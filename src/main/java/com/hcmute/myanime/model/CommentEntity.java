@@ -23,6 +23,9 @@ public class CommentEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UsersEntity usersByUserId;
 
+    public CommentEntity() {
+    }
+
     public int getId() {
         return id;
     }

@@ -58,6 +58,9 @@ public class MovieSeriesEntity {
         this.createAt = createAt;
     }
 
+    public MovieSeriesEntity() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

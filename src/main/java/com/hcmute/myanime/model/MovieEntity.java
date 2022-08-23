@@ -41,6 +41,9 @@ public class MovieEntity {
     @OneToMany(mappedBy = "movieByMovieId")
     private Collection<MovieSeriesEntity> movieSeriesById;
 
+    public MovieEntity() {
+    }
+
     public int getId() {
         return id;
     }

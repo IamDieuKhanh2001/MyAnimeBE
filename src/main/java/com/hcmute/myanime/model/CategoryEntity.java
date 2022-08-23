@@ -1,5 +1,8 @@
 package com.hcmute.myanime.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -17,8 +20,17 @@ public class CategoryEntity {
     @Basic
     @Column(name = "create_at", nullable = false)
     private Timestamp createAt;
-    @OneToMany(mappedBy = "categoryByCategoryId")
+    @OneToMany(mappedBy = "categoryByCategoryId", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Collection<CategoryMovieEntity> categoryMoviesById;
+
+    public CategoryEntity() {
+    }
+
+    public CategoryEntity(String name, Timestamp createAt) {
+        this.name = name;
+        this.createAt = createAt;
+    }
 
     public int getId() {
         return id;

@@ -29,6 +29,9 @@ public class UsersEntity {
     @JoinColumn(name = "user_role_id", referencedColumnName = "id", nullable = false)
     private UserRoleEntity userRoleByUserRoleId;
 
+    public UsersEntity() {
+    }
+
     public int getId() {
         return id;
     }

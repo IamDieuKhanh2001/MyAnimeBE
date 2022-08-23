@@ -26,6 +26,9 @@ public class EpisodeEntity {
     @JoinColumn(name = "series_id", referencedColumnName = "id")
     private MovieSeriesEntity movieSeriesBySeriesId;
 
+    public EpisodeEntity() {
+    }
+
     public int getId() {
         return id;
     }

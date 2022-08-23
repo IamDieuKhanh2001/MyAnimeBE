@@ -23,6 +23,9 @@ public class UserRoleEntity {
     @OneToMany(mappedBy = "userRoleByUserRoleId")
     private Collection<UsersEntity> usersById;
 
+    public UserRoleEntity() {
+    }
+
     public int getId() {
         return id;
     }

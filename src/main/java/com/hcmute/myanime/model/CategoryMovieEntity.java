@@ -1,5 +1,8 @@
 package com.hcmute.myanime.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,7 +17,11 @@ public class CategoryMovieEntity {
     private CategoryEntity categoryByCategoryId;
     @ManyToOne
     @JoinColumn(name = "movie_id", referencedColumnName = "id", nullable = false)
+    @JsonManagedReference
     private MovieEntity movieByMovieId;
+
+    public CategoryMovieEntity() {
+    }
 
     public int getId() {
         return id;
