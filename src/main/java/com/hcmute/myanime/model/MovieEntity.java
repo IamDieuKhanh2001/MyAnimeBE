@@ -41,7 +41,28 @@ public class MovieEntity {
     @OneToMany(mappedBy = "movieByMovieId")
     private Collection<MovieSeriesEntity> movieSeriesById;
 
+    @Transient
+    private Integer views = 5;
+
+    public Integer getViews() {
+        return views;
+    }
+
+    public void setViews(Integer views) {
+        this.views = views;
+    }
+
     public MovieEntity() {
+    }
+
+    public MovieEntity(String title, Date publicDate, String description, String videoTrailer, String studioName, String image, Timestamp dateAired) {
+        this.title = title;
+        this.publicDate = publicDate;
+        this.description = description;
+        this.videoTrailer = videoTrailer;
+        this.studioName = studioName;
+        this.image = image;
+        this.dateAired = dateAired;
     }
 
     public int getId() {

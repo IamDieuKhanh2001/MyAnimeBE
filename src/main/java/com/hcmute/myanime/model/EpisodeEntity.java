@@ -18,10 +18,22 @@ public class EpisodeEntity {
     @Column(name = "resource", nullable = true, length = -1)
     private String resource;
     @Basic
+    @Column(name = "views", nullable = true, length = -1)
+    private Integer views;
+    @Basic
     @Column(name = "create_at", nullable = false)
     private Timestamp createAt;
     @OneToMany(mappedBy = "episodeByEpisodeId")
     private Collection<CommentEntity> commentsById;
+
+    public Integer getViews() {
+        return views;
+    }
+
+    public void setViews(Integer views) {
+        this.views = views;
+    }
+
     @ManyToOne
     @JoinColumn(name = "series_id", referencedColumnName = "id")
     private MovieSeriesEntity movieSeriesBySeriesId;
