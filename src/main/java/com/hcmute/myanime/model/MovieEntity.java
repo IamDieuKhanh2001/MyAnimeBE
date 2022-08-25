@@ -1,5 +1,8 @@
 package com.hcmute.myanime.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -12,7 +15,6 @@ public class MovieEntity {
     @Id
     private int id;
     private String title;
-    private Date publicDate;
     private String description;
     private String videoTrailer;
     private String studioName;
@@ -20,6 +22,7 @@ public class MovieEntity {
     private Timestamp dateAired;
     private Timestamp createAt;
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(name = "category_movie", // table link two relationship
             joinColumns = @JoinColumn(name = "movie_id"), // Key is link with table Users
             inverseJoinColumns = @JoinColumn(name = "category_id")) //Key is link with table Roles
@@ -49,9 +52,8 @@ public class MovieEntity {
     public MovieEntity() {
     }
 
-    public MovieEntity(String title, Date publicDate, String description, String videoTrailer, String studioName, String image, Timestamp dateAired) {
+    public MovieEntity(String title, String description, String videoTrailer, String studioName, String image, Timestamp dateAired) {
         this.title = title;
-        this.publicDate = publicDate;
         this.description = description;
         this.videoTrailer = videoTrailer;
         this.studioName = studioName;
@@ -73,14 +75,6 @@ public class MovieEntity {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Date getPublicDate() {
-        return publicDate;
-    }
-
-    public void setPublicDate(Date publicDate) {
-        this.publicDate = publicDate;
     }
 
     public String getDescription() {
@@ -140,7 +134,6 @@ public class MovieEntity {
 
         if (id != that.id) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (publicDate != null ? !publicDate.equals(that.publicDate) : that.publicDate != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (videoTrailer != null ? !videoTrailer.equals(that.videoTrailer) : that.videoTrailer != null) return false;
         if (studioName != null ? !studioName.equals(that.studioName) : that.studioName != null) return false;
@@ -155,7 +148,6 @@ public class MovieEntity {
     public int hashCode() {
         int result = id;
         result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (publicDate != null ? publicDate.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (videoTrailer != null ? videoTrailer.hashCode() : 0);
         result = 31 * result + (studioName != null ? studioName.hashCode() : 0);
@@ -178,7 +170,6 @@ public class MovieEntity {
         return "MovieEntity{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", publicDate=" + publicDate +
                 ", description='" + description + '\'' +
                 ", videoTrailer='" + videoTrailer + '\'' +
                 ", studioName='" + studioName + '\'' +

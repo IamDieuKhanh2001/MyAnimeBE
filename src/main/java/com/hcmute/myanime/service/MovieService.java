@@ -33,7 +33,6 @@ public class MovieService {
     {
         MovieEntity movieEntity = new MovieEntity(
                 movieDTO.getTitle(),
-                new Date(System.currentTimeMillis()), // edit lai sau
                 movieDTO.getDescription(),
                 movieDTO.getVideoTrailer(),
                 movieDTO.getStudioName(),
