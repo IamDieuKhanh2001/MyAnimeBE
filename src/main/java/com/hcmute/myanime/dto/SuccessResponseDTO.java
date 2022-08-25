@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 
 public class SuccessResponseDTO {
     private HttpStatus status;
-    private String successMessage;
+    private String message;
 
-    public SuccessResponseDTO(HttpStatus status, String successMessage) {
+    public SuccessResponseDTO(HttpStatus status, String message) {
         this.status = status;
-        this.successMessage = successMessage;
+        this.message = message;
     }
 
     public HttpStatus getStatus() {
@@ -20,10 +20,10 @@ public class SuccessResponseDTO {
     }
 
     public String getSuccessMessage() {
-        return successMessage;
+        return message;
     }
 
     public void setSuccessMessage(String successMessage) {
-        this.successMessage = successMessage;
+        this.message = successMessage;
     }
 }
