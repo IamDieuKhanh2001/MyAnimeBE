@@ -22,6 +22,8 @@ public class MovieController {
     @PostMapping("/movie")
     public ResponseEntity<?> createNewMovie(@RequestBody MovieDTO movieDTO)
     {
+//        System.out.printf(movieDTO.getTitle());
+//        return ResponseEntity.ok("abc");
         if(movieService.save(movieDTO))
         {
             return ResponseEntity.ok(

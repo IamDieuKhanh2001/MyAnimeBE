@@ -35,7 +35,6 @@ public class MovieService {
 
     public boolean save(MovieDTO movieDTO)
     {
-        System.out.print(movieDTO.getTitle());
         MovieEntity movieEntity = new MovieEntity(
                 movieDTO.getTitle(),
                 new Date(System.currentTimeMillis()), // edit lai sau
@@ -45,15 +44,19 @@ public class MovieService {
                 movieDTO.getImage(),
                 movieDTO.getDateAired()
         );
-        try
-        {
-            movieRepository.save(movieEntity);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            return false;
-        }
+
+        System.out.println(movieEntity.toString());
+        return true;
+//        try
+//        {
+//            movieRepository.save(movieEntity);
+//            return true;
+//        }
+//        catch (Exception ex)
+//        {
+//            System.out.print(ex.getMessage());
+//            return false;
+//        }
     }
 
     public boolean deleteById(int movieId) {

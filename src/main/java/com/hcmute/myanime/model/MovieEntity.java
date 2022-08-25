@@ -41,6 +41,8 @@ public class MovieEntity {
     @OneToMany(mappedBy = "movieByMovieId")
     private Collection<MovieSeriesEntity> movieSeriesById;
 
+
+
     @Transient
     private Integer views = 5;
 
@@ -185,5 +187,23 @@ public class MovieEntity {
 
     public void setMovieSeriesById(Collection<MovieSeriesEntity> movieSeriesById) {
         this.movieSeriesById = movieSeriesById;
+    }
+
+    @Override
+    public String toString() {
+        return "MovieEntity{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", publicDate=" + publicDate +
+                ", description='" + description + '\'' +
+                ", videoTrailer='" + videoTrailer + '\'' +
+                ", studioName='" + studioName + '\'' +
+                ", image='" + image + '\'' +
+                ", dateAired=" + dateAired +
+                ", createAt=" + createAt +
+                ", categoryMoviesById=" + categoryMoviesById +
+                ", movieSeriesById=" + movieSeriesById +
+                ", views=" + views +
+                '}';
     }
 }
