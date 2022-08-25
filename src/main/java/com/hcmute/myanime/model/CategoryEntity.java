@@ -8,23 +8,26 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "category", schema = "movie")
+@Table(name = "categories", schema = "movie")
 public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id", nullable = false)
     private int id;
-    @Basic
-    @Column(name = "name", nullable = true, length = -1)
     private String name;
-    @Basic
-    @Column(name = "create_at", nullable = false)
     private Timestamp createAt;
-    @OneToMany(mappedBy = "categoryByCategoryId", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "categoryEntityCollection")
     @JsonBackReference
-    private Collection<CategoryMovieEntity> categoryMoviesById;
+    private Collection<MovieEntity> movieEntityCollection;
 
     public CategoryEntity() {
+    }
+
+    public Collection<MovieEntity> getMovieEntityCollection() {
+        return movieEntityCollection;
+    }
+
+    public void setMovieEntityCollection(Collection<MovieEntity> movieEntityCollection) {
+        this.movieEntityCollection = movieEntityCollection;
     }
 
     public CategoryEntity(String name, Timestamp createAt) {
@@ -78,11 +81,4 @@ public class CategoryEntity {
         return result;
     }
 
-    public Collection<CategoryMovieEntity> getCategoryMoviesById() {
-        return categoryMoviesById;
-    }
-
-    public void setCategoryMoviesById(Collection<CategoryMovieEntity> categoryMoviesById) {
-        this.categoryMoviesById = categoryMoviesById;
-    }
 }

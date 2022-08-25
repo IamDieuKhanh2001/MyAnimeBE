@@ -6,42 +6,34 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "movie", schema = "movie")
+@Table(name = "movies", schema = "movie")
 public class MovieEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id", nullable = false)
     private int id;
-    @Basic
-    @Column(name = "title", nullable = true, length = -1)
     private String title;
-    @Basic
-    @Column(name = "public_date", nullable = true)
     private Date publicDate;
-    @Basic
-    @Column(name = "description", nullable = true, length = -1)
     private String description;
-    @Basic
-    @Column(name = "video_trailer", nullable = true, length = 255)
     private String videoTrailer;
-    @Basic
-    @Column(name = "studio_name", nullable = true, length = -1)
     private String studioName;
-    @Basic
-    @Column(name = "image", nullable = true, length = -1)
     private String image;
-    @Basic
-    @Column(name = "date_aired", nullable = true)
     private Timestamp dateAired;
-    @Basic
-    @Column(name = "create_at", nullable = false)
     private Timestamp createAt;
-    @OneToMany(mappedBy = "movieByMovieId")
-    private Collection<CategoryMovieEntity> categoryMoviesById;
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinTable(name = "category_movie", // table link two relationship
+            joinColumns = @JoinColumn(name = "movie_id"), // Key is link with table Users
+            inverseJoinColumns = @JoinColumn(name = "category_id")) //Key is link with table Roles
+    private Collection<CategoryEntity> categoryEntityCollection;
     @OneToMany(mappedBy = "movieByMovieId")
     private Collection<MovieSeriesEntity> movieSeriesById;
 
+    public Collection<CategoryEntity> getCategoryEntityCollection() {
+        return categoryEntityCollection;
+    }
 
+    public void setCategoryEntityCollection(Collection<CategoryEntity> categoryEntityCollection) {
+        this.categoryEntityCollection = categoryEntityCollection;
+    }
 
     @Transient
     private Integer views = 5;
@@ -173,14 +165,6 @@ public class MovieEntity {
         return result;
     }
 
-    public Collection<CategoryMovieEntity> getCategoryMoviesById() {
-        return categoryMoviesById;
-    }
-
-    public void setCategoryMoviesById(Collection<CategoryMovieEntity> categoryMoviesById) {
-        this.categoryMoviesById = categoryMoviesById;
-    }
-
     public Collection<MovieSeriesEntity> getMovieSeriesById() {
         return movieSeriesById;
     }
@@ -201,8 +185,6 @@ public class MovieEntity {
                 ", image='" + image + '\'' +
                 ", dateAired=" + dateAired +
                 ", createAt=" + createAt +
-                ", categoryMoviesById=" + categoryMoviesById +
-                ", movieSeriesById=" + movieSeriesById +
                 ", views=" + views +
                 '}';
     }

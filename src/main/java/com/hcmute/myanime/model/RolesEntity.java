@@ -5,25 +5,18 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "user_role", schema = "movie")
-public class UserRoleEntity {
+@Table(name = "roles", schema = "movie")
+public class RolesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id", nullable = false)
     private int id;
-    @Basic
-    @Column(name = "name", nullable = false, length = 255)
     private String name;
-    @Basic
-    @Column(name = "permission", nullable = false, length = 255)
     private String permission;
-    @Basic
-    @Column(name = "create_at", nullable = false)
     private Timestamp createAt;
     @OneToMany(mappedBy = "userRoleByUserRoleId")
     private Collection<UsersEntity> usersById;
 
-    public UserRoleEntity() {
+    public RolesEntity() {
     }
 
     public int getId() {
@@ -63,7 +56,7 @@ public class UserRoleEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserRoleEntity that = (UserRoleEntity) o;
+        RolesEntity that = (RolesEntity) o;
 
         if (id != that.id) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;

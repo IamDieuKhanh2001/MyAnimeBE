@@ -1,16 +1,12 @@
 package com.hcmute.myanime.service;
 
-import com.hcmute.myanime.dto.CategoryDTO;
 import com.hcmute.myanime.dto.MovieDTO;
-import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.xml.stream.XMLStreamConstants;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,19 +40,17 @@ public class MovieService {
                 movieDTO.getImage(),
                 movieDTO.getDateAired()
         );
-
-        System.out.println(movieEntity.toString());
-        return true;
-//        try
-//        {
-//            movieRepository.save(movieEntity);
-//            return true;
-//        }
-//        catch (Exception ex)
-//        {
-//            System.out.print(ex.getMessage());
-//            return false;
-//        }
+        try
+        {
+            movieRepository.save(movieEntity);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            System.out.print(ex.getMessage());
+            ex.printStackTrace();
+            return false;
+        }
     }
 
     public boolean deleteById(int movieId) {

@@ -5,34 +5,18 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "episode", schema = "movie")
+@Table(name = "episodes", schema = "movie")
 public class EpisodeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id", nullable = false)
     private int id;
-    @Basic
-    @Column(name = "title", nullable = true, length = -1)
     private String title;
-    @Basic
-    @Column(name = "resource", nullable = true, length = -1)
     private String resource;
-    @Basic
-    @Column(name = "views", nullable = true, length = -1)
-    private Integer views;
-    @Basic
-    @Column(name = "create_at", nullable = false)
+//    @Column(name = "views", nullable = true, length = -1)
+//    private Integer views;
     private Timestamp createAt;
     @OneToMany(mappedBy = "episodeByEpisodeId")
     private Collection<CommentEntity> commentsById;
-
-    public Integer getViews() {
-        return views;
-    }
-
-    public void setViews(Integer views) {
-        this.views = views;
-    }
 
     @ManyToOne
     @JoinColumn(name = "series_id", referencedColumnName = "id")

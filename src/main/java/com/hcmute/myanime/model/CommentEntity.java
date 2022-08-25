@@ -4,17 +4,12 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "comment", schema = "movie")
+@Table(name = "comments", schema = "movie")
 public class CommentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id", nullable = false)
     private int id;
-    @Basic
-    @Column(name = "content", nullable = true, length = -1)
     private String content;
-    @Basic
-    @Column(name = "create_at", nullable = false)
     private Timestamp createAt;
     @ManyToOne
     @JoinColumn(name = "episode_id", referencedColumnName = "id", nullable = false)

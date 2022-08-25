@@ -9,16 +9,9 @@ import java.util.Collection;
 public class MovieSeriesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id", nullable = false)
     private int id;
-    @Basic
-    @Column(name = "name", nullable = true, length = 255)
     private String name;
-    @Basic
-    @Column(name = "description", nullable = true, length = -1)
     private String description;
-    @Basic
-    @Column(name = "create_at", nullable = false)
     private Timestamp createAt;
     @OneToMany(mappedBy = "movieSeriesBySeriesId")
     private Collection<EpisodeEntity> episodesById;
