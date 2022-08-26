@@ -15,11 +15,7 @@ public class MovieEntity {
     @Id
     private int id;
     private String title;
-    private String description;
-    private String videoTrailer;
     private String studioName;
-    private String image;
-    private Timestamp dateAired;
     private Timestamp createAt;
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -52,13 +48,9 @@ public class MovieEntity {
     public MovieEntity() {
     }
 
-    public MovieEntity(String title, String description, String videoTrailer, String studioName, String image, Timestamp dateAired) {
+    public MovieEntity(String title, String studioName) {
         this.title = title;
-        this.description = description;
-        this.videoTrailer = videoTrailer;
         this.studioName = studioName;
-        this.image = image;
-        this.dateAired = dateAired;
     }
 
     public int getId() {
@@ -77,44 +69,12 @@ public class MovieEntity {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getVideoTrailer() {
-        return videoTrailer;
-    }
-
-    public void setVideoTrailer(String videoTrailer) {
-        this.videoTrailer = videoTrailer;
-    }
-
     public String getStudioName() {
         return studioName;
     }
 
     public void setStudioName(String studioName) {
         this.studioName = studioName;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public Timestamp getDateAired() {
-        return dateAired;
-    }
-
-    public void setDateAired(Timestamp dateAired) {
-        this.dateAired = dateAired;
     }
 
     public Timestamp getCreateAt() {
@@ -134,11 +94,7 @@ public class MovieEntity {
 
         if (id != that.id) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (videoTrailer != null ? !videoTrailer.equals(that.videoTrailer) : that.videoTrailer != null) return false;
         if (studioName != null ? !studioName.equals(that.studioName) : that.studioName != null) return false;
-        if (image != null ? !image.equals(that.image) : that.image != null) return false;
-        if (dateAired != null ? !dateAired.equals(that.dateAired) : that.dateAired != null) return false;
         if (createAt != null ? !createAt.equals(that.createAt) : that.createAt != null) return false;
 
         return true;
@@ -148,11 +104,7 @@ public class MovieEntity {
     public int hashCode() {
         int result = id;
         result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (videoTrailer != null ? videoTrailer.hashCode() : 0);
         result = 31 * result + (studioName != null ? studioName.hashCode() : 0);
-        result = 31 * result + (image != null ? image.hashCode() : 0);
-        result = 31 * result + (dateAired != null ? dateAired.hashCode() : 0);
         result = 31 * result + (createAt != null ? createAt.hashCode() : 0);
         return result;
     }
@@ -163,20 +115,5 @@ public class MovieEntity {
 
     public void setMovieSeriesById(Collection<MovieSeriesEntity> movieSeriesById) {
         this.movieSeriesById = movieSeriesById;
-    }
-
-    @Override
-    public String toString() {
-        return "MovieEntity{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", videoTrailer='" + videoTrailer + '\'' +
-                ", studioName='" + studioName + '\'' +
-                ", image='" + image + '\'' +
-                ", dateAired=" + dateAired +
-                ", createAt=" + createAt +
-                ", views=" + views +
-                '}';
     }
 }

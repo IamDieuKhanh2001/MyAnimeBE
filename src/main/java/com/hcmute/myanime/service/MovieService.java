@@ -33,11 +33,7 @@ public class MovieService {
     {
         MovieEntity movieEntity = new MovieEntity(
                 movieDTO.getTitle(),
-                movieDTO.getDescription(),
-                movieDTO.getVideoTrailer(),
-                movieDTO.getStudioName(),
-                movieDTO.getImage(),
-                movieDTO.getDateAired()
+                movieDTO.getStudioName()
         );
         try
         {
@@ -68,12 +64,7 @@ public class MovieService {
         }
         MovieEntity movieEntity = movieById.get();
         movieEntity.setTitle(movieDTO.getTitle());
-        movieEntity.setDescription(movieDTO.getDescription());
-        movieEntity.setVideoTrailer(movieDTO.getVideoTrailer());
         movieEntity.setStudioName(movieDTO.getStudioName());
-        movieEntity.setImage(movieDTO.getImage());
-        movieEntity.setDateAired(movieDTO.getDateAired());
-
         try {
             movieRepository.save(movieEntity);
             return true;

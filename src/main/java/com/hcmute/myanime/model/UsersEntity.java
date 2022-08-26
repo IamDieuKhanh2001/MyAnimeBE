@@ -1,8 +1,12 @@
 package com.hcmute.myanime.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users", schema = "movie")
@@ -19,6 +23,12 @@ public class UsersEntity {
     @ManyToOne
     @JoinColumn(name = "user_role_id", referencedColumnName = "id", nullable = false)
     private RolesEntity userRoleByUserRoleId;
+
+    @OneToMany(mappedBy = "user")
+    private Collection<LogHistoriesEntity> logHistoriesEntityCollection;
+
+    @OneToMany(mappedBy = "user")
+    private Collection<FavoritesEntity> favoritesEntityCollection;
 
     public UsersEntity() {
     }

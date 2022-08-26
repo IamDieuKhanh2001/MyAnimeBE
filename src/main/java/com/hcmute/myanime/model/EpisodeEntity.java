@@ -22,6 +22,9 @@ public class EpisodeEntity {
     @JoinColumn(name = "series_id", referencedColumnName = "id")
     private MovieSeriesEntity movieSeriesBySeriesId;
 
+    @OneToOne(mappedBy = "episodeEntity")
+    private LogHistoriesEntity logHistoriesEntity;
+
     public EpisodeEntity() {
     }
 

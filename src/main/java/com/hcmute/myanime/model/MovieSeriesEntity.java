@@ -12,12 +12,17 @@ public class MovieSeriesEntity {
     private int id;
     private String name;
     private String description;
+    private Timestamp dateAired;
+    private int totalEpisode;
+    private String image;
     private Timestamp createAt;
     @OneToMany(mappedBy = "movieSeriesBySeriesId")
     private Collection<EpisodeEntity> episodesById;
     @ManyToOne
     @JoinColumn(name = "movie_id", referencedColumnName = "id")
     private MovieEntity movieByMovieId;
+    @OneToOne(mappedBy = "movieSeries")
+    private FavoritesEntity favoritesEntity;
 
     public int getId() {
         return id;
@@ -49,6 +54,30 @@ public class MovieSeriesEntity {
 
     public void setCreateAt(Timestamp createAt) {
         this.createAt = createAt;
+    }
+
+    public Timestamp getDateAired() {
+        return dateAired;
+    }
+
+    public void setDateAired(Timestamp dateAired) {
+        this.dateAired = dateAired;
+    }
+
+    public int getTotalEpisode() {
+        return totalEpisode;
+    }
+
+    public void setTotalEpisode(int totalEpisode) {
+        this.totalEpisode = totalEpisode;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public MovieSeriesEntity() {
