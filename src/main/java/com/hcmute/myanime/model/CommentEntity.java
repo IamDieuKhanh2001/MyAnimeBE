@@ -10,6 +10,7 @@ public class CommentEntity {
     @Id
     private int id;
     private String content;
+    @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @ManyToOne
     @JoinColumn(name = "episode_id", referencedColumnName = "id", nullable = false)

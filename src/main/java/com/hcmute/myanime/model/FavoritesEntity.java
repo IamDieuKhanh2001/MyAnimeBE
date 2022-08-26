@@ -9,6 +9,8 @@ public class FavoritesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int id;
+
+    @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
 
     @OneToOne(cascade = CascadeType.ALL)

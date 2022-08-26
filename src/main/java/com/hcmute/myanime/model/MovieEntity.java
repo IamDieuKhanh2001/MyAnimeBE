@@ -16,6 +16,7 @@ public class MovieEntity {
     private int id;
     private String title;
     private String studioName;
+    @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)

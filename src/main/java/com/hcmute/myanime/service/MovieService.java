@@ -1,8 +1,10 @@
 package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.dto.MovieDTO;
+import com.hcmute.myanime.mapper.MovieMapper;
 import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.repository.MovieRepository;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 @Service
 public class MovieService {
     @Autowired
@@ -20,10 +24,7 @@ public class MovieService {
         List<MovieEntity> movieEntities = movieRepository.findAll();
         List<MovieDTO> movieDTO = new ArrayList<>();
         movieEntities.forEach((movieEntity) -> {
-            MovieDTO movieDTO1 = new MovieDTO();
-            movieDTO1.setId(movieEntity.getId());
-            movieDTO1.setTitle(movieEntity.getTitle());
-
+            MovieDTO movieDTO1 = MovieMapper.toDTO(movieEntity);
             movieDTO.add(movieDTO1);
         });
         return movieDTO;
@@ -37,7 +38,10 @@ public class MovieService {
         );
         try
         {
-            movieRepository.save(movieEntity);
+            MovieEntity movieEntitySaved = movieRepository.save(movieEntity);
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String json = ow.writeValueAsString(movieEntitySaved);
+            System.out.println(json);
             return true;
         }
         catch (Exception ex)

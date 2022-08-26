@@ -15,6 +15,7 @@ public class MovieSeriesEntity {
     private Timestamp dateAired;
     private int totalEpisode;
     private String image;
+    @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @OneToMany(mappedBy = "movieSeriesBySeriesId")
     private Collection<EpisodeEntity> episodesById;

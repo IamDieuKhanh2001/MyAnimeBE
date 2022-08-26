@@ -1,8 +1,7 @@
 package com.hcmute.myanime.controller;
 
 import com.hcmute.myanime.dto.CategoryDTO;
-import com.hcmute.myanime.dto.SuccessResponseDTO;
-import com.hcmute.myanime.exception.BadRequestException;
+import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,13 +24,15 @@ public class CategoryController {
     public ResponseEntity<?> createNewCategory(@RequestBody CategoryDTO categoryDTO) {
         if(categoryService.save(categoryDTO)) {
             return ResponseEntity.ok(
-                    new SuccessResponseDTO(
+                    new ResponseDTO(
                             HttpStatus.OK,
                             "Create new category success"
                     )
             );
         } else {
-            return ResponseEntity.badRequest().body("Create new category fail");
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.NO_CONTENT, "create fail")
+            );
         }
     }
 
@@ -41,10 +42,12 @@ public class CategoryController {
 
         if(categoryService.updateById(categoryId, categoryDTO)) {
             return ResponseEntity.ok(
-                    new SuccessResponseDTO(HttpStatus.OK, "Update category success")
+                    new ResponseDTO(HttpStatus.OK, "Update category success")
             );
         } else {
-            return ResponseEntity.badRequest().body("Update category fail");
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Update fail")
+            );
         }
     }
 
@@ -53,10 +56,12 @@ public class CategoryController {
     public ResponseEntity<?> deleteCategoryById(@PathVariable int categoryId) {
         if(categoryService.deleteById(categoryId)) {
             return ResponseEntity.ok(
-                    new SuccessResponseDTO(HttpStatus.OK, "Delete category success")
+                    new ResponseDTO(HttpStatus.OK, "Delete category success")
             );
         } else {
-            return ResponseEntity.badRequest().body("Delete category fail");
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Detele Fail")
+            );
         }
     }
 }

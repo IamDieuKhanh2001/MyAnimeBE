@@ -24,8 +24,7 @@ public class CategoryService {
 
     public boolean save(CategoryDTO categoryDTO) {
         CategoryEntity categoryEntity = new CategoryEntity(
-                categoryDTO.getName(),
-                new Timestamp(System.currentTimeMillis())
+                categoryDTO.getName()
         );
         try {
             categoryRepository.save(categoryEntity);

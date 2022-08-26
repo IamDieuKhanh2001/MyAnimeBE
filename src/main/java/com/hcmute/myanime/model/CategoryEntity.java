@@ -14,6 +14,7 @@ public class CategoryEntity {
     @Id
     private int id;
     private String name;
+    @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @ManyToMany(mappedBy = "categoryEntityCollection")
     @JsonBackReference
@@ -30,9 +31,8 @@ public class CategoryEntity {
         this.movieEntityCollection = movieEntityCollection;
     }
 
-    public CategoryEntity(String name, Timestamp createAt) {
+    public CategoryEntity(String name) {
         this.name = name;
-        this.createAt = createAt;
     }
 
     public int getId() {

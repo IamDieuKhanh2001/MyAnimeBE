@@ -14,6 +14,7 @@ public class EpisodeEntity {
     private String resource;
 //    @Column(name = "views", nullable = true, length = -1)
 //    private Integer views;
+    @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @OneToMany(mappedBy = "episodeByEpisodeId")
     private Collection<CommentEntity> commentsById;

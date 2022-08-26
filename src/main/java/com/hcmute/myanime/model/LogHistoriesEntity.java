@@ -14,6 +14,8 @@ public class LogHistoriesEntity {
     @Id
     private int id;
     private Long lastSecond;
+
+    @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
 
     @OneToOne(cascade = CascadeType.ALL)

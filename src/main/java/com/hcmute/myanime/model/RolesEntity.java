@@ -12,6 +12,7 @@ public class RolesEntity {
     private int id;
     private String name;
     private String permission;
+    @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @OneToMany(mappedBy = "userRoleByUserRoleId")
     private Collection<UsersEntity> usersById;

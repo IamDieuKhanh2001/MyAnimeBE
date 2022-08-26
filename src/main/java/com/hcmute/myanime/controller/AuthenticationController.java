@@ -3,9 +3,8 @@ package com.hcmute.myanime.controller;
 import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.dto.AuthenticationRequestDTO;
 import com.hcmute.myanime.dto.AuthenticationResponseDTO;
-import com.hcmute.myanime.dto.SuccessResponseDTO;
+import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.dto.UserDTO;
-import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,11 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping("")
@@ -33,7 +29,7 @@ public class AuthenticationController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserDTO user) {
         if(applicationUserService.save(user)) {
-            return ResponseEntity.ok(new SuccessResponseDTO(HttpStatus.OK,
+            return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK,
                     "Create user " + user.getUsername() + " success"));
         } else {
             return ResponseEntity.badRequest().body("Register fail");

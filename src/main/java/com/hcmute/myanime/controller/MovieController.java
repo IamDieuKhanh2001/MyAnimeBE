@@ -1,7 +1,8 @@
 package com.hcmute.myanime.controller;
 
+import com.hcmute.myanime.common.Common;
 import com.hcmute.myanime.dto.MovieDTO;
-import com.hcmute.myanime.dto.SuccessResponseDTO;
+import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,13 @@ public class MovieController {
         if(movieService.save(movieDTO))
         {
             return ResponseEntity.ok(
-                    new SuccessResponseDTO(
-                            HttpStatus.OK, "ok")
+                    new ResponseDTO(
+                            HttpStatus.OK, Common.MessageRespone.StorageMovieSuccess)
             );
         }
         else
         {
-            throw new BadRequestException("Create new movie fail");
+            throw new BadRequestException(Common.MessageRespone.StorageMovieFail);
         }
     }
     @PutMapping("/movie/{movieID}")
@@ -39,7 +40,7 @@ public class MovieController {
     {
         if(movieService.updateById(movieID, movieDTO)) {
             return ResponseEntity.ok(
-                    new SuccessResponseDTO(HttpStatus.OK, "Update movie success")
+                    new ResponseDTO(HttpStatus.OK, Common.MessageRespone.UpdateMovieSuccess)
             );
         } else {
             throw new BadRequestException("Update movie fail");
@@ -50,10 +51,12 @@ public class MovieController {
     public ResponseEntity<?> deleteMovieByID(@PathVariable int movieID) {
         if(movieService.deleteById(movieID)) {
             return ResponseEntity.ok(
-                    new SuccessResponseDTO(HttpStatus.OK, "Delete movie success")
+                    new ResponseDTO(HttpStatus.OK, "Delete movie success")
             );
         } else {
-            throw new BadRequestException("Delete movie fail");
+            return ResponseEntity.ok(
+              new ResponseDTO(HttpStatus.BAD_REQUEST, "ID not found")
+            );
         }
     }
 }

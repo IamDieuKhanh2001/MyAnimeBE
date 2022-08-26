@@ -19,6 +19,7 @@ public class UsersEntity {
     private String password;
     private String email;
     private String avatar;
+    @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @OneToMany(mappedBy = "usersByUserId")
     private Collection<CommentEntity> commentsById;
