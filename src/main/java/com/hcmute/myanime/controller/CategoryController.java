@@ -31,7 +31,7 @@ public class CategoryController {
                     )
             );
         } else {
-            throw new BadRequestException("Create new category fail");
+            return ResponseEntity.badRequest().body("Create new category fail");
         }
     }
 
@@ -44,7 +44,7 @@ public class CategoryController {
                     new SuccessResponseDTO(HttpStatus.OK, "Update category success")
             );
         } else {
-            throw new BadRequestException("Update category fail");
+            return ResponseEntity.badRequest().body("Update category fail");
         }
     }
 
@@ -56,7 +56,7 @@ public class CategoryController {
                     new SuccessResponseDTO(HttpStatus.OK, "Delete category success")
             );
         } else {
-            throw new BadRequestException("Delete category fail");
+            return ResponseEntity.badRequest().body("Delete category fail");
         }
     }
 }

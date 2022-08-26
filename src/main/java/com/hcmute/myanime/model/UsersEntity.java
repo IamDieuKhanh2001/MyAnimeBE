@@ -17,6 +17,8 @@ public class UsersEntity {
     private String fullName;
     private String username;
     private String password;
+    private String email;
+    private String avatar;
     private Timestamp createAt;
     @OneToMany(mappedBy = "usersByUserId")
     private Collection<CommentEntity> commentsById;
@@ -71,6 +73,30 @@ public class UsersEntity {
 
     public void setCreateAt(Timestamp createAt) {
         this.createAt = createAt;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Collection<LogHistoriesEntity> getLogHistoriesEntityCollection() {
+        return logHistoriesEntityCollection;
+    }
+
+    public void setLogHistoriesEntityCollection(Collection<LogHistoriesEntity> logHistoriesEntityCollection) {
+        this.logHistoriesEntityCollection = logHistoriesEntityCollection;
+    }
+
+    public Collection<FavoritesEntity> getFavoritesEntityCollection() {
+        return favoritesEntityCollection;
+    }
+
+    public void setFavoritesEntityCollection(Collection<FavoritesEntity> favoritesEntityCollection) {
+        this.favoritesEntityCollection = favoritesEntityCollection;
     }
 
     @Override
