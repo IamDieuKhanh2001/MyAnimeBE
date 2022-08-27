@@ -100,6 +100,22 @@ public class MovieSeriesEntity {
     }
 
     @Override
+    public String toString() {
+        return "MovieSeriesEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", dateAired=" + dateAired +
+                ", totalEpisode=" + totalEpisode +
+                ", image='" + image + '\'' +
+                ", createAt=" + createAt +
+                ", episodesById=" + episodesById +
+                ", movieByMovieId=" + movieByMovieId +
+                ", favoritesEntity=" + favoritesEntity +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);

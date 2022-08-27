@@ -1,5 +1,7 @@
 package com.hcmute.myanime.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -77,12 +79,13 @@ public class EpisodeEntity {
     }
 
     @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (resource != null ? resource.hashCode() : 0);
-        result = 31 * result + (createAt != null ? createAt.hashCode() : 0);
-        return result;
+    public String toString() {
+        return "EpisodeEntity{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", resource='" + resource + '\'' +
+                ", createAt=" + createAt +
+                '}';
     }
 
     public Collection<CommentEntity> getCommentsById() {

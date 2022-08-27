@@ -1,5 +1,7 @@
 package com.hcmute.myanime.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
