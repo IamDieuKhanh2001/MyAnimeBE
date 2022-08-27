@@ -1,6 +1,7 @@
 package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.dto.MovieDTO;
+import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.mapper.MovieMapper;
 import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.repository.MovieRepository;
