@@ -1,5 +1,6 @@
 package com.hcmute.myanime.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -22,15 +23,19 @@ public class UsersEntity {
     @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @OneToMany(mappedBy = "usersByUserId")
+    @JsonBackReference
     private Collection<CommentEntity> commentsById;
     @ManyToOne
     @JoinColumn(name = "user_role_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private RolesEntity userRoleByUserRoleId;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private Collection<LogHistoriesEntity> logHistoriesEntityCollection;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private Collection<FavoritesEntity> favoritesEntityCollection;
 
     public UsersEntity() {

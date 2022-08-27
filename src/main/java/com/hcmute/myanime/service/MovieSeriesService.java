@@ -9,6 +9,7 @@ import com.hcmute.myanime.mapper.MovieSeriesMapper;
 import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
+import com.hcmute.myanime.repository.MovieRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ import java.util.Optional;
 public class MovieSeriesService {
     @Autowired
     private MovieSeriesRepository movieSeriesRepository;
+    @Autowired
+    private MovieRepository movieRepository;
 
 
     public List<MovieSeriesEntity> findAll()
@@ -28,9 +31,15 @@ public class MovieSeriesService {
         return movieSeriesRepository.findAll();
     }
 
-    public boolean save(MovieSeriesDTO movieSeriesDTO)
+    public boolean save(MovieSeriesDTO movieSeriesDTO, int movieId)
     {
         MovieSeriesEntity movieSeriesEntity = MovieSeriesMapper.toEntity(movieSeriesDTO);
+        Optional<MovieEntity> movieEntityOptional = movieRepository.findById(movieId);
+        if(!movieEntityOptional.isPresent()) {
+            return false;
+        }
+        MovieEntity movieEntity = movieEntityOptional.get();
+        movieSeriesEntity.setMovieByMovieId(movieEntity);
         try
         {
             movieSeriesRepository.save(movieSeriesEntity);

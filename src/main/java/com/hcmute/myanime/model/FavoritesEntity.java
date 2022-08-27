@@ -1,5 +1,7 @@
 package com.hcmute.myanime.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -15,9 +17,11 @@ public class FavoritesEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
+    @JsonBackReference
     private MovieSeriesEntity movieSeries; // mappedBy in table
 
     @ManyToOne
     @JoinColumn(referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private UsersEntity user;
 }

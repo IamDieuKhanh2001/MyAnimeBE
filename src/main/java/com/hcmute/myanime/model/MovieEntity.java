@@ -1,5 +1,6 @@
 package com.hcmute.myanime.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -25,6 +26,7 @@ public class MovieEntity {
             inverseJoinColumns = @JoinColumn(name = "category_id")) //Key is link with table Roles
     private Collection<CategoryEntity> categoryEntityCollection;
     @OneToMany(mappedBy = "movieByMovieId")
+    @JsonManagedReference
     private Collection<MovieSeriesEntity> movieSeriesById;
 
     public Collection<CategoryEntity> getCategoryEntityCollection() {

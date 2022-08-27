@@ -1,6 +1,7 @@
 package com.hcmute.myanime.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -16,9 +17,11 @@ public class CommentEntity {
     private Timestamp createAt;
     @ManyToOne
     @JoinColumn(name = "episode_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private EpisodeEntity episodeByEpisodeId;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private UsersEntity usersByUserId;
 
     public CommentEntity() {

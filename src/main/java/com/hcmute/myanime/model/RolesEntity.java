@@ -1,5 +1,8 @@
 package com.hcmute.myanime.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -15,6 +18,7 @@ public class RolesEntity {
     @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @OneToMany(mappedBy = "userRoleByUserRoleId")
+    @JsonManagedReference
     private Collection<UsersEntity> usersById;
 
     public RolesEntity() {

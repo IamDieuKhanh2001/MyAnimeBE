@@ -17,7 +17,6 @@ public class CategoryEntity {
     @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @ManyToMany(mappedBy = "categoryEntityCollection")
-    @JsonBackReference
     private Collection<MovieEntity> movieEntityCollection;
 
     public CategoryEntity() {

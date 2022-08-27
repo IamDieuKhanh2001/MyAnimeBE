@@ -1,5 +1,6 @@
 package com.hcmute.myanime.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -19,13 +20,16 @@ public class EpisodeEntity {
     @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @OneToMany(mappedBy = "episodeByEpisodeId")
+    @JsonManagedReference
     private Collection<CommentEntity> commentsById;
 
     @ManyToOne
     @JoinColumn(name = "series_id", referencedColumnName = "id")
+    @JsonBackReference
     private MovieSeriesEntity movieSeriesBySeriesId;
 
     @OneToOne(mappedBy = "episodeEntity")
+    @JsonManagedReference
     private LogHistoriesEntity logHistoriesEntity;
 
     public EpisodeEntity() {

@@ -24,10 +24,10 @@ public class MovieSeriesController {
         return ResponseEntity.ok( movieSeriesService.findAll());
     }
 
-    @PostMapping("/movie-series")
-    public ResponseEntity<?> storage(@RequestBody MovieSeriesDTO movieSeriesDTO)
+    @PostMapping("/movie-series/{movieId}")
+    public ResponseEntity<?> storage(@RequestBody MovieSeriesDTO movieSeriesDTO, @PathVariable int movieId)
     {
-        if(movieSeriesService.save(movieSeriesDTO))
+        if(movieSeriesService.save(movieSeriesDTO, movieId))
         {
             return ResponseEntity.ok(
                     new ResponseDTO(
