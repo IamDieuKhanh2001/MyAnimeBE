@@ -1,5 +1,6 @@
 package com.hcmute.myanime.service;
 
+import com.cloudinary.api.exceptions.BadRequest;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.EpisodeEntity;
@@ -22,7 +23,7 @@ public class EpisodeService {
     @Autowired
     private MovieSeriesRepository movieSeriesRepository;
 
-    public List<EpisodeEntity> findBySeriesId(int seriesId) {
+    public List<EpisodeEntity> findBySeriesId(int seriesId){
         if(!movieSeriesRepository.findById(seriesId).isPresent()){
             throw new BadRequestException("Series not found");
         }

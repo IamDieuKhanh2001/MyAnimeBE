@@ -1,5 +1,6 @@
 package com.hcmute.myanime.controller;
 
+import com.cloudinary.api.exceptions.BadRequest;
 import com.hcmute.myanime.dto.EpisodeDTO;
 import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.EpisodeEntity;
@@ -21,8 +22,7 @@ public class EpisodeController {
     private EpisodeService episodeService;
 
     @GetMapping("/user/episode/series/{seriesId}")
-    public ResponseEntity<?> getEpisodeOfSeries(@PathVariable int seriesId)
-    {
+    public ResponseEntity<?> getEpisodeOfSeries(@PathVariable int seriesId){
         List<EpisodeEntity> listEpisodeBySeriesId = episodeService.findBySeriesId(seriesId);
         List<EpisodeDTO> episodeDTOList = new ArrayList<>();
         listEpisodeBySeriesId.forEach((episode) -> {

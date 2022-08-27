@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin")
 public class MovieSeriesController {
@@ -19,7 +21,7 @@ public class MovieSeriesController {
     @GetMapping("/movie-series")
     public ResponseEntity<?> findAll()
     {
-        return ResponseEntity.ok(movieSeriesService.findAll());
+        return ResponseEntity.ok( movieSeriesService.findAll());
     }
 
     @PostMapping("/movie-series")
