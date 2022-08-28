@@ -8,6 +8,7 @@ import com.hcmute.myanime.dto.UserDTO;
 import com.hcmute.myanime.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,7 +27,7 @@ public class AuthenticationController {
     private JwtUtil jwtTokenUtil;
 
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.POST, consumes={"application/json"})
     public ResponseEntity<?> saveUser(@RequestBody UserDTO user) {
         if(applicationUserService.save(user)) {
             return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK,

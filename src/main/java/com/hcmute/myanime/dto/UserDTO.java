@@ -13,7 +13,6 @@ public class UserDTO {
     private String fullName;
     private String email;
     private String avatar;
-    private RolesEntity rolesEntity;
 
     public String getUsername() {
         return username;
@@ -55,11 +54,4 @@ public class UserDTO {
         this.avatar = avatar;
     }
 
-    public RolesEntity getRolesEntity() {
-        return rolesEntity;
-    }
-
-    public void setRolesEntity(RolesEntity rolesEntity) {
-        this.rolesEntity = rolesEntity;
-    }
 }

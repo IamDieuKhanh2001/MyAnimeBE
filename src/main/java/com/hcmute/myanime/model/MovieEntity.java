@@ -24,6 +24,7 @@ public class MovieEntity {
     @JoinTable(name = "category_movie", // table link two relationship
             joinColumns = @JoinColumn(name = "movie_id"), // Key is link with table Users
             inverseJoinColumns = @JoinColumn(name = "category_id")) //Key is link with table Roles
+    @JsonManagedReference
     private Collection<CategoryEntity> categoryEntityCollection;
     @OneToMany(mappedBy = "movieByMovieId")
     @JsonManagedReference

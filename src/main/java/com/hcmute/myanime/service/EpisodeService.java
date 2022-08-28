@@ -1,6 +1,7 @@
 package com.hcmute.myanime.service;
 
 import com.cloudinary.api.exceptions.BadRequest;
+import com.hcmute.myanime.dto.EpisodeDTO;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.EpisodeEntity;
@@ -31,4 +32,37 @@ public class EpisodeService {
         return episodeEntityList;
     }
 
+    public boolean save(EpisodeDTO episodeDTO, int seriesId) {
+        Optional<MovieSeriesEntity> movieSeriesEntityOptional = movieSeriesRepository.findById(seriesId);
+        if(!movieSeriesEntityOptional.isPresent()) {
+            return false;
+        }
+        MovieSeriesEntity movieSeriesEntity = movieSeriesEntityOptional.get();
+        EpisodeEntity newEpisodeEntity = new EpisodeEntity();
+        newEpisodeEntity.setMovieSeriesBySeriesId(movieSeriesEntity);
+        newEpisodeEntity.setTitle(episodeDTO.getTitle());
+        newEpisodeEntity.setResource(episodeDTO.getResource());
+        try {
+            episodeRepository.save(newEpisodeEntity);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean updateByEpisodeId(int episodeId, EpisodeDTO episodeDTO) {
+        Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(episodeId);
+        if(!episodeEntityOptional.isPresent()) {
+            return false;
+        }
+        EpisodeEntity updateEpisodeEntity = episodeEntityOptional.get();
+        updateEpisodeEntity.setResource(episodeDTO.getResource());
+        updateEpisodeEntity.setTitle(episodeDTO.getTitle());
+        try {
+            episodeRepository.save(updateEpisodeEntity);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
 }
