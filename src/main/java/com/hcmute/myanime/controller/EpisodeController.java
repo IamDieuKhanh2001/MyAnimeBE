@@ -1,6 +1,8 @@
 package com.hcmute.myanime.controller;
 
 import com.cloudinary.api.exceptions.BadRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hcmute.myanime.dto.CategoryDTO;
 import com.hcmute.myanime.dto.EpisodeDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,7 @@ public class EpisodeController {
     @Autowired
     private EpisodeService episodeService;
 
-    @GetMapping("/user/episode/series/{seriesId}")
+    @GetMapping(value = "/all/episode/series/{seriesId}")
     public ResponseEntity<?> getEpisodeOfSeries(@PathVariable int seriesId){
         List<EpisodeEntity> listEpisodeBySeriesId = episodeService.findBySeriesId(seriesId);
         List<EpisodeDTO> episodeDTOList = new ArrayList<>();
@@ -40,11 +43,13 @@ public class EpisodeController {
 
     @PostMapping("/admin/episode/series/{seriesId}")
     public ResponseEntity<?> createEpisodeOfSeries(
-            @RequestBody EpisodeDTO episodeDTO,
+            @RequestParam String model,
+            @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile,
             @PathVariable int seriesId
-    )
-    {
-        if(episodeService.save(episodeDTO, seriesId))
+    ) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        EpisodeDTO episodeDTO = mapper.readValue(model, EpisodeDTO.class);
+        if(episodeService.save(episodeDTO, sourceFile, seriesId))
         {
             return ResponseEntity.ok(
                     new ResponseDTO(
@@ -59,10 +64,15 @@ public class EpisodeController {
 
     @PutMapping("/admin/episode/{episodeId}")
     public ResponseEntity<?> updateEpisodeOfSeries(
-            @RequestBody EpisodeDTO episodeDTO,
+            @RequestParam String model,
+            @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile,
             @PathVariable int episodeId
-    ) {
-        if(episodeService.updateByEpisodeId(episodeId, episodeDTO)) {
+    ) throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        EpisodeDTO episodeDTO = mapper.readValue(model, EpisodeDTO.class);
+
+        if(episodeService.updateByEpisodeId(episodeId, episodeDTO, sourceFile)) {
             return ResponseEntity.ok(
                     new ResponseDTO(HttpStatus.OK, "Update episode success")
             );

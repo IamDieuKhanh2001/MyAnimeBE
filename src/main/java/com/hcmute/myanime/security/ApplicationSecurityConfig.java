@@ -38,7 +38,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/", "/admin/**", "/user/**", "/login", "/register",
+                    .antMatchers("/", "/login", "/register",
+
+                            //Các API từ đây sẽ bị xóa và chuyển về has role khi xong
+                            "/admin/**", "/user/**", "/all/**",
                             "/test/api/videoUpload").permitAll()
                     .antMatchers().hasAnyRole(ADMIN.name(), USER.name()) //Các API cần đăng nhập bằng tk admin, user
                     .antMatchers("/test/api/adminRole").hasRole(ADMIN.name()) //Các API cần đăng nhập bằng tk admin

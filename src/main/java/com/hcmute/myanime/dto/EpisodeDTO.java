@@ -1,5 +1,7 @@
 package com.hcmute.myanime.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.sql.Timestamp;
 
 public class EpisodeDTO {
