@@ -1,15 +1,11 @@
 package com.hcmute.myanime.controller;
 
-import com.cloudinary.api.exceptions.BadRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hcmute.myanime.dto.CategoryDTO;
 import com.hcmute.myanime.dto.EpisodeDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.exception.BadRequestException;
-import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.EpisodeEntity;
-import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.service.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

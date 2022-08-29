@@ -105,6 +105,14 @@ public class UsersEntity {
         this.favoritesEntityCollection = favoritesEntityCollection;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
