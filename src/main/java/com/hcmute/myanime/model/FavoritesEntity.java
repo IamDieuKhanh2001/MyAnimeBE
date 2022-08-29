@@ -24,4 +24,36 @@ public class FavoritesEntity {
     @JoinColumn(referencedColumnName = "id", nullable = false)
     @JsonBackReference
     private UsersEntity user;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Timestamp getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Timestamp createAt) {
+        this.createAt = createAt;
+    }
+
+    public MovieSeriesEntity getMovieSeries() {
+        return movieSeries;
+    }
+
+    public void setMovieSeries(MovieSeriesEntity movieSeries) {
+        this.movieSeries = movieSeries;
+    }
+
+    public UsersEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UsersEntity user) {
+        this.user = user;
+    }
 }

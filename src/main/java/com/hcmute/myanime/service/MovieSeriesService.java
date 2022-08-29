@@ -31,10 +31,10 @@ public class MovieSeriesService {
         return movieSeriesRepository.findAll();
     }
 
-    public boolean save(MovieSeriesDTO movieSeriesDTO, int movieId)
+    public boolean save(MovieSeriesDTO movieSeriesDTO)
     {
         MovieSeriesEntity movieSeriesEntity = MovieSeriesMapper.toEntity(movieSeriesDTO);
-        Optional<MovieEntity> movieEntityOptional = movieRepository.findById(movieId);
+        Optional<MovieEntity> movieEntityOptional = movieRepository.findById(movieSeriesDTO.getMovieId());
         if(!movieEntityOptional.isPresent()) {
             return false;
         }

@@ -1,8 +1,10 @@
 package com.hcmute.myanime.controller;
 
+import com.cloudinary.api.exceptions.BadRequest;
 import com.hcmute.myanime.dto.CategoryDTO;
 import com.hcmute.myanime.dto.MovieSeriesDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
+import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.service.MovieSeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,26 +25,21 @@ public class MovieSeriesController {
     {
         return ResponseEntity.ok( movieSeriesService.findAll());
     }
-
-    @PostMapping("/movie-series/{movieId}")
-    public ResponseEntity<?> storage(@RequestBody MovieSeriesDTO movieSeriesDTO, @PathVariable int movieId)
+    @PostMapping("/movie-series")
+    public ResponseEntity<?> storage(@RequestBody MovieSeriesDTO movieSeriesDTO)
     {
-        if(movieSeriesService.save(movieSeriesDTO, movieId))
-        {
+        if(movieSeriesService.save(movieSeriesDTO)) {
             return ResponseEntity.ok(
                     new ResponseDTO(
                             HttpStatus.OK,
                             "Create new movie series success"
                     )
             );
-        }
-        else
-        {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.NO_CONTENT, "create fail")
-            );
+        } else {
+            throw new BadRequestException("create fail");
         }
     }
+
 
     @PutMapping("/movie-series/{seriesID}")
     public ResponseEntity<?> updateSeriesById(@RequestBody MovieSeriesDTO movieSeriesDTO,
