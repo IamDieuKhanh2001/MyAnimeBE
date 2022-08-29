@@ -55,8 +55,10 @@ public class ApplicationUserService implements UserDetailsService {
     }
 
     public Boolean save(UserDTO userDTO) {
-        Optional<UsersEntity> DAOUsernameOptional = usersRepository.findByUsername(userDTO.getUsername());
-
+        Optional<UsersEntity> usersEntityOptional = usersRepository.findByUsername(userDTO.getUsername());
+        if(usersEntityOptional.isPresent()){
+            return false;
+        }
         UsersEntity newUser = UserMapper.toEntity(userDTO);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.setUserRoleByUserRoleId(rolesRepository.findByName("ROLE_" + ApplicationUserRole.USER.name()).get());

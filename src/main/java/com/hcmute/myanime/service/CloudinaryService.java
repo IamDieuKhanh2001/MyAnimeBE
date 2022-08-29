@@ -45,7 +45,7 @@ public class CloudinaryService {
                     + uploadedFile.getName(); //Dir tren cloudinary: Tạo folder id product và file name là id product
             //Option cho cloudinary
             Map paramsOption =
-                    ObjectUtils.asMap("resource_type", "video",
+                    ObjectUtils.asMap("resource_type", "auto",
                             "public_id", fileDir);
             Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
                     paramsOption);
