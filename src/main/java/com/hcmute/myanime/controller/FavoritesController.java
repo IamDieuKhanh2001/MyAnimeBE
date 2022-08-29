@@ -4,6 +4,7 @@ import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.dto.FavoritesDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.exception.BadRequestException;
+import com.hcmute.myanime.mapper.FavoritesMapper;
 import com.hcmute.myanime.model.FavoritesEntity;
 import com.hcmute.myanime.service.FavoritesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/user")
 public class FavoritesController {
     @Autowired
     private FavoritesService favoritesService;
@@ -23,9 +25,16 @@ public class FavoritesController {
     private ApplicationUserService applicationUserService;
 
     @GetMapping("/favorites")
-    public ResponseEntity<?> findAll()
+    public ResponseEntity<?> findByUserLogin()
     {
-        return null;
+        String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
+        List<FavoritesEntity> favoritesEntityList = favoritesService.findByUserLogin(usernameLoggedIn);
+        List<FavoritesDTO> favoritesDTOList = new ArrayList<>();
+        favoritesEntityList.forEach((favoritesEntity -> {
+            FavoritesDTO favoritesDTO = FavoritesMapper.toDTO(favoritesEntity);
+            favoritesDTOList.add(favoritesDTO);
+        }));
+        return ResponseEntity.ok(favoritesDTOList);
     }
 
     @PostMapping("/favorites")

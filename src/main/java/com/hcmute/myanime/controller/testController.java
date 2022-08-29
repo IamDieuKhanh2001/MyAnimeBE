@@ -21,11 +21,11 @@ public class testController {
     }
     @GetMapping("/test/api/adminRole")
     public ResponseEntity<?> testRole() {
-        return ResponseEntity.ok("hello " + applicationUserService.GetUsernameLoggedIn());
+        return ResponseEntity.ok("hello " + applicationUserService.getUsernameLoggedIn());
     }
     @GetMapping("/test/api/userRole")
     public ResponseEntity<?> testRole2() {
-        return ResponseEntity.ok("hello " + applicationUserService.GetUsernameLoggedIn());
+        return ResponseEntity.ok("hello " + applicationUserService.getUsernameLoggedIn());
     }
     @PostMapping("/test/api/videoUpload")
     public ResponseEntity<?> upload(@RequestParam(value = "video", required = false) MultipartFile video) {
@@ -34,6 +34,6 @@ public class testController {
                 "video2",
                 "MyAnimeProject_TLCN" + "/" + "test");
         System.out.println(url);
-        return ResponseEntity.ok("hello " + applicationUserService.GetUsernameLoggedIn());
+        return ResponseEntity.ok("hello " + applicationUserService.getUsernameLoggedIn());
     }
 }

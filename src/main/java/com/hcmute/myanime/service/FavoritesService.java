@@ -1,20 +1,15 @@
 package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.dto.FavoritesDTO;
-import com.hcmute.myanime.dto.MovieSeriesDTO;
 import com.hcmute.myanime.mapper.FavoritesMapper;
-import com.hcmute.myanime.mapper.MovieSeriesMapper;
 import com.hcmute.myanime.model.FavoritesEntity;
-import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.repository.FavoritesRepository;
-import com.hcmute.myanime.repository.MovieRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
 import com.hcmute.myanime.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -70,4 +65,8 @@ public class FavoritesService {
         }
     }
 
+    public List<FavoritesEntity> findByUserLogin(String usernameLoggedIn) {
+        UsersEntity userLogin = usersRepository.findByUsername(usernameLoggedIn).get();
+        return userLogin.getFavoritesEntityCollection().stream().toList();
+    }
 }

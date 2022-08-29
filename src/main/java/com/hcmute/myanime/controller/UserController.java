@@ -27,7 +27,7 @@ public class UserController {
                 !avatar.getContentType().equals("image/jpeg")) || avatar.equals(null)) {
             return ResponseEntity.badRequest().body("file extension must be .jpeg or .png");
         }
-        String username = applicationUserService.GetUsernameLoggedIn();
+        String username = applicationUserService.getUsernameLoggedIn();
         if(userService.uploadAvatar(avatar, username)) {
             return ResponseEntity.ok(
                     new ResponseDTO(

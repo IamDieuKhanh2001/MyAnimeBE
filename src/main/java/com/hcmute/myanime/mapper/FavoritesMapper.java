@@ -18,6 +18,7 @@ public class FavoritesMapper {
         favoritesDTO.setCreateAt(favoritesEntity.getCreateAt());
         favoritesDTO.setImage(favoritesEntity.getMovieSeries().getImage());
         favoritesDTO.setName(favoritesEntity.getMovieSeries().getName());
+        favoritesDTO.setMovieSeriesId(favoritesEntity.getMovieSeries().getId());
         favoritesDTO.setTotalEpisode(favoritesEntity.getMovieSeries().getTotalEpisode());
         return  favoritesDTO;
     }

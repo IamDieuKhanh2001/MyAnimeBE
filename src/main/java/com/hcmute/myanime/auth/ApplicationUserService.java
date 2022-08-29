@@ -1,15 +1,12 @@
 package com.hcmute.myanime.auth;
 
 import com.hcmute.myanime.dto.UserDTO;
-import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.mapper.UserMapper;
 import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.repository.RolesRepository;
 import com.hcmute.myanime.repository.UsersRepository;
 import com.hcmute.myanime.security.ApplicationUserRole;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,7 +38,7 @@ public class ApplicationUserService implements UserDetailsService {
         return user.map(ApplicationUser::new).get();
     }
 
-    public String GetUsernameLoggedIn() {
+    public String getUsernameLoggedIn() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
 
