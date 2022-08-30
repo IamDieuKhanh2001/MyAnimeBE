@@ -1,20 +1,15 @@
 package com.hcmute.myanime.service;
 
-import com.hcmute.myanime.dto.CategoryDTO;
-import com.hcmute.myanime.dto.MovieDTO;
 import com.hcmute.myanime.dto.MovieSeriesDTO;
-import com.hcmute.myanime.exception.BadRequestException;
-import com.hcmute.myanime.mapper.MovieMapper;
 import com.hcmute.myanime.mapper.MovieSeriesMapper;
-import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.repository.MovieRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +19,8 @@ public class MovieSeriesService {
     private MovieSeriesRepository movieSeriesRepository;
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
 
     public List<MovieSeriesEntity> findAll()
@@ -31,7 +28,7 @@ public class MovieSeriesService {
         return movieSeriesRepository.findAll();
     }
 
-    public boolean save(MovieSeriesDTO movieSeriesDTO)
+    public boolean save(MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile)
     {
         MovieSeriesEntity movieSeriesEntity = MovieSeriesMapper.toEntity(movieSeriesDTO);
         Optional<MovieEntity> movieEntityOptional = movieRepository.findById(movieSeriesDTO.getMovieId());
@@ -42,7 +39,12 @@ public class MovieSeriesService {
         movieSeriesEntity.setMovieByMovieId(movieEntity);
         try
         {
-            movieSeriesRepository.save(movieSeriesEntity);
+            MovieSeriesEntity savedEntity = movieSeriesRepository.save(movieSeriesEntity);
+            String urlSource = uploadSourceFileToCloudinary(sourceFile, savedEntity.getId());
+            if(!urlSource.equals("-1")) {
+                savedEntity.setImage(urlSource);
+                movieSeriesRepository.save(savedEntity);
+            }
             return true;
         }
         catch (Exception ex)
@@ -51,7 +53,15 @@ public class MovieSeriesService {
         }
     }
 
-    public boolean updateById(int seriesID, MovieSeriesDTO movieSeriesDTO) {
+    public String uploadSourceFileToCloudinary(MultipartFile sourceFile, int seriesId) {
+        String urlSource = cloudinaryService.uploadFile(
+                sourceFile,
+                String.valueOf(seriesId),
+                "MyAnimeProject_TLCN" + "/" + "movie_series");
+        return urlSource;
+    }
+
+    public boolean updateById(int seriesID, MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile) {
         Optional<MovieSeriesEntity> movieSeriesEntity = movieSeriesRepository.findById(seriesID);
         if(!movieSeriesEntity.isPresent()) {
             return false;
@@ -60,11 +70,15 @@ public class MovieSeriesService {
         MovieSeriesEntity updateMovieSeriesEntity = movieSeriesEntity.get();
         updateMovieSeriesEntity.setDateAired(movieSeriesDTO.getDateAired());
         updateMovieSeriesEntity.setDescription(movieSeriesDTO.getDescription());
-        updateMovieSeriesEntity.setImage(movieSeriesDTO.getImage());
         updateMovieSeriesEntity.setName(movieSeriesDTO.getName());
         updateMovieSeriesEntity.setTotalEpisode(movieSeriesDTO.getTotalEpisode());
         try {
-            movieSeriesRepository.save(updateMovieSeriesEntity);
+            MovieSeriesEntity savedEntity = movieSeriesRepository.save(updateMovieSeriesEntity);
+            String urlSource = uploadSourceFileToCloudinary(sourceFile, savedEntity.getId());
+            if(!urlSource.equals("-1")) {
+                savedEntity.setImage(urlSource);
+                movieSeriesRepository.save(savedEntity);
+            }
             return true;
         } catch (Exception ex) {
             return false;

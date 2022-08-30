@@ -1,14 +1,14 @@
 package com.hcmute.myanime.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hcmute.myanime.model.RolesEntity;
-
-import java.sql.Timestamp;
-import java.util.Set;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 public class UserDTO {
 
+    @NotEmpty(message = "Username must no be empty")
     private String username;
+    @NotEmpty(message = "Password must no be empty")
+    @Size(min = 7, message = "Password must be 7 characters length")
     private String password;
     private String fullName;
     private String email;

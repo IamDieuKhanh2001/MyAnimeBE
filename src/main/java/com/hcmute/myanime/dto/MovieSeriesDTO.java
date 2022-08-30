@@ -12,6 +12,16 @@ public class MovieSeriesDTO {
     private int totalEpisode;
     private int movieId;
 
+    public MovieSeriesDTO() {
+    }
+
+    public MovieSeriesDTO(String description, String name, int totalEpisode, int movieId) {
+        this.description = description;
+        this.name = name;
+        this.totalEpisode = totalEpisode;
+        this.movieId = movieId;
+    }
+
     public MovieSeriesDTO(int id, Timestamp createAt, Timestamp dateAired, String description, String image, String name, int totalEpisode, int movieId) {
         this.id = id;
         this.createAt = createAt;

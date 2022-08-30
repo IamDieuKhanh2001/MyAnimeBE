@@ -1,6 +1,8 @@
 package com.hcmute.myanime.auth;
 
+import com.cloudinary.api.exceptions.BadRequest;
 import com.hcmute.myanime.dto.UserDTO;
+import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.mapper.UserMapper;
 import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.repository.RolesRepository;
@@ -54,7 +56,7 @@ public class ApplicationUserService implements UserDetailsService {
     public Boolean save(UserDTO userDTO) {
         Optional<UsersEntity> usersEntityOptional = usersRepository.findByUsername(userDTO.getUsername());
         if(usersEntityOptional.isPresent()){
-            return false;
+            throw new BadRequestException("aaa");
         }
         UsersEntity newUser = UserMapper.toEntity(userDTO);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
