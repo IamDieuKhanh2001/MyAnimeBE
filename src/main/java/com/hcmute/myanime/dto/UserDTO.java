@@ -2,9 +2,11 @@ package com.hcmute.myanime.dto;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.sql.Timestamp;
 
 public class UserDTO {
 
+    private int id;
     @NotEmpty(message = "Username must no be empty")
     private String username;
     @NotEmpty(message = "Password must no be empty")
@@ -13,6 +15,23 @@ public class UserDTO {
     private String fullName;
     private String email;
     private String avatar;
+    private Timestamp createAt;
+
+    public Timestamp getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Timestamp createAt) {
+        this.createAt = createAt;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

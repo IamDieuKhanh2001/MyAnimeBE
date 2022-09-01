@@ -12,6 +12,7 @@ public class ApplicationUser  implements UserDetails {
     private String username;
     private String password;
     private Set<GrantedAuthority> authorities;
+    private Boolean enable;
 
     public ApplicationUser() {
     }
@@ -22,6 +23,7 @@ public class ApplicationUser  implements UserDetails {
         Set<GrantedAuthority> role = new HashSet<>();
         role.add(new SimpleGrantedAuthority(user.getUserRoleByUserRoleId().getName()));
         this.authorities = role;
+        this.enable = user.getEnable();
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -56,6 +58,6 @@ public class ApplicationUser  implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enable;
     }
 }

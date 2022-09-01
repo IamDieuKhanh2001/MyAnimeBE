@@ -22,6 +22,8 @@ public class UsersEntity {
     private String avatar;
     @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
+    @Column(columnDefinition = "boolean default true")
+    private Boolean enable;
     @OneToMany(mappedBy = "usersByUserId")
     @JsonBackReference
     private Collection<CommentEntity> commentsById;
@@ -39,6 +41,14 @@ public class UsersEntity {
     private Collection<FavoritesEntity> favoritesEntityCollection;
 
     public UsersEntity() {
+    }
+
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
     }
 
     public int getId() {
