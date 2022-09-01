@@ -29,6 +29,10 @@ public class MovieSeriesService {
         return movieSeriesRepository.findAll();
     }
 
+    public MovieSeriesEntity findById(int seriesId) {
+        return movieSeriesRepository.findById(seriesId).get();
+    }
+
     public boolean save(MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile)
     {
         MovieSeriesEntity movieSeriesEntity = MovieSeriesMapper.toEntity(movieSeriesDTO);

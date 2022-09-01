@@ -69,9 +69,7 @@ public class UserController {
                     new ResponseDTO(HttpStatus.OK, "Disable user id " + userId + " success")
             );
         } else {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Disable user id " + userId + " fail")
-            );
+            return ResponseEntity.badRequest().body("Disable user id " + userId + " fail");
         }
     }
 
@@ -82,9 +80,7 @@ public class UserController {
                     new ResponseDTO(HttpStatus.OK, "Enable user id " + userId + " success")
             );
         } else {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Enable user id " + userId + " fail")
-            );
+            return ResponseEntity.badRequest().body("Enable user id " + userId + " fail");
         }
     }
 

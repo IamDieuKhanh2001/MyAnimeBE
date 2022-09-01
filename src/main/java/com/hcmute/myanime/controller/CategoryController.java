@@ -20,6 +20,12 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.findAll());
     }
 
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<?> getCategoryById(@PathVariable int categoryId) {
+        return ResponseEntity.ok(categoryService.findById(categoryId));
+    }
+
+
     @PostMapping("/admin/category")
     public ResponseEntity<?> createNewCategory(@RequestBody CategoryDTO categoryDTO) {
         if(categoryService.save(categoryDTO)) {
@@ -30,9 +36,7 @@ public class CategoryController {
                     )
             );
         } else {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.NO_CONTENT, "create fail")
-            );
+            return ResponseEntity.badRequest().body("create category fail");
         }
     }
 
@@ -45,9 +49,7 @@ public class CategoryController {
                     new ResponseDTO(HttpStatus.OK, "Update category success")
             );
         } else {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Update fail")
-            );
+            return ResponseEntity.badRequest().body("Update category fail");
         }
     }
 
@@ -59,9 +61,7 @@ public class CategoryController {
                     new ResponseDTO(HttpStatus.OK, "Delete category success")
             );
         } else {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Detele Fail")
-            );
+            return ResponseEntity.badRequest().body("Delete category fail");
         }
     }
 }

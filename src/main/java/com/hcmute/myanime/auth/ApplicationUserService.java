@@ -56,7 +56,7 @@ public class ApplicationUserService implements UserDetailsService {
     public Boolean save(UserDTO userDTO) {
         Optional<UsersEntity> usersEntityOptional = usersRepository.findByUsername(userDTO.getUsername());
         if(usersEntityOptional.isPresent()){
-            throw new BadRequestException("aaa");
+            throw new BadRequestException("username not found");
         }
         UsersEntity newUser = UserMapper.toEntity(userDTO);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));

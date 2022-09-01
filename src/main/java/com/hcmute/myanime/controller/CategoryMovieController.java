@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping()
 public class CategoryMovieController {
     @Autowired
     private CategoryService categoryService;
@@ -27,7 +27,7 @@ public class CategoryMovieController {
         return ResponseEntity.ok(categoryByMovieId);
     }
 
-    @PostMapping("/category-movie/{movieId}")
+    @PostMapping("/admin/category-movie/{movieId}")
     public ResponseEntity<?> addNewCategoryMovie(@RequestBody List<Integer> categoryId,
                                             @PathVariable int movieId)
     {

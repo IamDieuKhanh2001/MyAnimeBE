@@ -17,7 +17,7 @@ public class EpisodeEntity {
     private String resource;
     private String resourcePublicId;
     @Column(columnDefinition = "Bigint default '0'")
-    private Long totalView;
+    private Long totalView = Long.valueOf(0);
     @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @Column(columnDefinition = "boolean default true")

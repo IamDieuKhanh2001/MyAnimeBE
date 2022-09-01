@@ -66,7 +66,7 @@ public class EpisodeController {
         }
         else
         {
-            throw new BadRequestException("add episode fail");
+            return ResponseEntity.badRequest().body("add episode fail");
         }
     }
 
@@ -85,9 +85,7 @@ public class EpisodeController {
                     new ResponseDTO(HttpStatus.OK, "Update episode success")
             );
         } else {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Update episode fail")
-            );
+            return ResponseEntity.badRequest().body("Update episode fail");
         }
     }
 
@@ -101,9 +99,7 @@ public class EpisodeController {
                     new ResponseDTO(HttpStatus.OK, "Delete episode success")
             );
         } else {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Detele episode Fail")
-            );
+            return ResponseEntity.badRequest().body("Delete episode fail");
         }
     }
 }

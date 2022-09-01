@@ -60,9 +60,7 @@ public class CommentController {
                     new ResponseDTO(HttpStatus.OK, "Delete comment success")
             );
         } else {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Detele comment Fail")
-            );
+            return ResponseEntity.badRequest().body("Delete comment fail");
         }
     }
 }

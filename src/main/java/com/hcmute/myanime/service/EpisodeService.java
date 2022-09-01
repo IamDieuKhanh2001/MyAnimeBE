@@ -45,7 +45,7 @@ public class EpisodeService {
     public boolean save(EpisodeDTO episodeDTO, MultipartFile sourceFile, int seriesId) {
         Optional<MovieSeriesEntity> movieSeriesEntityOptional = movieSeriesRepository.findById(seriesId);
         if(!movieSeriesEntityOptional.isPresent()) {
-            return false;
+            throw new BadRequestException("Series id not found");
         }
         MovieSeriesEntity movieSeriesEntity = movieSeriesEntityOptional.get();
         EpisodeEntity newEpisodeEntity = new EpisodeEntity();
@@ -78,7 +78,7 @@ public class EpisodeService {
     public boolean updateByEpisodeId(int episodeId, EpisodeDTO episodeDTO, MultipartFile sourceFile) {
         Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(episodeId);
         if(!episodeEntityOptional.isPresent()) {
-            return false;
+            throw new BadRequestException("Episode id not found");
         }
         EpisodeEntity updateEpisodeEntity = episodeEntityOptional.get();
         updateEpisodeEntity.setTitle(episodeDTO.getTitle());

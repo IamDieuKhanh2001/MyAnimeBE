@@ -2,11 +2,13 @@ package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.dto.CategoryDTO;
 import com.hcmute.myanime.exception.BadRequestException;
+import com.hcmute.myanime.exception.ResourceNotFoundException;
 import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.repository.CategoryRepository;
 import com.hcmute.myanime.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,5 +92,14 @@ public class CategoryService {
         } catch (Exception ex) {
             return false;
         }
+    }
+
+    public CategoryEntity findById(int categoryId) {
+        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(categoryId);
+        if(!categoryEntityOptional.isPresent()) {
+            throw new ResourceNotFoundException("not found category");
+        }
+        CategoryEntity categoryEntity = categoryEntityOptional.get();
+        return categoryEntity;
     }
 }

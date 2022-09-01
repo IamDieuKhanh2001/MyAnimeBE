@@ -54,9 +54,7 @@ public class MovieController {
                     new ResponseDTO(HttpStatus.OK, "Delete movie success")
             );
         } else {
-            return ResponseEntity.ok(
-              new ResponseDTO(HttpStatus.BAD_REQUEST, "ID not found")
-            );
+            throw new BadRequestException("ID not found");
         }
     }
 }

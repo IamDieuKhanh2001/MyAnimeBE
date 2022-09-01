@@ -59,9 +59,7 @@ public class FavoritesController {
                     new ResponseDTO(HttpStatus.OK, "Delete series success")
             );
         } else {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Detele Fail")
-            );
+            return ResponseEntity.badRequest().body("Delete series fail");
         }
     }
 }

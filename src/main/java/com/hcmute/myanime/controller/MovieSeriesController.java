@@ -58,6 +58,28 @@ public class MovieSeriesController {
         return ResponseEntity.ok(seriesDetailDTOList);
     }
 
+    @GetMapping("/movie-and-series/{seriesId}")
+    public ResponseEntity<?> movieAndSeriesBySeriesId(@PathVariable int seriesId)
+    {
+        MovieSeriesEntity movieSeriesEntity = movieSeriesService.findById(seriesId);
+        SeriesDetailDTO seriesDetailDTO = new SeriesDetailDTO(
+                movieSeriesEntity.getId(),
+                movieSeriesEntity.getMovieByMovieId().getTitle(),
+                movieSeriesEntity.getDescription(),
+                movieSeriesEntity.getMovieByMovieId().getStudioName(),
+                movieSeriesEntity.getImage(),
+                movieSeriesEntity.getDateAired(),
+                movieSeriesEntity.getMovieByMovieId().getCreateAt(),
+                movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity),
+                commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity),
+                movieSeriesEntity.getCreateAt(),
+                movieSeriesEntity.getName(),
+                movieSeriesEntity.getTotalEpisode(),
+                movieSeriesEntity.getMovieByMovieId().getId()
+        );
+        return ResponseEntity.ok(seriesDetailDTO);
+    }
+
     @PostMapping("/admin/movie-series")
     public ResponseEntity<?> storage(
             @RequestParam String model,
@@ -75,7 +97,7 @@ public class MovieSeriesController {
                     )
             );
         } else {
-            throw new BadRequestException("create fail");
+            throw new BadRequestException("create new movie series fail");
         }
     }
 
@@ -94,9 +116,7 @@ public class MovieSeriesController {
                     new ResponseDTO(HttpStatus.OK, "Update series success")
             );
         } else {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Update fail")
-            );
+            throw new BadRequestException("Update series fail");
         }
     }
 
@@ -107,9 +127,7 @@ public class MovieSeriesController {
                     new ResponseDTO(HttpStatus.OK, "Delete series success")
             );
         } else {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Detele Fail")
-            );
+            throw new BadRequestException("Delete series fail");
         }
     }
 }
