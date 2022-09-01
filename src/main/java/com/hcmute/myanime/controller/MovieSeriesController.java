@@ -3,10 +3,7 @@ package com.hcmute.myanime.controller;
 import com.cloudinary.api.exceptions.BadRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hcmute.myanime.dto.CategoryDTO;
-import com.hcmute.myanime.dto.EpisodeDTO;
-import com.hcmute.myanime.dto.MovieSeriesDTO;
-import com.hcmute.myanime.dto.ResponseDTO;
+import com.hcmute.myanime.dto.*;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.service.MovieSeriesService;
@@ -16,21 +13,49 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping()
 public class MovieSeriesController {
     @Autowired
     private MovieSeriesService movieSeriesService;
 
-    @GetMapping("/movie-series")
+    @GetMapping("/admin/movie-series")
     public ResponseEntity<?> findAll()
     {
         return ResponseEntity.ok( movieSeriesService.findAll());
     }
 
-    @PostMapping("/movie-series")
+    @GetMapping("/movie-and-series")
+    public ResponseEntity<?> movieAndSeriesFindAll()
+    {
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.findAll();
+        List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
+        movieSeriesEntityList.forEach(movieSeriesEntity -> {
+            seriesDetailDTOList.add(
+                    new SeriesDetailDTO(
+                            movieSeriesEntity.getId(),
+                            movieSeriesEntity.getMovieByMovieId().getTitle(),
+                            movieSeriesEntity.getDescription(),
+                            movieSeriesEntity.getMovieByMovieId().getStudioName(),
+                            movieSeriesEntity.getImage(),
+                            movieSeriesEntity.getDateAired(),
+                            movieSeriesEntity.getMovieByMovieId().getCreateAt(),
+                            Long.parseLong("10"),
+                            Long.parseLong("15"),
+                            movieSeriesEntity.getCreateAt(),
+                            movieSeriesEntity.getName(),
+                            movieSeriesEntity.getTotalEpisode(),
+                            movieSeriesEntity.getMovieByMovieId().getId()
+                    )
+            );
+        });
+        return ResponseEntity.ok(seriesDetailDTOList);
+    }
+
+    @PostMapping("/admin/movie-series")
     public ResponseEntity<?> storage(
             @RequestParam String model,
             @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile
@@ -52,7 +77,7 @@ public class MovieSeriesController {
     }
 
 
-    @PutMapping("/movie-series/{seriesID}")
+    @PutMapping("/admin/movie-series/{seriesID}")
     public ResponseEntity<?> updateSeriesById(
             @RequestParam String model,
             @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile,
@@ -72,7 +97,7 @@ public class MovieSeriesController {
         }
     }
 
-    @DeleteMapping("/movie-series/{seriesID}")
+    @DeleteMapping("/admin/movie-series/{seriesID}")
     public ResponseEntity<?> deleteSeriesById(@PathVariable int seriesID) {
         if(movieSeriesService.deleteById(seriesID)) {
             return ResponseEntity.ok(

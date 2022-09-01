@@ -16,8 +16,8 @@ public class EpisodeEntity {
     private String title;
     private String resource;
     private String resourcePublicId;
-//    @Column(name = "views", nullable = true, length = -1)
-//    private Integer views;
+    @Column(columnDefinition = "Bigint default '0'")
+    private Long totalView;
     @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @Column(columnDefinition = "boolean default true")
@@ -36,6 +36,14 @@ public class EpisodeEntity {
     private LogHistoriesEntity logHistoriesEntity;
 
     public EpisodeEntity() {
+    }
+
+    public Long getTotalView() {
+        return totalView;
+    }
+
+    public void setTotalView(Long totalView) {
+        this.totalView = totalView;
     }
 
     public String getResourcePublicId() {
