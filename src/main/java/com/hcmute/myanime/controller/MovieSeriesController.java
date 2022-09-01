@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hcmute.myanime.dto.*;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.MovieSeriesEntity;
+import com.hcmute.myanime.service.CommentService;
 import com.hcmute.myanime.service.MovieSeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,8 @@ import java.util.List;
 public class MovieSeriesController {
     @Autowired
     private MovieSeriesService movieSeriesService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/admin/movie-series")
     public ResponseEntity<?> findAll()
@@ -43,8 +46,8 @@ public class MovieSeriesController {
                             movieSeriesEntity.getImage(),
                             movieSeriesEntity.getDateAired(),
                             movieSeriesEntity.getMovieByMovieId().getCreateAt(),
-                            Long.parseLong("10"),
-                            Long.parseLong("15"),
+                            movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity),
+                            commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity),
                             movieSeriesEntity.getCreateAt(),
                             movieSeriesEntity.getName(),
                             movieSeriesEntity.getTotalEpisode(),

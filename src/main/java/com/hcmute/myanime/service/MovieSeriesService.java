@@ -2,6 +2,7 @@ package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.dto.MovieSeriesDTO;
 import com.hcmute.myanime.mapper.MovieSeriesMapper;
+import com.hcmute.myanime.model.EpisodeEntity;
 import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.repository.MovieRepository;
@@ -86,11 +87,28 @@ public class MovieSeriesService {
     }
 
     public boolean deleteById(int seriesID) {
+        Optional<MovieSeriesEntity> movieSeriesEntityOptional = movieSeriesRepository.findById(seriesID);
+        if(!movieSeriesEntityOptional.isPresent()) {
+            return false;
+        }
+        MovieSeriesEntity movieSeriesEntity = movieSeriesEntityOptional.get();
+        for (EpisodeEntity episodeEntity : movieSeriesEntity.getEpisodesById()) {
+            episodeEntity.setMovieSeriesBySeriesId(null);
+        }
         try {
             movieSeriesRepository.deleteById(seriesID);
             return true;
         } catch (Exception ex) {
             return false;
         }
+    }
+
+
+    public Long totalViewByMovieSeriesEntity(MovieSeriesEntity movieSeriesEntity) {
+        Long totalView = Long.valueOf(0);
+        for (EpisodeEntity episodeEntity : movieSeriesEntity.getEpisodesById()) {
+            totalView += episodeEntity.getTotalView();
+        }
+        return totalView;
     }
 }

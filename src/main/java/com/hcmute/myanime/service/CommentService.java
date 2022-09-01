@@ -2,9 +2,9 @@ package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.dto.CommentUserDTO;
-import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.CommentEntity;
 import com.hcmute.myanime.model.EpisodeEntity;
+import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.repository.CommentsRepository;
 import com.hcmute.myanime.repository.EpisodeRepository;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class CommentService {
@@ -38,7 +39,6 @@ public class CommentService {
         Optional<UsersEntity> userLoggedIn = usersRepository.findByUsername(usernameLoggedIn);
         Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(commentUserDTO.getEpisodeId());
         if(!episodeEntityOptional.isPresent() || !userLoggedIn.isPresent()) {
-            System.out.println("aa");
             return false;
         }
         CommentEntity commentEntity = new CommentEntity();
@@ -60,5 +60,17 @@ public class CommentService {
         } catch (Exception ex) {
             return false;
         }
+    }
+
+    public Long totalCommentByEpisodeEntity(EpisodeEntity episodeEntity) {
+        return commentsRepository.countByEpisodeByEpisodeId(episodeEntity);
+    }
+
+    public Long totalCommentByMovieSeriesEntity(MovieSeriesEntity movieSeriesEntity) {
+        Long totalComment = Long.valueOf(0);
+        for (EpisodeEntity item : movieSeriesEntity.getEpisodesById()) {
+            totalComment += totalCommentByEpisodeEntity(item);
+        }
+        return totalComment;
     }
 }
