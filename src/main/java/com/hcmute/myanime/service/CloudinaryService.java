@@ -21,8 +21,10 @@ public class CloudinaryService {
         this.cloudinary = cloudinary;
     }
 
-    public Boolean deleteFile(String directory) {
-        Map paramsOption = ObjectUtils.asMap("resource_type", "image", "invalidate" , true);
+    public Boolean deleteFileVideo(String directory) {
+        Map paramsOption = ObjectUtils.asMap(
+                "resource_type", "video",
+                "invalidate" , true);
         try {
             cloudinary.uploader().destroy(directory, paramsOption);
             return true;

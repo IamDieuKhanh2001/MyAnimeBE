@@ -6,6 +6,7 @@ import com.hcmute.myanime.dto.EpisodeDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.EpisodeEntity;
+import com.hcmute.myanime.service.CloudinaryService;
 import com.hcmute.myanime.service.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -75,6 +76,22 @@ public class EpisodeController {
         } else {
             return ResponseEntity.ok(
                     new ResponseDTO(HttpStatus.BAD_REQUEST, "Update episode fail")
+            );
+        }
+    }
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
+
+    @DeleteMapping("/admin/episode/{episodeId}")
+    public ResponseEntity<?> deleteEpisodeById(@PathVariable int episodeId) {
+        if(episodeService.deleteById(episodeId)) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK, "Delete episode success")
+            );
+        } else {
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Detele episode Fail")
             );
         }
     }

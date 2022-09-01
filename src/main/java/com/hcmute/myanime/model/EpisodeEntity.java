@@ -15,10 +15,13 @@ public class EpisodeEntity {
     private int id;
     private String title;
     private String resource;
+    private String resourcePublicId;
 //    @Column(name = "views", nullable = true, length = -1)
 //    private Integer views;
     @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
+    @Column(columnDefinition = "boolean default true")
+    private Boolean enable = true;
     @OneToMany(mappedBy = "episodeByEpisodeId")
     @JsonManagedReference
     private Collection<CommentEntity> commentsById;
@@ -33,6 +36,30 @@ public class EpisodeEntity {
     private LogHistoriesEntity logHistoriesEntity;
 
     public EpisodeEntity() {
+    }
+
+    public String getResourcePublicId() {
+        return resourcePublicId;
+    }
+
+    public void setResourcePublicId(String resourcePublicId) {
+        this.resourcePublicId = resourcePublicId;
+    }
+
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
+    }
+
+    public LogHistoriesEntity getLogHistoriesEntity() {
+        return logHistoriesEntity;
+    }
+
+    public void setLogHistoriesEntity(LogHistoriesEntity logHistoriesEntity) {
+        this.logHistoriesEntity = logHistoriesEntity;
     }
 
     public int getId() {

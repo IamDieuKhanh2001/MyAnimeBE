@@ -48,6 +48,8 @@ public class EpisodeService {
             String urlSource = uploadSourceFileToCloudinary(sourceFile, savedEntity.getId());
             if(!urlSource.equals("-1")) {
                 savedEntity.setResource(urlSource);
+                String resourcePublicId = "MyAnimeProject_TLCN" + "/" + "episode" + "/" + savedEntity.getId();
+                savedEntity.setResourcePublicId(resourcePublicId);
                 episodeRepository.save(savedEntity);
             }
             return true;
@@ -76,6 +78,8 @@ public class EpisodeService {
             String urlSource = uploadSourceFileToCloudinary(sourceFile, updateEpisodeEntity.getId());
             if(!urlSource.equals("-1")) {
                 updateEpisodeEntity.setResource(urlSource);
+                String resourcePublicId = "MyAnimeProject_TLCN" + "/" + "episode" + "/" + updateEpisodeEntity.getId();
+                updateEpisodeEntity.setResourcePublicId(resourcePublicId);
                 episodeRepository.save(updateEpisodeEntity);
                 return true;
             }
@@ -83,5 +87,22 @@ public class EpisodeService {
             return false;
         }
         return false;
+    }
+
+    public boolean deleteById(int episodeId) {
+        Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(episodeId);
+        if(!episodeEntityOptional.isPresent()) {
+            return false;
+        }
+        EpisodeEntity episodeEntity = episodeEntityOptional.get();
+        if(episodeEntity.getResourcePublicId() != null) {
+            cloudinaryService.deleteFileVideo(episodeEntity.getResourcePublicId());
+        }
+        try {
+            episodeRepository.deleteById(episodeId);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 }
