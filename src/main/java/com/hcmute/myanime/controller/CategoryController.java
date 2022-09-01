@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping()
 public class CategoryController {
 
     @Autowired
@@ -20,7 +20,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.findAll());
     }
 
-    @PostMapping("/category")
+    @PostMapping("/admin/category")
     public ResponseEntity<?> createNewCategory(@RequestBody CategoryDTO categoryDTO) {
         if(categoryService.save(categoryDTO)) {
             return ResponseEntity.ok(
@@ -36,7 +36,7 @@ public class CategoryController {
         }
     }
 
-    @PutMapping("/category/{categoryId}")
+    @PutMapping("/admin/category/{categoryId}")
     public ResponseEntity<?> updateCategoryById(@RequestBody CategoryDTO categoryDTO,
                                                 @PathVariable int categoryId) {
 
@@ -52,7 +52,7 @@ public class CategoryController {
     }
 
 
-    @DeleteMapping("/category/{categoryId}")
+    @DeleteMapping("/admin/category/{categoryId}")
     public ResponseEntity<?> deleteCategoryById(@PathVariable int categoryId) {
         if(categoryService.deleteById(categoryId)) {
             return ResponseEntity.ok(

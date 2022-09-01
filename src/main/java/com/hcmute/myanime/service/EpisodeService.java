@@ -33,6 +33,14 @@ public class EpisodeService {
         return episodeEntityList;
     }
 
+    public EpisodeEntity findById(int episodeId) {
+        Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(episodeId);
+        if(!episodeEntityOptional.isPresent()) {
+            throw new BadRequestException("Episode not found");
+        }
+        return episodeEntityOptional.get();
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public boolean save(EpisodeDTO episodeDTO, MultipartFile sourceFile, int seriesId) {
         Optional<MovieSeriesEntity> movieSeriesEntityOptional = movieSeriesRepository.findById(seriesId);

@@ -23,7 +23,7 @@ public class EpisodeController {
     @Autowired
     private EpisodeService episodeService;
 
-    @GetMapping(value = "/all/episode/series/{seriesId}")
+    @GetMapping(value = "/episode/series/{seriesId}")
     public ResponseEntity<?> getEpisodeOfSeries(@PathVariable int seriesId){
         List<EpisodeEntity> listEpisodeBySeriesId = episodeService.findBySeriesId(seriesId);
         List<EpisodeDTO> episodeDTOList = new ArrayList<>();
@@ -36,6 +36,17 @@ public class EpisodeController {
             episodeDTOList.add(episodeDTO);
         });
         return ResponseEntity.ok(episodeDTOList);
+    }
+
+    @GetMapping(value = "/episode/{episodeId}")
+    public ResponseEntity<?> getEpisodeById(@PathVariable int episodeId){
+        EpisodeEntity episodeEntity = episodeService.findById(episodeId);
+        EpisodeDTO episodeDTO = new EpisodeDTO(
+                episodeEntity.getId(),
+                episodeEntity.getCreateAt(),
+                episodeEntity.getResource(),
+                episodeEntity.getTitle());
+        return ResponseEntity.ok(episodeDTO);
     }
 
     @PostMapping("/admin/episode/series/{seriesId}")
