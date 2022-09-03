@@ -2,6 +2,7 @@ package com.hcmute.myanime.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -13,7 +14,7 @@ public class CommentEntity {
     @Id
     private int id;
     private String content;
-    @Column(columnDefinition = "timestamp default current_timestamp")
+    @CreationTimestamp
     private Timestamp createAt;
     @ManyToOne
     @JoinColumn(name = "episode_id", referencedColumnName = "id", nullable = false)

@@ -2,6 +2,7 @@ package com.hcmute.myanime.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -18,7 +19,7 @@ public class MovieSeriesEntity {
     private Timestamp dateAired;
     private int totalEpisode;
     private String image;
-    @Column(columnDefinition = "timestamp default current_timestamp")
+    @CreationTimestamp
     private Timestamp createAt;
     @OneToMany(mappedBy = "movieSeriesBySeriesId")
     @JsonManagedReference

@@ -1,6 +1,7 @@
 package com.hcmute.myanime.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -17,7 +18,7 @@ public class MovieEntity {
     private int id;
     private String title;
     private String studioName;
-    @Column(columnDefinition = "timestamp default current_timestamp")
+    @CreationTimestamp
     private Timestamp createAt;
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)

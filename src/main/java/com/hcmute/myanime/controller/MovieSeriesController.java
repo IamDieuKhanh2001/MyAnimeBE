@@ -1,9 +1,7 @@
 package com.hcmute.myanime.controller;
 
-import com.cloudinary.api.exceptions.BadRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.dto.*;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.MovieSeriesEntity;
@@ -26,8 +24,7 @@ public class MovieSeriesController {
     private MovieSeriesService movieSeriesService;
     @Autowired
     private CommentService commentService;
-    @Autowired
-    private ApplicationUserService applicationUserService;
+
 
     @GetMapping("/admin/movie-series")
     public ResponseEntity<?> findAll()
@@ -104,9 +101,6 @@ public class MovieSeriesController {
             @RequestParam String model,
             @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile
     ) throws JsonProcessingException {
-
-        String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
-        System.out.println(usernameLoggedIn);
 
         ObjectMapper mapper = new ObjectMapper();
         MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);

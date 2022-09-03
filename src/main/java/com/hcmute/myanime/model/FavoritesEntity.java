@@ -1,6 +1,7 @@
 package com.hcmute.myanime.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -12,7 +13,7 @@ public class FavoritesEntity {
     @Id
     private int id;
 
-    @Column(columnDefinition = "timestamp default current_timestamp")
+    @CreationTimestamp
     private Timestamp createAt;
 
     @OneToOne(cascade = CascadeType.ALL)

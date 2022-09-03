@@ -48,7 +48,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/admin/**", "/test/api/adminRole").hasRole(ADMIN.name()) //Các API cần đăng nhập bằng tk admin
                     .antMatchers().hasRole(USER.name()) //Các API cần đăng nhập bằng tk user
                 .anyRequest()
-                    .authenticated() //Các API còn lại cần phải đăng nhập
+                    .authenticated() //Other API need authorized
                 .and()
                     .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 .and()

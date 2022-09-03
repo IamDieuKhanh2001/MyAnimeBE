@@ -2,6 +2,7 @@ package com.hcmute.myanime.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -20,7 +21,7 @@ public class UsersEntity {
     private String password;
     private String email;
     private String avatar;
-    @Column(columnDefinition = "timestamp default current_timestamp")
+    @CreationTimestamp
     private Timestamp createAt;
     @Column(columnDefinition = "boolean default true")
     private Boolean enable = true;

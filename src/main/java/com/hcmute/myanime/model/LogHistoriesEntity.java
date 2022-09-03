@@ -2,6 +2,7 @@ package com.hcmute.myanime.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -16,7 +17,7 @@ public class LogHistoriesEntity {
     private int id;
     private Long lastSecond;
 
-    @Column(columnDefinition = "timestamp default current_timestamp")
+    @CreationTimestamp
     private Timestamp createAt;
 
     @OneToOne(cascade = CascadeType.ALL)
