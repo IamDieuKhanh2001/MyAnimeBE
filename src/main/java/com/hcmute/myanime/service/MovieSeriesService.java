@@ -9,12 +9,12 @@ import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.repository.MovieRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,6 +120,16 @@ public class MovieSeriesService {
         return totalView;
     }
 
+    public Long countSeries(String keywordSearch) {
+        Long totalSeries;
+        if(keywordSearch != null) {
+            totalSeries = movieSeriesRepository.countByNameContaining(keywordSearch);
+        } else {
+            totalSeries = movieSeriesRepository.count();
+        }
+        return totalSeries;
+    }
+
     private Boolean isNumber(String s) {
         try {
             Long.parseLong(s);
@@ -133,14 +143,20 @@ public class MovieSeriesService {
         return page != null && !page.equals("") && isNumber(page) && Long.parseLong(page) >= 0;
     }
 
-    public List<MovieSeriesEntity> getByPageAndLimit(String page, String limit) {
+    public List<MovieSeriesEntity> getByPageAndLimit(String page, String limit, String keywordSearch) {
         limit = (limit == null || limit.equals("")
                 || !isNumber(limit) || Long.parseLong(limit) < 0) ? GlobalVariable.DEFAULT_LIMIT : limit;
 
         page = (!isValidPage(page)) ? GlobalVariable.DEFAULT_PAGE : page;
         Pageable pageable = PageRequest.of((Integer.parseInt(page) - 1), Integer.parseInt(limit));
 
-        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesRepository.findAll(pageable).stream().toList();
+        List<MovieSeriesEntity> movieSeriesEntityList = new ArrayList<>();
+        if(keywordSearch != null) {
+            movieSeriesEntityList = movieSeriesRepository.findByNameContaining(keywordSearch,pageable);
+        } else{
+            movieSeriesEntityList = movieSeriesRepository.findAll(pageable).stream().toList();
+        }
+
         return movieSeriesEntityList;
     }
 }

@@ -32,13 +32,21 @@ public class MovieSeriesController {
         return ResponseEntity.ok( movieSeriesService.findAll());
     }
 
+    @GetMapping("/movie-and-series/count")
+    public ResponseEntity<?> countSeries(@RequestParam Map<String, String> requestParams)
+    {
+        String keywordSearch = requestParams.get("keyword");
+        return ResponseEntity.ok(new TotalSeriesDTO(movieSeriesService.countSeries(keywordSearch)));
+    }
+
     //Movie va series co phan trang
     @GetMapping("/movie-and-series")
     public ResponseEntity<?> movieAndSeriesFindAll(@RequestParam Map<String, String> requestParams)
     {
         String page = requestParams.get("page");
         String limit = requestParams.get("limit");
-        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.getByPageAndLimit(page, limit);
+        String keywordSearch = requestParams.get("keyword");
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.getByPageAndLimit(page, limit, keywordSearch);
         List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
             seriesDetailDTOList.add(
