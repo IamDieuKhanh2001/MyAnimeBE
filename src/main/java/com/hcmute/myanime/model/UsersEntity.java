@@ -23,7 +23,7 @@ public class UsersEntity {
     @Column(columnDefinition = "timestamp default current_timestamp")
     private Timestamp createAt;
     @Column(columnDefinition = "boolean default true")
-    private Boolean enable;
+    private Boolean enable = true;
     @OneToMany(mappedBy = "usersByUserId")
     @JsonBackReference
     private Collection<CommentEntity> commentsById;
