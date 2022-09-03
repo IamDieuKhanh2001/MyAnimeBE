@@ -8,4 +8,6 @@ public class CategoryMovieEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int id;
+    private int movie_id;
+    private int category_id;
 }
