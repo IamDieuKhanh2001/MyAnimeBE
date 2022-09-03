@@ -1,5 +1,6 @@
 package com.hcmute.myanime.service;
 
+import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.MovieSeriesDTO;
 import com.hcmute.myanime.mapper.MovieSeriesMapper;
 import com.hcmute.myanime.model.EpisodeEntity;
@@ -8,6 +9,9 @@ import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.repository.MovieRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -114,5 +118,29 @@ public class MovieSeriesService {
             totalView += episodeEntity.getTotalView();
         }
         return totalView;
+    }
+
+    private Boolean isNumber(String s) {
+        try {
+            Long.parseLong(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private Boolean isValidPage(String page) {
+        return page != null && !page.equals("") && isNumber(page) && Long.parseLong(page) >= 0;
+    }
+
+    public List<MovieSeriesEntity> getByPageAndLimit(String page, String limit) {
+        limit = (limit == null || limit.equals("")
+                || !isNumber(limit) || Long.parseLong(limit) < 0) ? GlobalVariable.DEFAULT_LIMIT : limit;
+
+        page = (!isValidPage(page)) ? GlobalVariable.DEFAULT_PAGE : page;
+        Pageable pageable = PageRequest.of((Integer.parseInt(page) - 1), Integer.parseInt(limit));
+
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesRepository.findAll(pageable).stream().toList();
+        return movieSeriesEntityList;
     }
 }

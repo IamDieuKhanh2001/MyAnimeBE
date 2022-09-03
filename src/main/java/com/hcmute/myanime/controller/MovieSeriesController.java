@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping()
@@ -31,10 +32,13 @@ public class MovieSeriesController {
         return ResponseEntity.ok( movieSeriesService.findAll());
     }
 
+    //Movie va series co phan trang
     @GetMapping("/movie-and-series")
-    public ResponseEntity<?> movieAndSeriesFindAll()
+    public ResponseEntity<?> movieAndSeriesFindAll(@RequestParam Map<String, String> requestParams)
     {
-        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.findAll();
+        String page = requestParams.get("page");
+        String limit = requestParams.get("limit");
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.getByPageAndLimit(page, limit);
         List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
             seriesDetailDTOList.add(
@@ -50,6 +54,7 @@ public class MovieSeriesController {
                             commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity),
                             movieSeriesEntity.getCreateAt(),
                             movieSeriesEntity.getName(),
+                            movieSeriesEntity.getEpisodesById().size(),
                             movieSeriesEntity.getTotalEpisode(),
                             movieSeriesEntity.getMovieByMovieId().getId()
                     )
@@ -58,6 +63,7 @@ public class MovieSeriesController {
         return ResponseEntity.ok(seriesDetailDTOList);
     }
 
+    //Movie va series lay id
     @GetMapping("/movie-and-series/{seriesId}")
     public ResponseEntity<?> movieAndSeriesBySeriesId(@PathVariable int seriesId)
     {
@@ -74,6 +80,7 @@ public class MovieSeriesController {
                 commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity),
                 movieSeriesEntity.getCreateAt(),
                 movieSeriesEntity.getName(),
+                movieSeriesEntity.getEpisodesById().size(),
                 movieSeriesEntity.getTotalEpisode(),
                 movieSeriesEntity.getMovieByMovieId().getId()
         );

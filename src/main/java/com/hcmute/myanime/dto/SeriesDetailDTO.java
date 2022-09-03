@@ -14,10 +14,11 @@ public class SeriesDetailDTO {
     private Long commentTotal;
     private Timestamp seriesCreateAt;
     private String seriesName;
+    private int currentNumberEpisode;
     private int totalEpisode;
     private int movieId;
 
-    public SeriesDetailDTO(int id, String movieTitle, String description, String studioName, String image, Timestamp dateAired, Timestamp movieCreateAt, Long views, Long commentTotal, Timestamp seriesCreateAt, String seriesName, int totalEpisode, int movieId) {
+    public SeriesDetailDTO(int id, String movieTitle, String description, String studioName, String image, Timestamp dateAired, Timestamp movieCreateAt, Long views, Long commentTotal, Timestamp seriesCreateAt, String seriesName, int currentNumberEpisode, int totalEpisode, int movieId) {
         this.id = id;
         this.movieTitle = movieTitle;
         this.description = description;
@@ -29,9 +30,19 @@ public class SeriesDetailDTO {
         this.commentTotal = commentTotal;
         this.seriesCreateAt = seriesCreateAt;
         this.seriesName = seriesName;
+        this.currentNumberEpisode = currentNumberEpisode;
         this.totalEpisode = totalEpisode;
         this.movieId = movieId;
     }
+
+    public int getCurrentNumberEpisode() {
+        return currentNumberEpisode;
+    }
+
+    public void setCurrentNumberEpisode(int currentNumberEpisode) {
+        this.currentNumberEpisode = currentNumberEpisode;
+    }
+
     public int getId() {
         return id;
     }
