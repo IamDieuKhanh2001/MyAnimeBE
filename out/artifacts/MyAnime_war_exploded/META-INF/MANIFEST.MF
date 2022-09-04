@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Created-By: IntelliJ IDEA
+Built-By: sizuk
+Build-Jdk: Oracle OpenJDK version 18.0.2
+Implementation-Title: MyAnime
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.hcmute
+Main-Class: ${start-class}
+
