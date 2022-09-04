@@ -65,7 +65,8 @@ public class MovieSeriesController {
                             movieSeriesEntity.getName(),
                             movieSeriesEntity.getEpisodesById().size(),
                             movieSeriesEntity.getTotalEpisode(),
-                            movieSeriesEntity.getMovieByMovieId().getId()
+                            movieSeriesEntity.getMovieByMovieId().getId(),
+                            movieSeriesEntity.getMovieByMovieId().getCategoryEntityCollection().stream().toList()
                     )
             );
         });
@@ -91,7 +92,8 @@ public class MovieSeriesController {
                 movieSeriesEntity.getName(),
                 movieSeriesEntity.getEpisodesById().size(),
                 movieSeriesEntity.getTotalEpisode(),
-                movieSeriesEntity.getMovieByMovieId().getId()
+                movieSeriesEntity.getMovieByMovieId().getId(),
+                movieSeriesEntity.getMovieByMovieId().getCategoryEntityCollection().stream().toList()
         );
         return ResponseEntity.ok(seriesDetailDTO);
     }
