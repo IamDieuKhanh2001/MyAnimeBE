@@ -1,6 +1,9 @@
 package com.hcmute.myanime.dto;
 
+import com.hcmute.myanime.model.CategoryEntity;
+
 import java.sql.Timestamp;
+import java.util.List;
 
 public class SeriesDetailDTO {
     private int id;
@@ -17,6 +20,15 @@ public class SeriesDetailDTO {
     private int currentNumberEpisode;
     private int totalEpisode;
     private int movieId;
+    private List<CategoryEntity> categoryList;
+
+    public List<CategoryEntity> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<CategoryEntity> categoryList) {
+        this.categoryList = categoryList;
+    }
 
     public SeriesDetailDTO(int id, String movieTitle, String description, String studioName, String image, Timestamp dateAired, Timestamp movieCreateAt, Long views, Long commentTotal, Timestamp seriesCreateAt, String seriesName, int currentNumberEpisode, int totalEpisode, int movieId) {
         this.id = id;
@@ -33,6 +45,24 @@ public class SeriesDetailDTO {
         this.currentNumberEpisode = currentNumberEpisode;
         this.totalEpisode = totalEpisode;
         this.movieId = movieId;
+    }
+
+    public SeriesDetailDTO(int id, String movieTitle, String description, String studioName, String image, Timestamp dateAired, Timestamp movieCreateAt, Long views, Long commentTotal, Timestamp seriesCreateAt, String seriesName, int currentNumberEpisode, int totalEpisode, int movieId, List<CategoryEntity> categoryList) {
+        this.id = id;
+        this.movieTitle = movieTitle;
+        this.description = description;
+        this.studioName = studioName;
+        this.image = image;
+        this.dateAired = dateAired;
+        this.movieCreateAt = movieCreateAt;
+        this.views = views;
+        this.commentTotal = commentTotal;
+        this.seriesCreateAt = seriesCreateAt;
+        this.seriesName = seriesName;
+        this.currentNumberEpisode = currentNumberEpisode;
+        this.totalEpisode = totalEpisode;
+        this.movieId = movieId;
+        this.categoryList = categoryList;
     }
 
     public int getCurrentNumberEpisode() {
