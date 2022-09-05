@@ -1,6 +1,7 @@
 package com.hcmute.myanime.auth;
 
 import com.cloudinary.api.exceptions.BadRequest;
+import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.UserDTO;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.mapper.UserMapper;
@@ -62,6 +63,7 @@ public class ApplicationUserService implements UserDetailsService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.setUserRoleByUserRoleId(rolesRepository.findByName("ROLE_" + ApplicationUserRole.USER.name()).get());
         newUser.setCreateAt(new Timestamp(System.currentTimeMillis()));
+        newUser.setFullName("Guest#" + GlobalVariable.GetOTP());
         try {
             usersRepository.save(newUser);
         } catch (Exception exception) {
