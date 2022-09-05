@@ -98,6 +98,36 @@ public class MovieSeriesController {
         return ResponseEntity.ok(seriesDetailDTO);
     }
 
+    //Movie va series lay id
+    @GetMapping("/movie-and-series/get-all-series/{seriesId}")
+    public ResponseEntity<?> getAllMovieAndSeriesBySeriesId(@PathVariable int seriesId)
+    {
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.findAllMovieAndSeriesById(seriesId);
+        List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
+        movieSeriesEntityList.forEach(movieSeriesEntity -> {
+            seriesDetailDTOList.add(
+                    new SeriesDetailDTO(
+                            movieSeriesEntity.getId(),
+                            movieSeriesEntity.getMovieByMovieId().getTitle(),
+                            movieSeriesEntity.getDescription(),
+                            movieSeriesEntity.getMovieByMovieId().getStudioName(),
+                            movieSeriesEntity.getImage(),
+                            movieSeriesEntity.getDateAired(),
+                            movieSeriesEntity.getMovieByMovieId().getCreateAt(),
+                            movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity),
+                            commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity),
+                            movieSeriesEntity.getCreateAt(),
+                            movieSeriesEntity.getName(),
+                            movieSeriesEntity.getEpisodesById().size(),
+                            movieSeriesEntity.getTotalEpisode(),
+                            movieSeriesEntity.getMovieByMovieId().getId(),
+                            movieSeriesEntity.getMovieByMovieId().getCategoryEntityCollection().stream().toList()
+                    )
+            );
+        });
+        return ResponseEntity.ok(seriesDetailDTOList);
+    }
+
     @PostMapping("/admin/movie-series")
     public ResponseEntity<?> storage(
             @RequestParam String model,

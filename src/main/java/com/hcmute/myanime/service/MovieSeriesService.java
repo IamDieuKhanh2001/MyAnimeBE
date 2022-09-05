@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,12 @@ public class MovieSeriesService {
 
     public MovieSeriesEntity findById(int seriesId) {
         return movieSeriesRepository.findById(seriesId).get();
+    }
+
+    public List<MovieSeriesEntity> findAllMovieAndSeriesById(int seriesId) {
+        MovieSeriesEntity movieSeriesEntity = movieSeriesRepository.findById(seriesId).get();
+        List<MovieSeriesEntity> movieSeriesByMovieIdList = movieSeriesEntity.getMovieByMovieId().getMovieSeriesById().stream().toList();
+        return movieSeriesByMovieIdList;
     }
 
     public boolean save(MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile)
