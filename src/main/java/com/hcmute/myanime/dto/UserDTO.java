@@ -1,5 +1,7 @@
 package com.hcmute.myanime.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
@@ -15,6 +17,7 @@ public class UserDTO {
     private String fullName;
     private String email;
     private String avatar;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createAt;
 
     public Timestamp getCreateAt() {

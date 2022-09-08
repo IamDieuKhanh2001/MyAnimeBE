@@ -1,11 +1,13 @@
 package com.hcmute.myanime.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 
 public class EpisodeDTO {
     private int id;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createAt;
     private String resource;
     private String title;

@@ -1,5 +1,7 @@
 package com.hcmute.myanime.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.sql.Timestamp;
 
 public class MovieDTO {
@@ -7,6 +9,7 @@ public class MovieDTO {
     private String title;
 
     private String studioName;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createAt;
 
     public int getId() {

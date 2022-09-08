@@ -1,10 +1,13 @@
 package com.hcmute.myanime.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.sql.Timestamp;
 
 public class LogHistoryDTO {
     private int id;
     private Long lastSecond;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createAt;
     private int episode_id;
     private int series_id;
