@@ -16,11 +16,11 @@ public class CommentEntity {
     private String content;
     @CreationTimestamp
     private Timestamp createAt;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "episode_id", referencedColumnName = "id", nullable = false)
     @JsonBackReference
     private EpisodeEntity episodeByEpisodeId;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonBackReference
     private UsersEntity usersByUserId;

@@ -1,10 +1,13 @@
 package com.hcmute.myanime.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.sql.Timestamp;
 
 public class CommentUserDTO {
     private int id;
     private String content;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createAt;
     private int episodeId;
     private String username;

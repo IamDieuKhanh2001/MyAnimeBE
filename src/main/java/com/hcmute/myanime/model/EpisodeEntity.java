@@ -23,16 +23,16 @@ public class EpisodeEntity {
     private Timestamp createAt;
     @Column(columnDefinition = "boolean default true")
     private Boolean enable = true;
-    @OneToMany(mappedBy = "episodeByEpisodeId")
+    @OneToMany(mappedBy = "episodeByEpisodeId", fetch = FetchType.LAZY)
     @JsonManagedReference
     private Collection<CommentEntity> commentsById;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_id", referencedColumnName = "id")
     @JsonBackReference
     private MovieSeriesEntity movieSeriesBySeriesId;
 
-    @OneToOne(mappedBy = "episodeEntity")
+    @OneToOne(mappedBy = "episodeEntity", fetch = FetchType.LAZY)
     @JsonManagedReference
     private LogHistoriesEntity logHistoriesEntity;
 

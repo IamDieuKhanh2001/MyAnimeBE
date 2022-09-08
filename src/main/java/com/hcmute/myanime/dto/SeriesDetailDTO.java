@@ -1,5 +1,6 @@
 package com.hcmute.myanime.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hcmute.myanime.model.CategoryEntity;
 
 import java.sql.Timestamp;
@@ -12,9 +13,11 @@ public class SeriesDetailDTO {
     private String studioName;
     private String image;
     private Timestamp dateAired;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp movieCreateAt;
     private Long views;
     private Long commentTotal;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp seriesCreateAt;
     private String seriesName;
     private int currentNumberEpisode;

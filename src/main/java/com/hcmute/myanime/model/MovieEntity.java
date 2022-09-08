@@ -27,7 +27,7 @@ public class MovieEntity {
             inverseJoinColumns = @JoinColumn(name = "category_id")) //Key is link with table Roles
     @JsonManagedReference
     private Collection<CategoryEntity> categoryEntityCollection;
-    @OneToMany(mappedBy = "movieByMovieId")
+    @OneToMany(mappedBy = "movieByMovieId", fetch = FetchType.LAZY)
     @JsonManagedReference
     private Collection<MovieSeriesEntity> movieSeriesById;
 

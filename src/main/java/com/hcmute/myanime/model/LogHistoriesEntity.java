@@ -20,13 +20,69 @@ public class LogHistoriesEntity {
     @CreationTimestamp
     private Timestamp createAt;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "episode_id", referencedColumnName = "id")
     @JsonBackReference
     private EpisodeEntity episodeEntity; // mappedBy in table
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "series_id", referencedColumnName = "id")
+    @JsonBackReference
+    private MovieSeriesEntity movieSeriesEntity; // mappedBy in table
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id", nullable = false)
     @JsonBackReference
     private UsersEntity user;
+
+    public LogHistoriesEntity() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Long getLastSecond() {
+        return lastSecond;
+    }
+
+    public void setLastSecond(Long lastSecond) {
+        this.lastSecond = lastSecond;
+    }
+
+    public Timestamp getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Timestamp createAt) {
+        this.createAt = createAt;
+    }
+
+    public EpisodeEntity getEpisodeEntity() {
+        return episodeEntity;
+    }
+
+    public void setEpisodeEntity(EpisodeEntity episodeEntity) {
+        this.episodeEntity = episodeEntity;
+    }
+
+    public UsersEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UsersEntity user) {
+        this.user = user;
+    }
+
+    public MovieSeriesEntity getMovieSeriesEntity() {
+        return movieSeriesEntity;
+    }
+
+    public void setMovieSeriesEntity(MovieSeriesEntity movieSeriesEntity) {
+        this.movieSeriesEntity = movieSeriesEntity;
+    }
 }

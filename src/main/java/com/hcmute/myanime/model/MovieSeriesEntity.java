@@ -21,14 +21,14 @@ public class MovieSeriesEntity {
     private String image;
     @CreationTimestamp
     private Timestamp createAt;
-    @OneToMany(mappedBy = "movieSeriesBySeriesId")
+    @OneToMany(mappedBy = "movieSeriesBySeriesId", fetch = FetchType.LAZY)
     @JsonManagedReference
     private Collection<EpisodeEntity> episodesById;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movie_id", referencedColumnName = "id")
     @JsonBackReference
     private MovieEntity movieByMovieId;
-    @OneToOne(mappedBy = "movieSeries")
+    @OneToOne(mappedBy = "movieSeries", fetch = FetchType.LAZY)
     @JsonManagedReference
     private FavoritesEntity favoritesEntity;
 
