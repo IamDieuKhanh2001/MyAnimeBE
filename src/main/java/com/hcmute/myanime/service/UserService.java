@@ -2,6 +2,7 @@ package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.dto.UserDTO;
+import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.repository.UsersRepository;
@@ -52,7 +53,11 @@ public class UserService {
 
     public UsersEntity findUserLogging() {
         String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
-        UsersEntity usersEntity = usersRepository.findByUsername(usernameLoggedIn).get();
+        Optional<UsersEntity> userByUsername = usersRepository.findByUsername(usernameLoggedIn);
+        if(!userByUsername.isPresent()) {
+            throw new BadRequestException("User not found");
+        }
+        UsersEntity usersEntity = userByUsername.get();
         return usersEntity;
     }
 

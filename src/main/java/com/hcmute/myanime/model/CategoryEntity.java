@@ -17,7 +17,7 @@ public class CategoryEntity {
     private String name;
     @CreationTimestamp
     private Timestamp createAt;
-    @ManyToMany(mappedBy = "categoryEntityCollection")
+    @ManyToMany(mappedBy = "categoryEntityCollection", fetch = FetchType.LAZY)
     @JsonBackReference
     private Collection<MovieEntity> movieEntityCollection;
 

@@ -25,19 +25,19 @@ public class UsersEntity {
     private Timestamp createAt;
     @Column(columnDefinition = "boolean default true")
     private Boolean enable = true;
-    @OneToMany(mappedBy = "usersByUserId")
+    @OneToMany(mappedBy = "usersByUserId", fetch = FetchType.LAZY)
     @JsonBackReference
     private Collection<CommentEntity> commentsById;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_role_id", referencedColumnName = "id", nullable = false)
     @JsonBackReference
     private RolesEntity userRoleByUserRoleId;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonManagedReference
     private Collection<LogHistoriesEntity> logHistoriesEntityCollection;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonManagedReference
     private Collection<FavoritesEntity> favoritesEntityCollection;
 

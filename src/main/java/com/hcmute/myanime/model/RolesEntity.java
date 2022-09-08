@@ -18,7 +18,7 @@ public class RolesEntity {
     private String permission;
     @CreationTimestamp
     private Timestamp createAt;
-    @OneToMany(mappedBy = "userRoleByUserRoleId")
+    @OneToMany(mappedBy = "userRoleByUserRoleId", fetch = FetchType.LAZY)
     @JsonManagedReference
     private Collection<UsersEntity> usersById;
 
