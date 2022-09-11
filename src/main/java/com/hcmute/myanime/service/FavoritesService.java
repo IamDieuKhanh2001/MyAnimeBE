@@ -1,5 +1,6 @@
 package com.hcmute.myanime.service;
 
+import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.dto.FavoritesDTO;
 import com.hcmute.myanime.mapper.FavoritesMapper;
 import com.hcmute.myanime.model.FavoritesEntity;
@@ -22,25 +23,24 @@ public class FavoritesService {
     private UsersRepository usersRepository;
     @Autowired
     private MovieSeriesRepository movieSeriesRepository;
-
-    public List<FavoritesEntity> findAll()
-    {
-        return favoritesRepository.findAll();
-    }
+    @Autowired
+    private ApplicationUserService applicationUserService;
 
     public boolean save(FavoritesDTO favoritesDTO)
     {
         FavoritesEntity favoritesEntity = FavoritesMapper.toEntity(favoritesDTO);
 
         Optional<MovieSeriesEntity> movieSeriesRepositoryOptional = movieSeriesRepository.findById(favoritesDTO.getMovieSeriesId());
-        Optional<UsersEntity> usersEntityOptional = usersRepository.findById(1);
 
-        if(!movieSeriesRepositoryOptional.isPresent() || !usersEntityOptional.isPresent()) {
+        String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
+        Optional<UsersEntity> userLoggedIn = usersRepository.findByUsername(usernameLoggedIn);
+
+        if(!movieSeriesRepositoryOptional.isPresent() || !userLoggedIn.isPresent()) {
             return false;
         }
 
         MovieSeriesEntity movieSeriesEntity = movieSeriesRepositoryOptional.get();
-        UsersEntity usersEntity = usersEntityOptional.get();
+        UsersEntity usersEntity = userLoggedIn.get();
 
         favoritesEntity.setMovieSeries(movieSeriesEntity);
         favoritesEntity.setUser(usersEntity);
@@ -58,8 +58,24 @@ public class FavoritesService {
 
     public boolean deleteById(int favoritesID) {
         try {
-            favoritesRepository.deleteById(favoritesID);
-            return true;
+            String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
+            Optional<UsersEntity> userLoggedIn = usersRepository.findByUsername(usernameLoggedIn);
+            if(!userLoggedIn.isPresent())
+                return false;
+            UsersEntity usersEntity = userLoggedIn.get();
+
+            Optional<FavoritesEntity> favoritesEntityOptional = favoritesRepository.findById(favoritesID);
+            if(!favoritesEntityOptional.isPresent())
+                return false;
+            FavoritesEntity favoritesEntity = favoritesEntityOptional.get();
+
+            System.out.println(favoritesEntity.getUser().getId() + "/" + usersEntity.getId() + "/" + favoritesID);
+
+            if(favoritesEntity.getUser().getId() == usersEntity.getId()) {
+                favoritesRepository.deleteById(favoritesID);
+                return true;
+            }
+            return false;
         } catch (Exception ex) {
             return false;
         }

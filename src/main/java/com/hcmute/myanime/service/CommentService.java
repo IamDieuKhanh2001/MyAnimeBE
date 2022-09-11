@@ -2,10 +2,7 @@ package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.dto.CommentUserDTO;
-import com.hcmute.myanime.model.CommentEntity;
-import com.hcmute.myanime.model.EpisodeEntity;
-import com.hcmute.myanime.model.MovieSeriesEntity;
-import com.hcmute.myanime.model.UsersEntity;
+import com.hcmute.myanime.model.*;
 import com.hcmute.myanime.repository.CommentsRepository;
 import com.hcmute.myanime.repository.EpisodeRepository;
 import com.hcmute.myanime.repository.UsersRepository;
@@ -55,8 +52,24 @@ public class CommentService {
 
     public boolean deleteById(int commentId) {
         try {
-            commentsRepository.deleteById(commentId);
-            return true;
+            String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
+            Optional<UsersEntity> userLoggedIn = usersRepository.findByUsername(usernameLoggedIn);
+            if(!userLoggedIn.isPresent())
+                return false;
+            UsersEntity usersEntity = userLoggedIn.get();
+
+            Optional<CommentEntity> commentEntityOptional = commentsRepository.findById(commentId);
+            if(!commentEntityOptional.isPresent())
+                return false;
+            CommentEntity commentEntity = commentEntityOptional.get();
+
+            if(commentEntity.getUsersByUserId().getId() == usersEntity.getId())
+            {
+                commentsRepository.deleteById(commentId);
+                return true;
+            }
+            return false;
+
         } catch (Exception ex) {
             return false;
         }
