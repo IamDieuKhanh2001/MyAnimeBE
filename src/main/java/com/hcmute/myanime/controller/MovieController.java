@@ -4,11 +4,14 @@ import com.hcmute.myanime.common.Common;
 import com.hcmute.myanime.dto.MovieDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.exception.BadRequestException;
+import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/admin")
@@ -23,17 +26,14 @@ public class MovieController {
     @PostMapping("/movie")
     public ResponseEntity<?> createNewMovie(@RequestBody MovieDTO movieDTO)
     {
-        if(movieService.save(movieDTO))
-        {
-            return ResponseEntity.ok(
+        MovieEntity movieEntity = movieService.save(movieDTO);
+        return ResponseEntity.ok(
                     new ResponseDTO(
-                            HttpStatus.OK, Common.MessageRespone.StorageMovieSuccess)
+                            HttpStatus.OK,
+                            Common.MessageRespone.StorageMovieSuccess,
+                            movieEntity
+                            )
             );
-        }
-        else
-        {
-            throw new BadRequestException(Common.MessageRespone.StorageMovieFail);
-        }
     }
     @PutMapping("/movie/{movieID}")
     public ResponseEntity<?> updateMovieByID(@RequestBody MovieDTO movieDTO, @PathVariable int movieID)

@@ -28,6 +28,7 @@ public class FavoritesController {
     public ResponseEntity<?> findByUserLogin()
     {
         String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
+        System.out.println(usernameLoggedIn);
         List<FavoritesEntity> favoritesEntityList = favoritesService.findByUserLogin(usernameLoggedIn);
         List<FavoritesDTO> favoritesDTOList = new ArrayList<>();
         favoritesEntityList.forEach((favoritesEntity -> {

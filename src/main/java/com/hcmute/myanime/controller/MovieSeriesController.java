@@ -2,6 +2,7 @@ package com.hcmute.myanime.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hcmute.myanime.dto.*;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.MovieSeriesEntity;
@@ -43,7 +44,6 @@ public class MovieSeriesController {
     @GetMapping("/movie-and-series")
     public ResponseEntity<?> movieAndSeriesFindAll(@RequestParam Map<String, String> requestParams)
     {
-
         String page = requestParams.get("page");
         String limit = requestParams.get("limit");
         String keywordSearch = requestParams.get("keyword");
@@ -135,6 +135,7 @@ public class MovieSeriesController {
     ) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
 
         if(movieSeriesService.save(movieSeriesDTO, sourceFile)) {

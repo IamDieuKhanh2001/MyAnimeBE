@@ -12,7 +12,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "movies", schema = "movie")
-public class MovieEntity {
+public class MovieEntity implements Cloneable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int id;
@@ -39,17 +39,6 @@ public class MovieEntity {
         this.categoryEntityCollection = categoryEntityCollection;
     }
 
-    @Transient
-    private Integer views = 5;
-
-    public Integer getViews() {
-        return views;
-    }
-
-    public void setViews(Integer views) {
-        this.views = views;
-    }
-
     public MovieEntity() {
     }
 
@@ -57,6 +46,7 @@ public class MovieEntity {
         this.title = title;
         this.studioName = studioName;
     }
+
 
     public int getId() {
         return id;
@@ -120,5 +110,19 @@ public class MovieEntity {
 
     public void setMovieSeriesById(Collection<MovieSeriesEntity> movieSeriesById) {
         this.movieSeriesById = movieSeriesById;
+    }
+
+    public MovieEntity clone() throws CloneNotSupportedException {
+        return (MovieEntity) super.clone();
+    }
+    @Override
+    public String toString() {
+        return "MovieEntity{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", studioName='" + studioName + '\'' +
+                ", createAt=" + createAt +
+                ", movieSeriesById=" + movieSeriesById +
+                '}';
     }
 }

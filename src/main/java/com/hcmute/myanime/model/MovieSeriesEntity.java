@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "movie_series", schema = "movie")
@@ -28,9 +29,17 @@ public class MovieSeriesEntity {
     @JoinColumn(name = "movie_id", referencedColumnName = "id")
     @JsonBackReference
     private MovieEntity movieByMovieId;
-    @OneToOne(mappedBy = "movieSeries", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "movieSeries", fetch = FetchType.LAZY)
     @JsonManagedReference
-    private FavoritesEntity favoritesEntity;
+    private Collection<FavoritesEntity> favoritesEntityCollection;
+
+    public Collection<FavoritesEntity> getFavoritesEntityCollection() {
+        return favoritesEntityCollection;
+    }
+
+    public void setFavoritesEntityCollection(Collection<FavoritesEntity> favoritesEntityCollection) {
+        this.favoritesEntityCollection = favoritesEntityCollection;
+    }
 
     public int getId() {
         return id;
@@ -118,7 +127,6 @@ public class MovieSeriesEntity {
                 ", createAt=" + createAt +
                 ", episodesById=" + episodesById +
                 ", movieByMovieId=" + movieByMovieId +
-                ", favoritesEntity=" + favoritesEntity +
                 '}';
     }
 
