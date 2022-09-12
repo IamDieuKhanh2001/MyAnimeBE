@@ -32,17 +32,12 @@ public class LogHistoriesService {
         return historiesEntityList;
     }
 
-    public boolean save(LogHistoryDTO logHistoryDTO) {
+    public LogHistoriesEntity save(LogHistoryDTO logHistoryDTO) {
         Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(logHistoryDTO.getEpisode_id());
         if(!episodeEntityOptional.isPresent()) {
             throw new BadRequestException("Episode not found");
         }
         EpisodeEntity episodeEntity = episodeEntityOptional.get();
-//        Optional<MovieSeriesEntity> movieSeriesEntityOptional = movieSeriesRepository.findById(logHistoryDTO.getSeries_id());
-//        if(!movieSeriesEntityOptional.isPresent()) {
-//            throw new BadRequestException("Series not found");
-//        }
-//        MovieSeriesEntity movieSeriesEntity = movieSeriesEntityOptional.get();
         UsersEntity userLogging = userService.findUserLogging();
 
         LogHistoriesEntity logHistoriesEntity = logHistoriesRepository
@@ -57,12 +52,12 @@ public class LogHistoriesService {
         logHistoriesEntity.setCreateAt(new Timestamp(System.currentTimeMillis()));
         try
         {
-            logHistoriesRepository.save(logHistoriesEntity);
-            return true;
+            LogHistoriesEntity save = logHistoriesRepository.save(logHistoriesEntity);
+            return save;
         }
         catch (Exception ex)
         {
-            return false;
+            throw new BadRequestException("create history fail");
         }
     }
 

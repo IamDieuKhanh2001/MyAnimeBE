@@ -44,16 +44,24 @@ public class LogHistoriesController {
 
     @PostMapping("/history") //Case if episode id and user is similar will be replaced
     public ResponseEntity<?> createHistoryUserLogging(@RequestBody LogHistoryDTO logHistoryDTO) {
-        if (logHistoriesService.save(logHistoryDTO)) {
-            return ResponseEntity.ok(
+        LogHistoriesEntity historyEntity = logHistoriesService.save(logHistoryDTO);
+        LogHistoryDTO logHistoryResponseDTO = new LogHistoryDTO(
+                historyEntity.getId(),
+                historyEntity.getLastSecond(),
+                historyEntity.getCreateAt(),
+                historyEntity.getEpisodeEntity().getId(),
+                historyEntity.getMovieSeriesEntity().getId(),
+                historyEntity.getMovieSeriesEntity().getImage(),
+                historyEntity.getMovieSeriesEntity().getName(),
+                historyEntity.getEpisodeEntity().getTitle()
+        );
+        return ResponseEntity.ok(
                     new ResponseDTO(
                             HttpStatus.OK,
-                            "Create new history series success"
+                            "Create new history series success",
+                            logHistoryResponseDTO
                     )
             );
-        } else {
-            throw new BadRequestException("create history fail");
-        }
     }
 
     @DeleteMapping("/history/{historyId}")
