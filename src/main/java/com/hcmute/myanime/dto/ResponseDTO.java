@@ -1,32 +1,34 @@
 package com.hcmute.myanime.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonIgnoreProperties(value= {"handler","hibernateLazyInitializer","FieldHandler"})
 public class ResponseDTO {
     private HttpStatus status;
     private String message;
-    private Map<?, ?> data;
+    private Object data;
 
     public ResponseDTO(HttpStatus status, String message) {
         this.status = status;
         this.message = message;
-        data = new HashMap<String, Object>();
+
     }
 
-    public ResponseDTO(HttpStatus status, String message, Map<?, ?> data) {
+    public ResponseDTO(HttpStatus status, String message, Object data) {
         this.status = status;
         this.message = message;
         this.data = data;
     }
 
-    public Map<?, ?> getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(Map<?, ?> data) {
+    public void setData(Object data) {
         this.data = data;
     }
 

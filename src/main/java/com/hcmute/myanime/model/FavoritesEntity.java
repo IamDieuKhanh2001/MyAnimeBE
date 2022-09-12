@@ -16,7 +16,7 @@ public class FavoritesEntity {
     @CreationTimestamp
     private Timestamp createAt;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
     @JsonBackReference
     private MovieSeriesEntity movieSeries; // mappedBy in table

@@ -4,12 +4,11 @@ import com.hcmute.myanime.dto.MovieDTO;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.mapper.MovieMapper;
 import com.hcmute.myanime.model.MovieEntity;
+import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.repository.MovieRepository;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,7 @@ public class MovieService {
         return movieDTO;
     }
 
-    public boolean save(MovieDTO movieDTO)
+    public MovieEntity save(MovieDTO movieDTO)
     {
         MovieEntity movieEntity = new MovieEntity(
                 movieDTO.getTitle(),
@@ -39,21 +38,24 @@ public class MovieService {
         );
         try
         {
-            MovieEntity movieEntitySaved = movieRepository.save(movieEntity);
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            String json = ow.writeValueAsString(movieEntitySaved);
-            System.out.println(json);
-            return true;
+            MovieEntity movieEntityCurrent = movieRepository.save(movieEntity);
+            return movieEntityCurrent;
         }
         catch (Exception ex)
         {
-            System.out.print(ex.getMessage());
-            ex.printStackTrace();
-            return false;
+            throw new BadRequestException("Can not add movie");
         }
     }
 
     public boolean deleteById(int movieId) {
+        Optional<MovieEntity> movieEntityOptional = movieRepository.findById(movieId);
+        if(!movieEntityOptional.isPresent()) {
+            return false;
+        }
+        MovieEntity movieEntity = movieEntityOptional.get();
+        for (MovieSeriesEntity movieSeriesEntity : movieEntity.getMovieSeriesById()) {
+            movieSeriesEntity.setMovieByMovieId(null);
+        }
         try {
             movieRepository.deleteById(movieId);
             return true;
