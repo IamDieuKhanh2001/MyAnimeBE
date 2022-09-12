@@ -12,6 +12,6 @@ import java.util.List;
 
 @Repository
 public interface FavoritesRepository extends JpaRepository<FavoritesEntity, Integer> {
-//    @Query( "DELETE FROM FavoritesEntity WHERE id = :ids" )
-//    void deleteById(@Param("ids") Integer favoritesId);
+    @Query( "SELECT o FROM FavoritesEntity o WHERE movie_series_id = :mvsid AND user_id = :uid" )
+    FavoritesEntity findByMovieSeriesIdAndUserId(@Param("mvsid") Integer movieSeriesId, @Param("uid") Integer userId);
 }

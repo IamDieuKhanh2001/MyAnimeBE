@@ -39,21 +39,27 @@ public class FavoritesService {
             return false;
         }
 
-        MovieSeriesEntity movieSeriesEntity = movieSeriesRepositoryOptional.get();
-        UsersEntity usersEntity = userLoggedIn.get();
-
-        favoritesEntity.setMovieSeries(movieSeriesEntity);
-        favoritesEntity.setUser(usersEntity);
-
-        try
+        // Kiểm tra xem user đã favorites movie series đó hay chưa
+        FavoritesEntity favoritesEntityChecked = favoritesRepository.findByMovieSeriesIdAndUserId(favoritesDTO.getMovieSeriesId(), userLoggedIn.get().getId());
+        if(favoritesEntityChecked == null)
         {
-            favoritesRepository.save(favoritesEntity);
-            return true;
+            MovieSeriesEntity movieSeriesEntity = movieSeriesRepositoryOptional.get();
+            UsersEntity usersEntity = userLoggedIn.get();
+
+            favoritesEntity.setMovieSeries(movieSeriesEntity);
+            favoritesEntity.setUser(usersEntity);
+
+            try
+            {
+                favoritesRepository.save(favoritesEntity);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
-        catch (Exception ex)
-        {
-            return false;
-        }
+        return false;
     }
 
     public boolean deleteById(int favoritesID) {
