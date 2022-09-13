@@ -13,11 +13,11 @@ public class SeriesDetailDTO {
     private String studioName;
     private String image;
     private Timestamp dateAired;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Timestamp movieCreateAt;
     private Long views;
     private Long commentTotal;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Timestamp seriesCreateAt;
     private String seriesName;
     private int currentNumberEpisode;
