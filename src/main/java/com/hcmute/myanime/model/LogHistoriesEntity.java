@@ -85,4 +85,13 @@ public class LogHistoriesEntity {
     public void setMovieSeriesEntity(MovieSeriesEntity movieSeriesEntity) {
         this.movieSeriesEntity = movieSeriesEntity;
     }
+
+    @Override
+    public String toString() {
+        return "LogHistoriesEntity{" +
+                "id=" + id +
+                ", lastSecond=" + lastSecond +
+                ", createAt=" + createAt +
+                '}';
+    }
 }

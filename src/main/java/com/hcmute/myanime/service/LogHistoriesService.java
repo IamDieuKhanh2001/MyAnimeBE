@@ -8,6 +8,7 @@ import com.hcmute.myanime.repository.LogHistoriesRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -67,6 +68,24 @@ public class LogHistoriesService {
             return true;
         } catch (Exception ex) {
             return false;
+        }
+    }
+
+    @Transactional
+    public Boolean deleteAfterDay(int numberOfDate) {
+        Timestamp dateTime = new Timestamp(System.currentTimeMillis());
+        dateTime.setDate(dateTime.getDate() - numberOfDate);
+//        System.out.println(dateTime);
+//        List<LogHistoriesEntity> byCreateAtLessThan = logHistoriesRepository.findByCreateAtLessThan(dateTime);
+//        byCreateAtLessThan.forEach(logHistoriesEntity -> {
+//            System.out.println(logHistoriesEntity.toString());
+//        });
+        try {
+            logHistoriesRepository.deleteByCreateAtLessThan(dateTime);
+            return true;
+        } catch (Exception exception) {
+            throw exception;
+//            return false;
         }
     }
 }
