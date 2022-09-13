@@ -32,6 +32,9 @@ public class MovieSeriesEntity {
     @OneToMany(mappedBy = "movieSeries", fetch = FetchType.LAZY)
     @JsonManagedReference
     private Collection<FavoritesEntity> favoritesEntityCollection;
+    @OneToMany(mappedBy = "movieSeriesEntity", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Collection<LogHistoriesEntity> logHistoriesEntityCollection;
 
     public Collection<FavoritesEntity> getFavoritesEntityCollection() {
         return favoritesEntityCollection;

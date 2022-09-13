@@ -32,9 +32,9 @@ public class EpisodeEntity {
     @JsonBackReference
     private MovieSeriesEntity movieSeriesBySeriesId;
 
-    @OneToOne(mappedBy = "episodeEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "episodeEntity", fetch = FetchType.LAZY)
     @JsonManagedReference
-    private LogHistoriesEntity logHistoriesEntity;
+    private Collection<LogHistoriesEntity> logHistoriesEntityCollection;
 
     public EpisodeEntity() {
     }
@@ -61,14 +61,6 @@ public class EpisodeEntity {
 
     public void setEnable(Boolean enable) {
         this.enable = enable;
-    }
-
-    public LogHistoriesEntity getLogHistoriesEntity() {
-        return logHistoriesEntity;
-    }
-
-    public void setLogHistoriesEntity(LogHistoriesEntity logHistoriesEntity) {
-        this.logHistoriesEntity = logHistoriesEntity;
     }
 
     public int getId() {

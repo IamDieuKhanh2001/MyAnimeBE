@@ -20,12 +20,12 @@ public class LogHistoriesEntity {
     @CreationTimestamp
     private Timestamp createAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "episode_id", referencedColumnName = "id")
     @JsonBackReference
     private EpisodeEntity episodeEntity; // mappedBy in table
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_id", referencedColumnName = "id")
     @JsonBackReference
     private MovieSeriesEntity movieSeriesEntity; // mappedBy in table
