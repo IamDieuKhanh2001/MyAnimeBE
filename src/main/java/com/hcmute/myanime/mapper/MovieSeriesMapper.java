@@ -16,4 +16,18 @@ public class MovieSeriesMapper {
         movieSeriesEntity.setTotalEpisode(movieSeriesDTO.getTotalEpisode());
         return movieSeriesEntity;
     }
+
+    public static MovieSeriesDTO toDTO (MovieSeriesEntity movieSeriesEntity)
+    {
+        MovieSeriesDTO movieSeriesDTO = new MovieSeriesDTO();
+        movieSeriesDTO.setId(movieSeriesEntity.getId());
+        movieSeriesDTO.setCreateAt(movieSeriesEntity.getCreateAt());
+        movieSeriesDTO.setDateAired(movieSeriesEntity.getDateAired());
+        movieSeriesDTO.setDescription(movieSeriesEntity.getDescription());
+        movieSeriesDTO.setImage(movieSeriesEntity.getImage());
+        movieSeriesDTO.setName(movieSeriesEntity.getName());
+        movieSeriesDTO.setTotalEpisode(movieSeriesEntity.getTotalEpisode());
+        movieSeriesDTO.setMovieId(movieSeriesEntity.getMovieByMovieId().getId());
+        return movieSeriesDTO;
+    }
 }

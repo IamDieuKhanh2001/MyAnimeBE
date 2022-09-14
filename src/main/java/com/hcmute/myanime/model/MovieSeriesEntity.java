@@ -36,6 +36,14 @@ public class MovieSeriesEntity {
     @JsonManagedReference
     private Collection<LogHistoriesEntity> logHistoriesEntityCollection;
 
+    public Collection<LogHistoriesEntity> getLogHistoriesEntityCollection() {
+        return logHistoriesEntityCollection;
+    }
+
+    public void setLogHistoriesEntityCollection(Collection<LogHistoriesEntity> logHistoriesEntityCollection) {
+        this.logHistoriesEntityCollection = logHistoriesEntityCollection;
+    }
+
     public Collection<FavoritesEntity> getFavoritesEntityCollection() {
         return favoritesEntityCollection;
     }

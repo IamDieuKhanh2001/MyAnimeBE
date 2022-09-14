@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hcmute.myanime.dto.*;
 import com.hcmute.myanime.exception.BadRequestException;
+import com.hcmute.myanime.mapper.MovieSeriesMapper;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.service.CommentService;
 import com.hcmute.myanime.service.MovieSeriesService;
@@ -30,7 +31,12 @@ public class MovieSeriesController {
     @GetMapping("/admin/movie-series")
     public ResponseEntity<?> findAll()
     {
-        return ResponseEntity.ok( movieSeriesService.findAll());
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.findAll();
+        List<MovieSeriesDTO> movieSeriesDTOList = new ArrayList<>();
+        movieSeriesEntityList.forEach(movieSeriesEntity -> {
+            movieSeriesDTOList.add(MovieSeriesMapper.toDTO(movieSeriesEntity));
+        });
+        return ResponseEntity.ok(movieSeriesDTOList);
     }
 
     @GetMapping("/movie-and-series/count")
