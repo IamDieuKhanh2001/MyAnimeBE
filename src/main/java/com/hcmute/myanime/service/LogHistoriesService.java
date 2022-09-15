@@ -73,19 +73,13 @@ public class LogHistoriesService {
 
     @Transactional
     public Boolean deleteAfterDay(int numberOfDate) {
-        Timestamp dateTime = new Timestamp(System.currentTimeMillis());
-        dateTime.setDate(dateTime.getDate() - numberOfDate);
-//        System.out.println(dateTime);
-//        List<LogHistoriesEntity> byCreateAtLessThan = logHistoriesRepository.findByCreateAtLessThan(dateTime);
-//        byCreateAtLessThan.forEach(logHistoriesEntity -> {
-//            System.out.println(logHistoriesEntity.toString());
-//        });
+        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+        currentDate.setDate(currentDate.getDate() - numberOfDate);
         try {
-            logHistoriesRepository.deleteByCreateAtLessThan(dateTime);
+            logHistoriesRepository.deleteByCreateAtLessThan(currentDate);
             return true;
         } catch (Exception exception) {
-            throw exception;
-//            return false;
+            return false;
         }
     }
 }
