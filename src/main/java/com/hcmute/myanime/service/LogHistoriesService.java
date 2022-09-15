@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +52,8 @@ public class LogHistoriesService {
         logHistoriesEntity.setEpisodeEntity(episodeEntity);
         logHistoriesEntity.setMovieSeriesEntity(episodeEntity.getMovieSeriesBySeriesId());
         logHistoriesEntity.setUser(userLogging);
-        logHistoriesEntity.setCreateAt(new Timestamp(System.currentTimeMillis()));
+        Timestamp createAt = new Timestamp(System.currentTimeMillis());
+        logHistoriesEntity.setCreateAt(createAt);
         try
         {
             LogHistoriesEntity save = logHistoriesRepository.save(logHistoriesEntity);
