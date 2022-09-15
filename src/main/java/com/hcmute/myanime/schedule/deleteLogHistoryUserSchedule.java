@@ -10,9 +10,9 @@ public class deleteLogHistoryUserSchedule {
     @Autowired
     private LogHistoriesService logHistoriesService;
 
-    @Scheduled(cron = "0 6 */7 * * ?")
+    @Scheduled(cron = "0 6 */30 * * ?")
     public void scheduleTaskUsingCronExpression() {
         System.out.println("This is crone job");
-        logHistoriesService.deleteAfterDay(7);
+        logHistoriesService.deleteAfterDay(30);
     }
 }
