@@ -3,6 +3,7 @@ package com.hcmute.myanime.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.hcmute.myanime.common.Common;
 import com.hcmute.myanime.dto.*;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.mapper.MovieSeriesMapper;
@@ -144,16 +145,15 @@ public class MovieSeriesController {
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
 
-        if(movieSeriesService.save(movieSeriesDTO, sourceFile)) {
-            return ResponseEntity.ok(
-                    new ResponseDTO(
-                            HttpStatus.OK,
-                            "Create new movie series success"
-                    )
-            );
-        } else {
-            throw new BadRequestException("create new movie series fail");
-        }
+        MovieSeriesEntity movieSeriesEntity = movieSeriesService.save(movieSeriesDTO, sourceFile);
+        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity);
+        return ResponseEntity.ok(
+                new ResponseDTO(
+                        HttpStatus.OK,
+                        "Create series success",
+                        movieSeriesResponseDTO
+                )
+        );
     }
 
 

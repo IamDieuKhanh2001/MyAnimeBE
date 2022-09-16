@@ -2,6 +2,7 @@ package com.hcmute.myanime.controller;
 
 import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.service.CloudinaryService;
+import com.hcmute.myanime.service.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,8 @@ public class testController {
     private ApplicationUserService applicationUserService;
     @Autowired
     private CloudinaryService cloudinaryService;
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     @GetMapping("/test/api")
     public ResponseEntity<?> test() {
@@ -35,5 +38,10 @@ public class testController {
                 "MyAnimeProject_TLCN" + "/" + "test");
         System.out.println(url);
         return ResponseEntity.ok("hello " + applicationUserService.getUsernameLoggedIn());
+    }
+    @GetMapping("/user/mail")
+    public ResponseEntity<?> mail() {
+        emailSenderService.sendSimpleEmail("quachdieukhanh@gmail.com","Test", "test body");
+        return ResponseEntity.ok("hello");
     }
 }

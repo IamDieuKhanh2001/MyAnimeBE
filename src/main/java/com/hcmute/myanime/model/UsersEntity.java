@@ -41,6 +41,18 @@ public class UsersEntity {
     @JsonManagedReference
     private Collection<FavoritesEntity> favoritesEntityCollection;
 
+    @OneToMany(mappedBy = "usersEntityByUserId", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Collection<EmailConfirmationEntity> emailConfirmationEntityCollection;
+
+    public Collection<EmailConfirmationEntity> getEmailConfirmationEntityCollection() {
+        return emailConfirmationEntityCollection;
+    }
+
+    public void setEmailConfirmationEntityCollection(Collection<EmailConfirmationEntity> emailConfirmationEntityCollection) {
+        this.emailConfirmationEntityCollection = emailConfirmationEntityCollection;
+    }
+
     public UsersEntity() {
     }
 
