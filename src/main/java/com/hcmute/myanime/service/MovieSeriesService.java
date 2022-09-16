@@ -2,6 +2,7 @@ package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.MovieSeriesDTO;
+import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.mapper.MovieSeriesMapper;
 import com.hcmute.myanime.model.EpisodeEntity;
 import com.hcmute.myanime.model.MovieEntity;
@@ -44,12 +45,12 @@ public class MovieSeriesService {
         return movieSeriesByMovieIdList;
     }
 
-    public boolean save(MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile)
+    public MovieSeriesEntity save(MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile)
     {
         MovieSeriesEntity movieSeriesEntity = MovieSeriesMapper.toEntity(movieSeriesDTO);
         Optional<MovieEntity> movieEntityOptional = movieRepository.findById(movieSeriesDTO.getMovieId());
         if(!movieEntityOptional.isPresent()) {
-            return false;
+            throw new BadRequestException("can not find movie entity");
         }
         MovieEntity movieEntity = movieEntityOptional.get();
         movieSeriesEntity.setMovieByMovieId(movieEntity);
@@ -59,13 +60,13 @@ public class MovieSeriesService {
             String urlSource = uploadSourceFileToCloudinary(sourceFile, savedEntity.getId());
             if(!urlSource.equals("-1")) {
                 savedEntity.setImage(urlSource);
-                movieSeriesRepository.save(savedEntity);
+                savedEntity = movieSeriesRepository.save(savedEntity);
             }
-            return true;
+            return savedEntity;
         }
         catch (Exception ex)
         {
-            return false;
+            throw new BadRequestException("Can not add series");
         }
     }
 

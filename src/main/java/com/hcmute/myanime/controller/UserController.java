@@ -5,6 +5,7 @@ import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.dto.UserDTO;
 import com.hcmute.myanime.mapper.UserMapper;
 import com.hcmute.myanime.model.UsersEntity;
+import com.hcmute.myanime.service.EmailSenderService;
 import com.hcmute.myanime.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -84,17 +85,15 @@ public class UserController {
         }
     }
 
-//    @PutMapping("/user/user-detail")
-//    public ResponseEntity<?> updateUserLogging(@RequestBody UserDTO userDTO) {
-//
-//        if(userService.updateUserLogging(userDTO)) {
-//            return ResponseEntity.ok(
-//                    new ResponseDTO(HttpStatus.OK, "Update user success")
-//            );
-//        } else {
-//            return ResponseEntity.ok(
-//                    new ResponseDTO(HttpStatus.BAD_REQUEST, "Update user fail")
-//            );
-//        }
-//    }
+    @PutMapping("/user/user-detail/fullName")
+    public ResponseEntity<?> updateFullNameUserLogging(@RequestBody UserDTO userDTO) {
+        ResponseEntity<?> responseEntity = userService.updateFullNameUserLogging(userDTO);
+        return responseEntity;
+    }
+
+    @PutMapping("/user/user-detail/mail")
+    public ResponseEntity<?> updateMailUserLogging(@RequestBody UserDTO userDTO) {
+        ResponseEntity<?> responseEntity = userService.updateMailUserLogging(userDTO);
+        return responseEntity;
+    }
 }
