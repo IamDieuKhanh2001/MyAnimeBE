@@ -52,10 +52,10 @@ public class MovieService {
         if(!movieEntityOptional.isPresent()) {
             return false;
         }
-        MovieEntity movieEntity = movieEntityOptional.get();
-        for (MovieSeriesEntity movieSeriesEntity : movieEntity.getMovieSeriesById()) {
-            movieSeriesEntity.setMovieByMovieId(null);
-        }
+//        MovieEntity movieEntity = movieEntityOptional.get();
+//        for (MovieSeriesEntity movieSeriesEntity : movieEntity.getMovieSeriesById()) {
+//            movieSeriesEntity.setMovieByMovieId(null);
+//        }
         try {
             movieRepository.deleteById(movieId);
             return true;

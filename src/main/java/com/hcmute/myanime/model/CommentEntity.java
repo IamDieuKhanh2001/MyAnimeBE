@@ -3,6 +3,8 @@ package com.hcmute.myanime.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -18,6 +20,7 @@ public class CommentEntity {
     private Timestamp createAt;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "episode_id", referencedColumnName = "id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference
     private EpisodeEntity episodeByEpisodeId;
     @ManyToOne(fetch = FetchType.LAZY)

@@ -2,6 +2,8 @@ package com.hcmute.myanime.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -18,6 +20,7 @@ public class FavoritesEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference
     private MovieSeriesEntity movieSeries; // mappedBy in table
 

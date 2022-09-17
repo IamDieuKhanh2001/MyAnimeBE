@@ -3,6 +3,8 @@ package com.hcmute.myanime.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -22,17 +24,18 @@ public class MovieSeriesEntity {
     private String image;
     @CreationTimestamp
     private Timestamp createAt;
-    @OneToMany(mappedBy = "movieSeriesBySeriesId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "movieSeriesBySeriesId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Collection<EpisodeEntity> episodesById;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movie_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference
     private MovieEntity movieByMovieId;
-    @OneToMany(mappedBy = "movieSeries", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "movieSeries", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Collection<FavoritesEntity> favoritesEntityCollection;
-    @OneToMany(mappedBy = "movieSeriesEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "movieSeriesEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Collection<LogHistoriesEntity> logHistoriesEntityCollection;
 

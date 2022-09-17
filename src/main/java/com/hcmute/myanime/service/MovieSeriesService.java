@@ -107,10 +107,10 @@ public class MovieSeriesService {
         if(!movieSeriesEntityOptional.isPresent()) {
             return false;
         }
-        MovieSeriesEntity movieSeriesEntity = movieSeriesEntityOptional.get();
-        for (EpisodeEntity episodeEntity : movieSeriesEntity.getEpisodesById()) {
-            episodeEntity.setMovieSeriesBySeriesId(null);
-        }
+//        MovieSeriesEntity movieSeriesEntity = movieSeriesEntityOptional.get();
+//        for (EpisodeEntity episodeEntity : movieSeriesEntity.getEpisodesById()) {
+//            episodeEntity.setMovieSeriesBySeriesId(null);
+//        }
         try {
             movieSeriesRepository.deleteById(seriesID);
             return true;

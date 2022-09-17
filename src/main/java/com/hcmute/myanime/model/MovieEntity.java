@@ -27,7 +27,7 @@ public class MovieEntity implements Cloneable {
             inverseJoinColumns = @JoinColumn(name = "category_id")) //Key is link with table Roles
     @JsonManagedReference
     private Collection<CategoryEntity> categoryEntityCollection;
-    @OneToMany(mappedBy = "movieByMovieId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "movieByMovieId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Collection<MovieSeriesEntity> movieSeriesById;
 

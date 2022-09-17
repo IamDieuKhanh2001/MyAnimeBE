@@ -22,11 +22,13 @@ public class LogHistoriesEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "episode_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference
     private EpisodeEntity episodeEntity; // mappedBy in table
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference
     private MovieSeriesEntity movieSeriesEntity; // mappedBy in table
 
