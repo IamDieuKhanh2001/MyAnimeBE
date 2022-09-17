@@ -166,13 +166,13 @@ public class MovieSeriesController {
         ObjectMapper mapper = new ObjectMapper();
         MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
 
-        if(movieSeriesService.updateById(seriesID, movieSeriesDTO, sourceFile)) {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.OK, "Update series success")
-            );
-        } else {
-            throw new BadRequestException("Update series fail");
-        }
+        MovieSeriesEntity movieSeriesEntity = movieSeriesService.updateById(seriesID, movieSeriesDTO, sourceFile);
+        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity);
+        return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK,
+                            "Update series success",
+                            movieSeriesResponseDTO)
+        );
     }
 
     @DeleteMapping("/admin/movie-series/{seriesID}")

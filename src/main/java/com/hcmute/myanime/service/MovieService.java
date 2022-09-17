@@ -64,19 +64,19 @@ public class MovieService {
         }
     }
 
-    public boolean updateById(int movieId, MovieDTO movieDTO) {
+    public MovieEntity updateById(int movieId, MovieDTO movieDTO) {
         Optional<MovieEntity> movieById = movieRepository.findById(movieId);
         if(!movieById.isPresent()) {
-            return false;
+            throw new BadRequestException("Can not find movie with this Id");
         }
         MovieEntity movieEntity = movieById.get();
         movieEntity.setTitle(movieDTO.getTitle());
         movieEntity.setStudioName(movieDTO.getStudioName());
         try {
-            movieRepository.save(movieEntity);
-            return true;
+            MovieEntity saveMovieEntity = movieRepository.save(movieEntity);
+            return saveMovieEntity;
         } catch (Exception ex) {
-            return false;
+            throw new BadRequestException("Can not update movie");
         }
     }
 }

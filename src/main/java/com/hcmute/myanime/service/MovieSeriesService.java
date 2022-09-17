@@ -78,10 +78,10 @@ public class MovieSeriesService {
         return urlSource;
     }
 
-    public boolean updateById(int seriesID, MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile) {
+    public MovieSeriesEntity updateById(int seriesID, MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile) {
         Optional<MovieSeriesEntity> movieSeriesEntity = movieSeriesRepository.findById(seriesID);
         if(!movieSeriesEntity.isPresent()) {
-            return false;
+            throw new BadRequestException("Can not find series with this Id");
         }
 
         MovieSeriesEntity updateMovieSeriesEntity = movieSeriesEntity.get();
@@ -94,11 +94,11 @@ public class MovieSeriesService {
             String urlSource = uploadSourceFileToCloudinary(sourceFile, savedEntity.getId());
             if(!urlSource.equals("-1")) {
                 savedEntity.setImage(urlSource);
-                movieSeriesRepository.save(savedEntity);
+                savedEntity = movieSeriesRepository.save(savedEntity);
             }
-            return true;
+            return savedEntity;
         } catch (Exception ex) {
-            return false;
+            throw new BadRequestException("Can not update series");
         }
     }
 
