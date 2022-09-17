@@ -3,6 +3,8 @@ package com.hcmute.myanime.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -23,16 +25,17 @@ public class EpisodeEntity {
     private Timestamp createAt;
     @Column(columnDefinition = "boolean default true")
     private Boolean enable = true;
-    @OneToMany(mappedBy = "episodeByEpisodeId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "episodeByEpisodeId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Collection<CommentEntity> commentsById;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_id", referencedColumnName = "id")
     @JsonBackReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private MovieSeriesEntity movieSeriesBySeriesId;
 
-    @OneToMany(mappedBy = "episodeEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "episodeEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Collection<LogHistoriesEntity> logHistoriesEntityCollection;
 
