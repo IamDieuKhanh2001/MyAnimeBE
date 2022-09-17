@@ -4,6 +4,7 @@ import com.hcmute.myanime.common.Common;
 import com.hcmute.myanime.dto.MovieDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.exception.BadRequestException;
+import com.hcmute.myanime.mapper.MovieMapper;
 import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +39,14 @@ public class MovieController {
     @PutMapping("/movie/{movieID}")
     public ResponseEntity<?> updateMovieByID(@RequestBody MovieDTO movieDTO, @PathVariable int movieID)
     {
-        if(movieService.updateById(movieID, movieDTO)) {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.OK, Common.MessageRespone.UpdateMovieSuccess)
-            );
-        } else {
-            throw new BadRequestException("Update movie fail");
-        }
+        MovieEntity movieEntity = movieService.updateById(movieID, movieDTO);
+        MovieDTO movieResponseDTO = MovieMapper.toDTO(movieEntity);
+        return ResponseEntity.ok(
+                new ResponseDTO(
+                        HttpStatus.OK,
+                        Common.MessageRespone.UpdateMovieSuccess,
+                        movieResponseDTO)
+        );
     }
 
     @DeleteMapping("/movie/{movieID}")
