@@ -83,6 +83,7 @@ public class MovieSeriesController {
         return ResponseEntity.ok(seriesDetailDTOList);
     }
 
+    //so luong category id
     @GetMapping("/movie-and-series/category/{categoryId}/count")
     public ResponseEntity<?> countSeriesByCategoryId(@PathVariable int categoryId)
     {

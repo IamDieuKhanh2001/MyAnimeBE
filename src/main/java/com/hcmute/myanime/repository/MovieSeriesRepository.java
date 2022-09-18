@@ -1,6 +1,5 @@
 package com.hcmute.myanime.repository;
 
-import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +13,6 @@ import java.util.List;
 public interface MovieSeriesRepository extends JpaRepository<MovieSeriesEntity, Integer> {
     List<MovieSeriesEntity> findByNameContaining(String keyword, Pageable pageable);
     Long countByNameContaining(String keyword);
-    List<MovieSeriesEntity> findAllByMovieByMovieId(MovieEntity movieEntity, Pageable pageable);
     @Query(value = "select series from MovieSeriesEntity series join " +
             "series.movieByMovieId movie join " +
             "movie.categoryEntityCollection categoryMovie where categoryMovie.id = :categoryId")
