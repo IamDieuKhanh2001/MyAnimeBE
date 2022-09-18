@@ -7,6 +7,7 @@ import com.hcmute.myanime.common.Common;
 import com.hcmute.myanime.dto.*;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.mapper.MovieSeriesMapper;
+import com.hcmute.myanime.mapper.SeriesDetailMapper;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.service.CommentService;
 import com.hcmute.myanime.service.MovieSeriesService;
@@ -57,25 +58,9 @@ public class MovieSeriesController {
         List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.getByPageAndLimit(page, limit, keywordSearch);
         List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
-            seriesDetailDTOList.add(
-                    new SeriesDetailDTO(
-                            movieSeriesEntity.getId(),
-                            movieSeriesEntity.getMovieByMovieId().getTitle(),
-                            movieSeriesEntity.getDescription(),
-                            movieSeriesEntity.getMovieByMovieId().getStudioName(),
-                            movieSeriesEntity.getImage(),
-                            movieSeriesEntity.getDateAired(),
-                            movieSeriesEntity.getMovieByMovieId().getCreateAt(),
-                            movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity),
-                            commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity),
-                            movieSeriesEntity.getCreateAt(),
-                            movieSeriesEntity.getName(),
-                            movieSeriesEntity.getEpisodesById().size(),
-                            movieSeriesEntity.getTotalEpisode(),
-                            movieSeriesEntity.getMovieByMovieId().getId(),
-                            movieSeriesEntity.getMovieByMovieId().getCategoryEntityCollection().stream().toList()
-                    )
-            );
+            Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+            Long seriesTotalComment = commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity);
+            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView,seriesTotalComment));
         });
         return ResponseEntity.ok(seriesDetailDTOList);
     }
@@ -85,52 +70,22 @@ public class MovieSeriesController {
     public ResponseEntity<?> movieAndSeriesBySeriesId(@PathVariable int seriesId)
     {
         MovieSeriesEntity movieSeriesEntity = movieSeriesService.findById(seriesId);
-        SeriesDetailDTO seriesDetailDTO = new SeriesDetailDTO(
-                movieSeriesEntity.getId(),
-                movieSeriesEntity.getMovieByMovieId().getTitle(),
-                movieSeriesEntity.getDescription(),
-                movieSeriesEntity.getMovieByMovieId().getStudioName(),
-                movieSeriesEntity.getImage(),
-                movieSeriesEntity.getDateAired(),
-                movieSeriesEntity.getMovieByMovieId().getCreateAt(),
-                movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity),
-                commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity),
-                movieSeriesEntity.getCreateAt(),
-                movieSeriesEntity.getName(),
-                movieSeriesEntity.getEpisodesById().size(),
-                movieSeriesEntity.getTotalEpisode(),
-                movieSeriesEntity.getMovieByMovieId().getId(),
-                movieSeriesEntity.getMovieByMovieId().getCategoryEntityCollection().stream().toList()
-        );
+        Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+        Long seriesTotalComment = commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity);
+        SeriesDetailDTO seriesDetailDTO = SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView,seriesTotalComment);
         return ResponseEntity.ok(seriesDetailDTO);
     }
 
-    //Movie va series lay id
+    //Movie va series lay cac series cùng 1 movie id
     @GetMapping("/movie-and-series/get-all-series/{seriesId}")
     public ResponseEntity<?> getAllMovieAndSeriesBySeriesId(@PathVariable int seriesId)
     {
         List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.findAllMovieAndSeriesById(seriesId);
         List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
-            seriesDetailDTOList.add(
-                    new SeriesDetailDTO(
-                            movieSeriesEntity.getId(),
-                            movieSeriesEntity.getMovieByMovieId().getTitle(),
-                            movieSeriesEntity.getDescription(),
-                            movieSeriesEntity.getMovieByMovieId().getStudioName(),
-                            movieSeriesEntity.getImage(),
-                            movieSeriesEntity.getDateAired(),
-                            movieSeriesEntity.getMovieByMovieId().getCreateAt(),
-                            movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity),
-                            commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity),
-                            movieSeriesEntity.getCreateAt(),
-                            movieSeriesEntity.getName(),
-                            movieSeriesEntity.getEpisodesById().size(),
-                            movieSeriesEntity.getTotalEpisode(),
-                            movieSeriesEntity.getMovieByMovieId().getId(),
-                            movieSeriesEntity.getMovieByMovieId().getCategoryEntityCollection().stream().toList()
-                    )
-            );
+            Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+            Long seriesTotalComment = commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity);
+            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView,seriesTotalComment));
         });
         return ResponseEntity.ok(seriesDetailDTOList);
     }
