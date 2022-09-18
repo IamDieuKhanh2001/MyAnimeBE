@@ -1,14 +1,20 @@
 package com.hcmute.myanime.service;
 
+import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.CategoryDTO;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.exception.ResourceNotFoundException;
 import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.MovieEntity;
+import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.repository.CategoryRepository;
 import com.hcmute.myanime.repository.MovieRepository;
+import com.hcmute.myanime.repository.MovieSeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +31,45 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private MovieSeriesRepository movieSeriesRepository;
 
     public List<CategoryEntity> findAll() {
         return categoryRepository.findAll();
     }
 
+    private Boolean isNumber(String s) {
+        try {
+            Long.parseLong(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private Boolean isValidPage(String page) {
+        return page != null && !page.equals("") && isNumber(page) && Long.parseLong(page) >= 0;
+    }
+
+    public List<MovieSeriesEntity> findMovieSeriesEntitiesByCategory(int categoryId, String page, String limit) {
+        limit = (limit == null || limit.equals("")
+                || !isNumber(limit) || Long.parseLong(limit) < 0) ? GlobalVariable.DEFAULT_LIMIT : limit;
+
+        page = (!isValidPage(page)) ? GlobalVariable.DEFAULT_PAGE : page;
+        Pageable pageable = PageRequest.of((Integer.parseInt(page) - 1), Integer.parseInt(limit));
+
+        List<MovieSeriesEntity> movieSeriesEntityList = new ArrayList<>();
+        movieSeriesEntityList = movieSeriesRepository.findByCategoryId(categoryId, pageable);
+//        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(categoryId);
+//        if(categoryEntityOptional.isPresent()) {
+//            CategoryEntity categoryEntity = categoryEntityOptional.get();
+//            List<MovieEntity> movieEntityList = categoryEntity.getMovieEntityCollection().stream().toList();
+//            movieEntityList.forEach(movieEntity -> {
+//                movieSeriesEntityList.addAll(movieSeriesRepository.findAllByMovieByMovieId(movieEntity, pageable));
+//            });
+//        }
+        return movieSeriesEntityList;
+    }
     public boolean save(CategoryDTO categoryDTO) {
         CategoryEntity categoryEntity = new CategoryEntity(
                 categoryDTO.getName()
@@ -101,5 +141,11 @@ public class CategoryService {
         }
         CategoryEntity categoryEntity = categoryEntityOptional.get();
         return categoryEntity;
+    }
+
+    public Long countSeriesByCategoryId(int categoryId) {
+        Long totalSeries;
+        totalSeries = categoryRepository.countSeriesByCategoryId(categoryId);
+        return totalSeries;
     }
 }

@@ -2,6 +2,7 @@ package com.hcmute.myanime.repository;
 
 import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.MovieEntity;
+import com.hcmute.myanime.model.MovieSeriesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +15,8 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<CategoryEntity, Integer> {
     @Query( "select o from CategoryEntity o where id in :ids" )
     Collection<CategoryEntity> findByIds(@Param("ids") List<Integer> inventoryIdList);
+    @Query(value = "select count(series) from MovieSeriesEntity series join " +
+            "series.movieByMovieId movie join " +
+            "movie.categoryEntityCollection categoryMovie where categoryMovie.id = :categoryId")
+    Long countSeriesByCategoryId(@Param("categoryId") int categoryId);
 }

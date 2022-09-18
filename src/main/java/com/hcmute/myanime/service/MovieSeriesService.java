@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +27,8 @@ public class MovieSeriesService {
     private MovieRepository movieRepository;
     @Autowired
     private CloudinaryService cloudinaryService;
+    @Autowired
+    private CategoryService categoryService;
 
 
     public List<MovieSeriesEntity> findAll()
@@ -128,7 +129,7 @@ public class MovieSeriesService {
         return totalView;
     }
 
-    public Long countSeries(String keywordSearch) {
+    public Long countSeriesByKeyword(String keywordSearch) {
         Long totalSeries;
         if(keywordSearch != null) {
             totalSeries = movieSeriesRepository.countByNameContaining(keywordSearch);
@@ -161,7 +162,8 @@ public class MovieSeriesService {
         List<MovieSeriesEntity> movieSeriesEntityList = new ArrayList<>();
         if(keywordSearch != null) {
             movieSeriesEntityList = movieSeriesRepository.findByNameContaining(keywordSearch,pageable);
-        } else{
+        }
+        else{
             movieSeriesEntityList = movieSeriesRepository.findAll(pageable).stream().toList();
         }
 

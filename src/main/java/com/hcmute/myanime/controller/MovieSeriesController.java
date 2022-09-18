@@ -3,12 +3,12 @@ package com.hcmute.myanime.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.hcmute.myanime.common.Common;
 import com.hcmute.myanime.dto.*;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.mapper.MovieSeriesMapper;
 import com.hcmute.myanime.mapper.SeriesDetailMapper;
 import com.hcmute.myanime.model.MovieSeriesEntity;
+import com.hcmute.myanime.service.CategoryService;
 import com.hcmute.myanime.service.CommentService;
 import com.hcmute.myanime.service.MovieSeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,8 @@ public class MovieSeriesController {
     private MovieSeriesService movieSeriesService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private CategoryService categoryService;
 
 
     @GetMapping("/admin/movie-series")
@@ -45,7 +47,7 @@ public class MovieSeriesController {
     public ResponseEntity<?> countSeries(@RequestParam Map<String, String> requestParams)
     {
         String keywordSearch = requestParams.get("keyword");
-        return ResponseEntity.ok(new TotalSeriesDTO(movieSeriesService.countSeries(keywordSearch)));
+        return ResponseEntity.ok(new TotalSeriesDTO(movieSeriesService.countSeriesByKeyword(keywordSearch)));
     }
 
     //Movie va series co phan trang
@@ -55,7 +57,7 @@ public class MovieSeriesController {
         String page = requestParams.get("page");
         String limit = requestParams.get("limit");
         String keywordSearch = requestParams.get("keyword");
-        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.getByPageAndLimit(page, limit, keywordSearch);
+        List<MovieSeriesEntity> movieSeriesEntityList  = movieSeriesService.getByPageAndLimit(page, limit, keywordSearch);
         List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
             Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
@@ -63,6 +65,28 @@ public class MovieSeriesController {
             seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView,seriesTotalComment));
         });
         return ResponseEntity.ok(seriesDetailDTOList);
+    }
+
+    //Movie va series by category co phan trang
+    @GetMapping("/movie-and-series/category/{categoryId}")
+    public ResponseEntity<?> movieAndSeriesFindByCategory(@PathVariable int categoryId, @RequestParam Map<String, String> requestParams)
+    {
+        String page = requestParams.get("page");
+        String limit = requestParams.get("limit");
+        List<MovieSeriesEntity> movieSeriesEntityList = categoryService.findMovieSeriesEntitiesByCategory(categoryId, page, limit);
+        List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
+        movieSeriesEntityList.forEach(movieSeriesEntity -> {
+            Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+            Long seriesTotalComment = commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity);
+            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView,seriesTotalComment));
+        });
+        return ResponseEntity.ok(seriesDetailDTOList);
+    }
+
+    @GetMapping("/movie-and-series/category/{categoryId}/count")
+    public ResponseEntity<?> countSeriesByCategoryId(@PathVariable int categoryId)
+    {
+        return ResponseEntity.ok(new TotalSeriesDTO(categoryService.countSeriesByCategoryId(categoryId)));
     }
 
     //Movie va series lay id
