@@ -3,6 +3,7 @@ package com.hcmute.myanime.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class MovieDTO {
     private int id;
@@ -11,6 +12,16 @@ public class MovieDTO {
     private String studioName;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createAt;
+
+    private List<CategoryDTO> categoryData;
+
+    public List<CategoryDTO> getCategoryData() {
+        return categoryData;
+    }
+
+    public void setCategoryData(List<CategoryDTO> categoryData) {
+        this.categoryData = categoryData;
+    }
 
     public int getId() {
         return id;

@@ -25,7 +25,6 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.findById(categoryId));
     }
 
-
     @PostMapping("/admin/category")
     public ResponseEntity<?> createNewCategory(@RequestBody CategoryDTO categoryDTO) {
         if(categoryService.save(categoryDTO)) {

@@ -1,5 +1,6 @@
 package com.hcmute.myanime.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.MovieSeriesDTO;
 import com.hcmute.myanime.exception.BadRequestException;
@@ -33,7 +34,8 @@ public class MovieSeriesService {
 
     public List<MovieSeriesEntity> findAll()
     {
-        return movieSeriesRepository.findAll();
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesRepository.findAll();
+        return movieSeriesEntityList;
     }
 
     public MovieSeriesEntity findById(int seriesId) {

@@ -1,6 +1,7 @@
 package com.hcmute.myanime.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hcmute.myanime.model.MovieEntity;
 
 import java.sql.Timestamp;
 
@@ -14,6 +15,16 @@ public class MovieSeriesDTO {
     private String name;
     private int totalEpisode;
     private int movieId;
+
+    private MovieDTO movieData;
+
+    public MovieDTO getMovieData() {
+        return movieData;
+    }
+
+    public void setMovieData(MovieDTO movieData) {
+        this.movieData = movieData;
+    }
 
     public MovieSeriesDTO() {
     }

@@ -1,5 +1,7 @@
 package com.hcmute.myanime.mapper;
 
+
+import com.hcmute.myanime.dto.MovieDTO;
 import com.hcmute.myanime.dto.MovieSeriesDTO;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 
@@ -28,6 +30,8 @@ public class MovieSeriesMapper {
         movieSeriesDTO.setName(movieSeriesEntity.getName());
         movieSeriesDTO.setTotalEpisode(movieSeriesEntity.getTotalEpisode());
         movieSeriesDTO.setMovieId(movieSeriesEntity.getMovieByMovieId().getId());
+        movieSeriesDTO.setMovieData(MovieMapper.toDTO(movieSeriesEntity.getMovieByMovieId()));
+
         return movieSeriesDTO;
     }
 }

@@ -4,6 +4,7 @@ import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.CategoryDTO;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.exception.ResourceNotFoundException;
+import com.hcmute.myanime.mapper.CategoryMapper;
 import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
@@ -34,8 +35,13 @@ public class CategoryService {
     @Autowired
     private MovieSeriesRepository movieSeriesRepository;
 
-    public List<CategoryEntity> findAll() {
-        return categoryRepository.findAll();
+    public List<CategoryDTO> findAll() {
+        List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
+        List<CategoryDTO> categoryDTOList = new ArrayList<>();
+        categoryEntityList.forEach((categoryEntity -> {
+            categoryDTOList.add(CategoryMapper.toDTO(categoryEntity));
+        }));
+        return categoryDTOList;
     }
 
     private Boolean isNumber(String s) {
