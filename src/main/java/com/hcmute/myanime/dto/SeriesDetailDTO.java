@@ -12,6 +12,7 @@ public class SeriesDetailDTO {
     private String description;
     private String studioName;
     private String image;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Timestamp dateAired;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Timestamp movieCreateAt;

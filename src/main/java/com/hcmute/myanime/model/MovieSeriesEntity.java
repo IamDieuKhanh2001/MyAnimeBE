@@ -18,6 +18,7 @@ public class MovieSeriesEntity {
     @Id
     private int id;
     private String name;
+    @Column(columnDefinition="TEXT")
     private String description;
     private Timestamp dateAired;
     private int totalEpisode;
