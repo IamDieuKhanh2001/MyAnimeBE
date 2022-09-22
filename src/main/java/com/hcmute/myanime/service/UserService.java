@@ -5,7 +5,6 @@ import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.config.EmailTemplate;
 import com.hcmute.myanime.dto.UserDTO;
 import com.hcmute.myanime.exception.BadRequestException;
-import com.hcmute.myanime.model.CategoryEntity;
 import com.hcmute.myanime.model.EmailConfirmationEntity;
 import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.repository.EmailConfirmationRepository;
@@ -13,6 +12,7 @@ import com.hcmute.myanime.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
@@ -99,38 +99,49 @@ public class UserService {
         } catch (Exception ex) {
             return false;
         }
+
     }
 
-    public ResponseEntity<?> updateMailUserLogging(UserDTO userDTO) {
+    public ResponseEntity<?> updateInfoUserLogging(UserDTO userDTO) {
         String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
         UsersEntity userEntity = usersRepository.findByUsername(usernameLoggedIn).get();
         String otpCode = GlobalVariable.GetOTP();
         Optional<UsersEntity> usersEntityOptional = usersRepository.findByEmail(userDTO.getEmail());
         if (usersEntityOptional.isPresent()) { //Check if mail has been used in other mail
-            return ResponseEntity.badRequest().body("Another account has used this email, please try another email");
+            if(userEntity.getEmail() == null || !usersEntityOptional.get().equals(userEntity)) {
+                return ResponseEntity.badRequest().body("Another account has used this email, please try another email");
+            }
         }
-        try {
-            sendRecoveryEmail(userDTO.getEmail(), usernameLoggedIn, otpCode);
-            Timestamp expDate = new Timestamp(System.currentTimeMillis());
-            EmailConfirmationEntity emailConfirmationEntity = new
-                    EmailConfirmationEntity(
-                    otpCode,
-                    "pending",
-                    userDTO.getEmail(),
-                    "SetMail",
-                    expDate,
-                    expDate,
-                    userEntity);
+        userEntity.setFullName(userDTO.getFullName());
+        if(userEntity.getEmail() == null || !userEntity.getEmail().equals(userDTO.getEmail())) {
+            System.out.println("change mail");
+            try {
+                sendRecoveryEmail(userDTO.getEmail(), usernameLoggedIn, otpCode);
+                Timestamp expDate = new Timestamp(System.currentTimeMillis());
+                expDate.setMinutes(expDate.getMinutes() + 10);
+                Timestamp createAt = new Timestamp(System.currentTimeMillis());
+                System.out.println(expDate);
+                System.out.println(createAt);
+                EmailConfirmationEntity emailConfirmationEntity = new
+                        EmailConfirmationEntity(
+                        otpCode,
+                        GlobalVariable.EMAIL_CONFIRMATION_STATUS_PENDING,
+                        userDTO.getEmail(),
+                        "SetMail",
+                        expDate,
+                        createAt,
+                        userEntity);
+                emailConfirmationRepository.save(emailConfirmationEntity);
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body("This gmail is not valid");
+            }
+        }
 
-            emailConfirmationRepository.save(emailConfirmationEntity);
-        } catch (MessagingException e) {
-            return ResponseEntity.badRequest().body("This gmail is not valid");
-        }
         try {
             usersRepository.save(userEntity);
-            return ResponseEntity.ok("Request success for confirmation mail");
+            return ResponseEntity.ok("Update user info success");
         } catch (Exception ex) {
-            return ResponseEntity.badRequest().body("Update user mail fail");
+            return ResponseEntity.badRequest().body("Update user fail");
         }
     }
 
@@ -143,15 +154,34 @@ public class UserService {
 
     }
 
-    public ResponseEntity<?> updateFullNameUserLogging(UserDTO userDTO) {
+    public ResponseEntity<?> checkUserMailOTPCode(String otpCode) {
         String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
         UsersEntity userEntity = usersRepository.findByUsername(usernameLoggedIn).get();
-        userEntity.setFullName(userDTO.getFullName());
-        try {
-            usersRepository.save(userEntity);
-            return ResponseEntity.ok("Update user name success");
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().body("Update user info fail");
+        return updateMailFromEmailConfirm(otpCode, userEntity);
+    }
+
+    @Transactional
+    public ResponseEntity<?> updateMailFromEmailConfirm (String otpCode, UsersEntity userEntity) {
+        Optional<EmailConfirmationEntity> emailConfirmationEntityOptional
+                = emailConfirmationRepository.findByOtpCodeAndUsersEntityByUserId(otpCode, userEntity);
+        if(emailConfirmationEntityOptional.isPresent()) {
+            EmailConfirmationEntity userEmailConfirmEntity = emailConfirmationEntityOptional.get();
+            Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+            if(userEmailConfirmEntity.getExpiredDate().after(currentDate)) {
+                userEntity.setEmail(userEmailConfirmEntity.getEmail());
+                try {
+                    usersRepository.save(userEntity);
+                    userEmailConfirmEntity.setStatus(GlobalVariable.EMAIL_CONFIRMATION_STATUS_USED);
+                    emailConfirmationRepository.save(userEmailConfirmEntity);
+                    return ResponseEntity.ok("Update user mail success");
+                } catch (Exception ex) {
+                    return ResponseEntity.badRequest().body("Update user mail fail");
+                }
+            } else {
+                return ResponseEntity.badRequest().body("OTP code has been expired");
+            }
+        } else {
+            return ResponseEntity.badRequest().body("OTP code not valid, try again");
         }
     }
 }

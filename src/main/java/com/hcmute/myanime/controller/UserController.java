@@ -85,15 +85,15 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/user-detail/fullName")
-    public ResponseEntity<?> updateFullNameUserLogging(@RequestBody UserDTO userDTO) {
-        ResponseEntity<?> responseEntity = userService.updateFullNameUserLogging(userDTO);
+    @PutMapping("/user/user-detail")
+    public ResponseEntity<?> updateInfoUserLogging(@RequestBody UserDTO userDTO) {
+        ResponseEntity<?> responseEntity = userService.updateInfoUserLogging(userDTO);
         return responseEntity;
     }
 
-    @PutMapping("/user/user-detail/mail")
-    public ResponseEntity<?> updateMailUserLogging(@RequestBody UserDTO userDTO) {
-        ResponseEntity<?> responseEntity = userService.updateMailUserLogging(userDTO);
+    @GetMapping("/user/user-detail/mail/checkOTP/{otpCode}")
+    public ResponseEntity<?> checkUserMailOTP(@PathVariable String otpCode) {
+        ResponseEntity<?> responseEntity = userService.checkUserMailOTPCode(otpCode);
         return responseEntity;
     }
 }

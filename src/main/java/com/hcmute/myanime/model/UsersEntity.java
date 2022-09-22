@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users", schema = "movie")
@@ -44,6 +45,19 @@ public class UsersEntity {
     @OneToMany(mappedBy = "usersEntityByUserId", fetch = FetchType.LAZY)
     @JsonManagedReference
     private Collection<EmailConfirmationEntity> emailConfirmationEntityCollection;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UsersEntity that = (UsersEntity) o;
+        return id == that.id && Objects.equals(fullName, that.fullName) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(email, that.email) && Objects.equals(avatar, that.avatar) && Objects.equals(createAt, that.createAt) && Objects.equals(enable, that.enable) && Objects.equals(commentsById, that.commentsById) && Objects.equals(userRoleByUserRoleId, that.userRoleByUserRoleId) && Objects.equals(logHistoriesEntityCollection, that.logHistoriesEntityCollection) && Objects.equals(favoritesEntityCollection, that.favoritesEntityCollection) && Objects.equals(emailConfirmationEntityCollection, that.emailConfirmationEntityCollection);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fullName, username, password, email, avatar, createAt, enable, commentsById, userRoleByUserRoleId, logHistoriesEntityCollection, favoritesEntityCollection, emailConfirmationEntityCollection);
+    }
 
     public Collection<EmailConfirmationEntity> getEmailConfirmationEntityCollection() {
         return emailConfirmationEntityCollection;
@@ -134,32 +148,6 @@ public class UsersEntity {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UsersEntity that = (UsersEntity) o;
-
-        if (id != that.id) return false;
-        if (fullName != null ? !fullName.equals(that.fullName) : that.fullName != null) return false;
-        if (username != null ? !username.equals(that.username) : that.username != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (createAt != null ? !createAt.equals(that.createAt) : that.createAt != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (fullName != null ? fullName.hashCode() : 0);
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (createAt != null ? createAt.hashCode() : 0);
-        return result;
     }
 
     public Collection<CommentEntity> getCommentsById() {

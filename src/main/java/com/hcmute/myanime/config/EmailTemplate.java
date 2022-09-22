@@ -17,13 +17,13 @@ public class EmailTemplate {
                 "    </style>\n" +
                 "</head>\n" +
                 "\n" +
-                "<body marginheight=\"0\" topmargin=\"0\" marginwidth=\"0\" style=\"margin: 0px; background-color: #f2f3f8;\" leftmargin=\"0\">\n" +
+                "<body marginheight=\"0\" topmargin=\"0\" marginwidth=\"0\" style=\"margin: 0px; background-color: #0b0c2a;\" leftmargin=\"0\">\n" +
                 "    <!--100% body table-->\n" +
-                "    <table cellspacing=\"0\" border=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#f2f3f8\"\n" +
+                "    <table cellspacing=\"0\" border=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#0b0c2a\"\n" +
                 "        style=\"@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;\">\n" +
                 "        <tr>\n" +
                 "            <td>\n" +
-                "                <table style=\"background-color: #f2f3f8; max-width:670px;  margin:0 auto;\" width=\"100%\" border=\"0\"\n" +
+                "                <table style=\"background-color: #0b0c2a; max-width:670px;  margin:0 auto;\" width=\"100%\" border=\"0\"\n" +
                 "                    align=\"center\" cellpadding=\"0\" cellspacing=\"0\">\n" +
                 "                    <tr>\n" +
                 "                        <td style=\"height:80px;\">&nbsp;</td>\n" +
@@ -31,7 +31,7 @@ public class EmailTemplate {
                 "                    <tr>\n" +
                 "                        <td style=\"text-align:center;\">\n" +
                 "                          <a href=\"\" title=\"logo\" target=\"_blank\">\n" +
-                "                            <img width=\"400\" height=\"200\" src=\"https://logolook.net/wp-content/uploads/2021/11/Shopee-Logo.png\" title=\"logo\" alt=\"logo\">\n" +
+                "                            <img width=\"170\" height=\"50\" src=\"https://res.cloudinary.com/dpxgtmzld/image/upload/v1663818044/MyAnimeProject_TLCN/BackEnd_Assets/logo_myanime.png\" title=\"logo\" alt=\"logo\">\n" +
                 "                          </a>\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
@@ -52,7 +52,7 @@ public class EmailTemplate {
                 "                                        <span\n" +
                 "                                            style=\"display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;\"></span>\n" +
                 "                                        <p style=\"color:#455056; font-size:15px;line-height:24px; margin:0;\">\n" +
-                "                                            Bạn đã yêu cầu thay đổi mật khẩu cho " + username + "\n" + "<br>" +
+                "                                            Mã OTP dưới đây có hiệu lực trong vòng 10 phút, hãy nhanh chóng sử dụng " + "\n" + "<br>" +
                 "                                            Hãy sử dụng OTP này để xác thực: \n" +
                 "                                        </p>\n" +
                 "                                        <a \n" +
@@ -70,7 +70,7 @@ public class EmailTemplate {
                 "                    </tr>\n" +
                 "                    <tr>\n" +
                 "                        <td style=\"text-align:center;\">\n" +
-                "                            <p style=\"font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;\">&copy; <strong>Thực tập FPT software - Nhóm 2 - Made with love</strong></p>\n" +
+                "                            <p style=\"font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;\">&copy; <strong style=\"color: white\">アニメが好きだ　ー HCMUTE プログラマー</strong></p>\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
                 "                    <tr>\n" +

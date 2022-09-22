@@ -10,4 +10,6 @@ public class GlobalVariable {
         return String.format("%06d", new Random().nextInt(999999));
     }
 
+    public static final String EMAIL_CONFIRMATION_STATUS_PENDING = "pending";
+    public static final String EMAIL_CONFIRMATION_STATUS_USED = "Used";
 }
