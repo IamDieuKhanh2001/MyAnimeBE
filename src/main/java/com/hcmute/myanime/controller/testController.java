@@ -20,7 +20,7 @@ public class testController {
 
     @GetMapping("/test/api")
     public ResponseEntity<?> test() {
-        return ResponseEntity.ok("Deployed 28/09/2022");
+        return ResponseEntity.ok("Deployed 29/09/2022 Change Timezone Server USA");
     }
     @GetMapping("/test/api/adminRole")
     public ResponseEntity<?> testRole() {
