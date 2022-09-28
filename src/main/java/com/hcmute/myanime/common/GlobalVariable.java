@@ -12,4 +12,7 @@ public class GlobalVariable {
 
     public static final String EMAIL_CONFIRMATION_STATUS_PENDING = "pending";
     public static final String EMAIL_CONFIRMATION_STATUS_USED = "Used";
+
+    // The rule is that each view of a client can only be increased at least once every 30 minutes
+    public static final long MINIMUM_SECONDS_VIEW = 1800;
 }

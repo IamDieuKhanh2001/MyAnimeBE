@@ -39,6 +39,9 @@ public class EpisodeEntity {
     @JsonManagedReference
     private Collection<LogHistoriesEntity> logHistoriesEntityCollection;
 
+    @OneToMany(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Collection<ViewStatisticsEntity> viewStatisticsEntity;
+
     public EpisodeEntity() {
     }
 

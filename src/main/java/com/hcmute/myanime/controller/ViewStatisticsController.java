@@ -21,15 +21,26 @@ public class ViewStatisticsController {
     @Autowired
     private EpisodeService episodeService;
 
-    @GetMapping("/top-most-view-in-week")
+    @GetMapping("/top-ep-most-view-in-week")
     public ResponseEntity<?> getEpisodeMostViewInWeek()
     {
-        return ResponseEntity.ok(episodeService.getTopMostView(7));
+        return ResponseEntity.ok(episodeService.getTopEpisodeMostView(7, 5));
     }
-
-    @GetMapping("/top-most-view-in-month")
+    @GetMapping("/top-ep-most-view-in-month")
     public ResponseEntity<?> getEpisodeMostViewInMonth()
     {
-        return ResponseEntity.ok(episodeService.getTopMostView(30));
+        return ResponseEntity.ok(episodeService.getTopEpisodeMostView(30, 5));
+    }
+
+    @GetMapping("/top-movie-series-most-view-in-week")
+    public ResponseEntity<?> getMovieSeriesMostViewInWeek()
+    {
+        return ResponseEntity.ok(episodeService.getTopSeriesMostView(7, 5));
+    }
+
+    @GetMapping("/top-movie-series-most-view-in-month")
+    public ResponseEntity<?> getMovieSeriesMostViewInMonth()
+    {
+        return ResponseEntity.ok(episodeService.getTopSeriesMostView(30, 5));
     }
 }

@@ -4,21 +4,31 @@ import java.sql.Timestamp;
 
 public class StatisticsEpisodeDTO extends EpisodeDTO{
 
-    private long totalView;
+    private long statisticsView;
+    private int SeriesId;
 
-    public StatisticsEpisodeDTO(int id, Timestamp createAt, String resource, String title, long totalView) {
+
+    public StatisticsEpisodeDTO(int id, Timestamp createAt, String resource, String title, long statisticsView, int seriesId) {
         super(id, createAt, resource, title);
-        this.totalView = totalView;
+        this.statisticsView = statisticsView;
+        SeriesId = seriesId;
     }
 
-    public long getTotalView() {
-        return totalView;
+
+    public long getStatisticsView() {
+        return statisticsView;
     }
 
-    public void setTotalView(long totalView) {
-        this.totalView = totalView;
+    public void setStatisticsView(long statisticsView) {
+        this.statisticsView = statisticsView;
     }
 
-    public StatisticsEpisodeDTO() {
+    public int getSeriesId() {
+        return SeriesId;
     }
+
+    public void setSeriesId(int seriesId) {
+        SeriesId = seriesId;
+    }
+
 }

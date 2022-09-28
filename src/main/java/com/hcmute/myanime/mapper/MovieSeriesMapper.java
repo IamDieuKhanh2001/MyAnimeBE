@@ -3,6 +3,7 @@ package com.hcmute.myanime.mapper;
 
 import com.hcmute.myanime.dto.MovieDTO;
 import com.hcmute.myanime.dto.MovieSeriesDTO;
+import com.hcmute.myanime.dto.StatisticsMovieSeriesDTO;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 
 public class MovieSeriesMapper {
@@ -33,5 +34,22 @@ public class MovieSeriesMapper {
         movieSeriesDTO.setMovieData(MovieMapper.toDTO(movieSeriesEntity.getMovieByMovieId()));
 
         return movieSeriesDTO;
+    }
+
+    public static StatisticsMovieSeriesDTO toDTO2 (MovieSeriesEntity movieSeriesEntity, long statisticsViewTotal)
+    {
+        StatisticsMovieSeriesDTO statisticsMovieSeriesDTO = new StatisticsMovieSeriesDTO();
+        statisticsMovieSeriesDTO.setId(movieSeriesEntity.getId());
+        statisticsMovieSeriesDTO.setCreateAt(movieSeriesEntity.getCreateAt());
+        statisticsMovieSeriesDTO.setDateAired(movieSeriesEntity.getDateAired());
+        statisticsMovieSeriesDTO.setDescription(movieSeriesEntity.getDescription());
+        statisticsMovieSeriesDTO.setImage(movieSeriesEntity.getImage());
+        statisticsMovieSeriesDTO.setName(movieSeriesEntity.getName());
+        statisticsMovieSeriesDTO.setTotalEpisode(movieSeriesEntity.getTotalEpisode());
+        statisticsMovieSeriesDTO.setMovieId(movieSeriesEntity.getMovieByMovieId().getId());
+        statisticsMovieSeriesDTO.setMovieData(MovieMapper.toDTO(movieSeriesEntity.getMovieByMovieId()));
+        statisticsMovieSeriesDTO.setStatisticsViewTotal(statisticsViewTotal);
+
+        return statisticsMovieSeriesDTO;
     }
 }
