@@ -20,7 +20,7 @@ public class testController {
 
     @GetMapping("/test/api")
     public ResponseEntity<?> test() {
-        return ResponseEntity.ok("Deployed 22/09/2022");
+        return ResponseEntity.ok("Deployed 28/09/2022");
     }
     @GetMapping("/test/api/adminRole")
     public ResponseEntity<?> testRole() {
