@@ -4,15 +4,19 @@ import com.hcmute.myanime.dto.EpisodeDTO;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.EpisodeEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
+import com.hcmute.myanime.model.ViewStatisticsEntity;
 import com.hcmute.myanime.repository.EpisodeRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
+import com.hcmute.myanime.repository.ViewStatisticsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Service
 @Transactional
@@ -24,6 +28,8 @@ public class EpisodeService {
     private MovieSeriesRepository movieSeriesRepository;
     @Autowired
     private CloudinaryService cloudinaryService;
+    @Autowired
+    private ViewStatisticsRepository viewStatisticsRepository;
 
     public List<EpisodeEntity> findBySeriesId(int seriesId){
         if(!movieSeriesRepository.findById(seriesId).isPresent()){
@@ -113,4 +119,71 @@ public class EpisodeService {
             return false;
         }
     }
+
+    public boolean increaseView(int episodeId, String ipClient)
+    {
+        Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(episodeId);
+        if(!episodeEntityOptional.isPresent())
+            return false;
+
+        EpisodeEntity episodeEntity = episodeEntityOptional.get();
+
+        List<ViewStatisticsEntity> viewStatisticsEntityList = viewStatisticsRepository.findByIpAddressAndEpisode(ipClient, episodeEntity, PageRequest.of(0, 1));
+
+        viewStatisticsEntityList.forEach((v)->{
+            System.out.println(v.getCreateAt().getTime()/1000);
+        });
+
+        if(viewStatisticsEntityList.size() == 0)
+        {
+            ViewStatisticsEntity viewStatisticsEntityInsert = new ViewStatisticsEntity();
+            viewStatisticsEntityInsert.setEpisode(episodeEntity);
+            viewStatisticsEntityInsert.setIpAddress(ipClient);
+            viewStatisticsRepository.save(viewStatisticsEntityInsert);
+            episodeEntity.setTotalView(episodeEntity.getTotalView() + 1);
+            episodeRepository.save(episodeEntity);
+            return true;
+        }
+
+        ViewStatisticsEntity viewStatisticsEntity = viewStatisticsEntityList.get(0);
+        Timestamp lastTimeView = viewStatisticsEntity.getCreateAt();
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+
+        long distanceSecond = (currentTimestamp.getTime() / 1000) - (lastTimeView.getTime() / 1000);
+
+        // The rule is that each view of a client can only be increased at least once every 30 minutes
+        if(distanceSecond < 1800)
+            return false;
+
+        ViewStatisticsEntity viewStatisticsEntityInsert = new ViewStatisticsEntity();
+        viewStatisticsEntityInsert.setEpisode(episodeEntity);
+        viewStatisticsEntityInsert.setIpAddress(ipClient);
+        viewStatisticsRepository.save(viewStatisticsEntityInsert);
+        episodeEntity.setTotalView(episodeEntity.getTotalView() + 1);
+        episodeRepository.save(episodeEntity);
+        return true;
+    }
+
+    public List<EpisodeEntity> getTop5EpisodeViewOnWeek()
+    {
+        long weekSeconds = 604800;
+        long monthSeconds = 2592000;
+
+
+//        System.out.println(viewStatisticsRepository.a());
+//        System.out.println(viewStatisticsRepository.ab());
+//        System.out.println(viewStatisticsRepository.abc());
+//        return new ArrayList<>();
+
+
+        List<Object[]> list = viewStatisticsRepository.test(2);
+        list.forEach((item)->{
+            EpisodeEntity episodeEntity = (EpisodeEntity) item[0];
+            long totalView = (Long) item[1];
+            System.out.println(episodeEntity.getResource());
+            System.out.println(totalView);
+        });
+        return  new ArrayList<>();
+    }
+
 }

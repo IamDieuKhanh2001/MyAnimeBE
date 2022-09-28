@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +87,19 @@ public class EpisodeController {
             );
         } else {
             return ResponseEntity.badRequest().body("Update episode fail");
+        }
+    }
+
+    @PatchMapping("/episode/increaseview/{episodeId}")
+    public ResponseEntity<?> increaseView(@PathVariable int episodeId, HttpServletRequest request)
+    {
+        String ipClient = request.getRemoteAddr();
+        if(episodeService.increaseView(episodeId, ipClient)) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK, "Increase view success")
+            );
+        } else {
+            return ResponseEntity.badRequest().body("Increase view fail");
         }
     }
 
