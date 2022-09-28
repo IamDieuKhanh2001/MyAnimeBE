@@ -1,6 +1,7 @@
 package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.dto.EpisodeDTO;
+import com.hcmute.myanime.dto.StatisticsEpisodeDTO;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.EpisodeEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
@@ -10,7 +11,6 @@ import com.hcmute.myanime.repository.MovieSeriesRepository;
 import com.hcmute.myanime.repository.ViewStatisticsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -164,26 +164,25 @@ public class EpisodeService {
         return true;
     }
 
-    public List<EpisodeEntity> getTop5EpisodeViewOnWeek()
+    public List<StatisticsEpisodeDTO> getTopMostView(int numberOfDay)
     {
-        long weekSeconds = 604800;
-        long monthSeconds = 2592000;
+        List<Object[]> listObject = viewStatisticsRepository.findTopMostViewWithDay(numberOfDay, PageRequest.of(0, 5));
+        if(listObject.size() == 0)
+            return null;
 
+        List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = new ArrayList<>();
 
-//        System.out.println(viewStatisticsRepository.a());
-//        System.out.println(viewStatisticsRepository.ab());
-//        System.out.println(viewStatisticsRepository.abc());
-//        return new ArrayList<>();
-
-
-        List<Object[]> list = viewStatisticsRepository.test(2);
-        list.forEach((item)->{
-            EpisodeEntity episodeEntity = (EpisodeEntity) item[0];
-            long totalView = (Long) item[1];
-            System.out.println(episodeEntity.getResource());
-            System.out.println(totalView);
+        listObject.forEach((itemObj)->{
+            EpisodeEntity episodeEntity = (EpisodeEntity) itemObj[0];
+            long totalView = (Long) itemObj[1];
+            if(episodeEntity != null)
+            {
+                StatisticsEpisodeDTO statisticsEpisodeDTO = new StatisticsEpisodeDTO(episodeEntity.getId(), episodeEntity.getCreateAt(), episodeEntity.getResource(), episodeEntity.getTitle(), totalView);
+                statisticsEpisodeDTOList.add(statisticsEpisodeDTO);
+            }
         });
-        return  new ArrayList<>();
+
+        return statisticsEpisodeDTOList;
     }
 
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,15 +21,15 @@ public class ViewStatisticsController {
     @Autowired
     private EpisodeService episodeService;
 
-    @GetMapping("/top-view-one-week")
-    public ResponseEntity<?> getTop5EpisodeViewOnWeek()
+    @GetMapping("/top-most-view-in-week")
+    public ResponseEntity<?> getEpisodeMostViewInWeek()
     {
-        episodeService.getTop5EpisodeViewOnWeek();
-        return ResponseEntity.ok(
-                new ResponseDTO(
-                        HttpStatus.OK,
-                        "Create new category success"
-                )
-        );
+        return ResponseEntity.ok(episodeService.getTopMostView(7));
+    }
+
+    @GetMapping("/top-most-view-in-month")
+    public ResponseEntity<?> getEpisodeMostViewInMonth()
+    {
+        return ResponseEntity.ok(episodeService.getTopMostView(30));
     }
 }
