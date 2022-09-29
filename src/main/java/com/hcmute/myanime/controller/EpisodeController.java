@@ -103,9 +103,6 @@ public class EpisodeController {
         }
     }
 
-    @Autowired
-    private CloudinaryService cloudinaryService;
-
     @DeleteMapping("/admin/episode/{episodeId}")
     public ResponseEntity<?> deleteEpisodeById(@PathVariable int episodeId) {
         if(episodeService.deleteById(episodeId)) {
