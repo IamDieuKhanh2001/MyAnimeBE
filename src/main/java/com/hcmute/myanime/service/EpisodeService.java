@@ -172,11 +172,12 @@ public class EpisodeService {
 
     public List<StatisticsEpisodeDTO> getTopEpisodeMostView(int numberOfDay, int size)
     {
+        List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = new ArrayList<>();
+
         List<Object[]> listObject = viewStatisticsRepository.findTopMostViewWithDay(numberOfDay, PageRequest.of(0, size));
         if(listObject.size() == 0)
-            return null;
+            return statisticsEpisodeDTOList;
 
-        List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = new ArrayList<>();
 
         listObject.forEach((itemObj)->{
             EpisodeEntity episodeEntity = (EpisodeEntity) itemObj[0];
@@ -192,9 +193,10 @@ public class EpisodeService {
     }
 
     public List<StatisticsMovieSeriesDTO> getTopSeriesMostView(int numberOfDay, int size) {
+        List<StatisticsMovieSeriesDTO> statisticsMovieSeriesDTOList = new ArrayList<>();
         List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = this.getTopEpisodeMostView(numberOfDay, 999999);
         if (statisticsEpisodeDTOList.size() == 0)
-            return null;
+            return statisticsMovieSeriesDTOList;
 
         Map<Integer, Long> series = new HashMap<>();
         statisticsEpisodeDTOList.forEach((statisticsEpisodeDTO) -> {
@@ -207,7 +209,6 @@ public class EpisodeService {
             }
         });
 
-        List<StatisticsMovieSeriesDTO> statisticsMovieSeriesDTOList = new ArrayList<>();
         for (var seri : series.entrySet()) {
             Optional<MovieSeriesEntity> movieSeriesEntityOptional = movieSeriesRepository.findById(seri.getKey());
             if (!movieSeriesEntityOptional.isPresent())
