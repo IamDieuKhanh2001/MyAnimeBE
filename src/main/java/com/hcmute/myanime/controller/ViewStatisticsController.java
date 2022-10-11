@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("statistics")
@@ -29,15 +32,10 @@ public class ViewStatisticsController {
         return ResponseEntity.ok(episodeService.getTopEpisodeMostView(30, 5));
     }
 
-    @GetMapping("/top-movie-series-most-view-in-week")
-    public ResponseEntity<?> getMovieSeriesMostViewInWeek()
+    @GetMapping("/top-movie-series-most-view-in-number-of-day")
+    public ResponseEntity<?> getMovieSeriesMostViewInNumberOfDay(@RequestParam(defaultValue = "1") int numberOfDay,
+                                                                 @RequestParam(defaultValue = "5") int size)
     {
-        return ResponseEntity.ok(episodeService.getTopSeriesMostView(7, 5));
-    }
-
-    @GetMapping("/top-movie-series-most-view-in-month")
-    public ResponseEntity<?> getMovieSeriesMostViewInMonth()
-    {
-        return ResponseEntity.ok(episodeService.getTopSeriesMostView(30, 5));
+        return ResponseEntity.ok(episodeService.getTopSeriesMostView(numberOfDay, size));
     }
 }
