@@ -2,6 +2,8 @@ package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.dto.FavoritesDTO;
+import com.hcmute.myanime.exception.ResourceDeleteException;
+import com.hcmute.myanime.exception.ResourceNotFoundException;
 import com.hcmute.myanime.mapper.FavoritesMapper;
 import com.hcmute.myanime.model.FavoritesEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
@@ -26,7 +28,7 @@ public class FavoritesService {
     @Autowired
     private ApplicationUserService applicationUserService;
 
-    public boolean save(FavoritesDTO favoritesDTO)
+    public boolean saveOrDelete(FavoritesDTO favoritesDTO)
     {
         FavoritesEntity favoritesEntity = FavoritesMapper.toEntity(favoritesDTO);
 
@@ -58,8 +60,17 @@ public class FavoritesService {
             {
                 return false;
             }
+        } else {         // Neu favorites movie series da dc save thi xoa khoi db
+            deleteById(favoritesEntityChecked.getId());
+            throw new ResourceDeleteException("Favorite deleted successfully");
         }
-        return false;
+    }
+
+    public FavoritesEntity findByMovieSeriesIdAndUserLoggingId(int movieSeriesId) {
+        String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
+        Optional<UsersEntity> userLoggedIn = usersRepository.findByUsername(usernameLoggedIn);
+        FavoritesEntity favoritesEntity = favoritesRepository.findByMovieSeriesIdAndUserId(movieSeriesId, userLoggedIn.get().getId());
+        return favoritesEntity;
     }
 
     public boolean deleteById(int favoritesID) {

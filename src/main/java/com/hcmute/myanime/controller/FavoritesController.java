@@ -38,10 +38,22 @@ public class FavoritesController {
         return ResponseEntity.ok(favoritesDTOList);
     }
 
+    @GetMapping("/favorites/{favoritesID}")
+    public ResponseEntity<?> findByMovieSeriesIdAndUserLoggingId(@PathVariable int favoritesID)
+    {
+        FavoritesEntity favoritesEntity = favoritesService.findByMovieSeriesIdAndUserLoggingId(favoritesID);
+        List<FavoritesDTO> favoritesDTOList = new ArrayList<>();
+        if(favoritesEntity == null) {
+            return ResponseEntity.ok(favoritesDTOList);
+        }
+        favoritesDTOList.add(FavoritesMapper.toDTO(favoritesEntity));
+        return ResponseEntity.ok(favoritesDTOList);
+    }
+
     @PostMapping("/favorites")
     public ResponseEntity<?> storage(@RequestBody FavoritesDTO favoritesDTO)
     {
-        if(favoritesService.save(favoritesDTO)) {
+        if(favoritesService.saveOrDelete(favoritesDTO)) {
             return ResponseEntity.ok(
                     new ResponseDTO(
                             HttpStatus.OK,

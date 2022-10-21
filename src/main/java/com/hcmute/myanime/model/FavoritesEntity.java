@@ -60,4 +60,5 @@ public class FavoritesEntity {
     public void setUser(UsersEntity user) {
         this.user = user;
     }
+
 }
