@@ -13,9 +13,11 @@ import com.hcmute.myanime.repository.MovieSeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,13 +30,11 @@ public class MovieSeriesService {
     private MovieRepository movieRepository;
     @Autowired
     private CloudinaryService cloudinaryService;
-    @Autowired
-    private CategoryService categoryService;
 
 
     public List<MovieSeriesEntity> findAll()
     {
-        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesRepository.findAll();
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesRepository.findAll(Sort.by("createAt").descending());
         return movieSeriesEntityList;
     }
 
@@ -168,7 +168,20 @@ public class MovieSeriesService {
         else{
             movieSeriesEntityList = movieSeriesRepository.findAll(pageable).stream().toList();
         }
+        return movieSeriesEntityList;
+    }
 
+    public List<MovieSeriesEntity> getRecentlyAddedShow(String page, String limit) {
+        limit = (limit == null || limit.equals("")
+                || !isNumber(limit) || Long.parseLong(limit) < 0) ? GlobalVariable.DEFAULT_LIMIT : limit;
+
+        page = (!isValidPage(page)) ? GlobalVariable.DEFAULT_PAGE : page;
+        Pageable pageable = PageRequest.of((Integer.parseInt(page) - 1), Integer.parseInt(limit));
+
+        Timestamp dayAfter = new Timestamp(System.currentTimeMillis());
+        dayAfter.setDate(dayAfter.getDate() - 7);
+
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesRepository.findAllByCreateAtAfter(dayAfter, pageable);
         return movieSeriesEntityList;
     }
 }

@@ -115,6 +115,21 @@ public class MovieSeriesController {
         return ResponseEntity.ok(seriesDetailDTOList);
     }
 
+    @GetMapping("/movie-and-series/get-recently-added-series")
+    public ResponseEntity<?> getRecentlyAddedMovieAndSeries(@RequestParam Map<String, String> requestParams)
+    {
+        String page = requestParams.get("page");
+        String limit = requestParams.get("limit");
+        List<MovieSeriesEntity> movieSeriesEntityList  = movieSeriesService.getRecentlyAddedShow(page, limit);
+        List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
+        movieSeriesEntityList.forEach(movieSeriesEntity -> {
+            Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+            Long seriesTotalComment = commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity);
+            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView,seriesTotalComment));
+        });
+        return ResponseEntity.ok(seriesDetailDTOList);
+    }
+
     @PostMapping("/admin/movie-series")
     public ResponseEntity<?> storage(
             @RequestParam String model,

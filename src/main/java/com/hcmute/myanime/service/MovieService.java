@@ -7,6 +7,7 @@ import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class MovieService {
     private MovieRepository movieRepository;
     public List<MovieDTO> findAll()
     {
-        List<MovieEntity> movieEntities = movieRepository.findAll();
+        List<MovieEntity> movieEntities = movieRepository.findAll(Sort.by("createAt").descending());
         List<MovieDTO> movieDTO = new ArrayList<>();
         movieEntities.forEach((movieEntity) -> {
             MovieDTO movieDTO1 = MovieMapper.toDTO(movieEntity);
