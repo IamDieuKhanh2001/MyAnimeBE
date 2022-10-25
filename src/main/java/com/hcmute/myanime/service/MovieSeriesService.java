@@ -171,7 +171,7 @@ public class MovieSeriesService {
         return movieSeriesEntityList;
     }
 
-    public List<MovieSeriesEntity> getRecentlyAddedShow(String page, String limit) {
+    public List<MovieSeriesEntity> getRecentlyAddedShow(String page, String limit, int numberOfDayAfter) {
         limit = (limit == null || limit.equals("")
                 || !isNumber(limit) || Long.parseLong(limit) < 0) ? GlobalVariable.DEFAULT_LIMIT : limit;
 
@@ -179,7 +179,7 @@ public class MovieSeriesService {
         Pageable pageable = PageRequest.of((Integer.parseInt(page) - 1), Integer.parseInt(limit));
 
         Timestamp dayAfter = new Timestamp(System.currentTimeMillis());
-        dayAfter.setDate(dayAfter.getDate() - 7);
+        dayAfter.setDate(dayAfter.getDate() - numberOfDayAfter);
 
         List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesRepository.findAllByCreateAtAfter(dayAfter, pageable);
         return movieSeriesEntityList;

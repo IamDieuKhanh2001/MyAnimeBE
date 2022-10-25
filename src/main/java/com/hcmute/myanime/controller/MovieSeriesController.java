@@ -120,7 +120,7 @@ public class MovieSeriesController {
     {
         String page = requestParams.get("page");
         String limit = requestParams.get("limit");
-        List<MovieSeriesEntity> movieSeriesEntityList  = movieSeriesService.getRecentlyAddedShow(page, limit);
+        List<MovieSeriesEntity> movieSeriesEntityList  = movieSeriesService.getRecentlyAddedShow(page, limit, 7);
         List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
             Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
