@@ -26,6 +26,7 @@ public class UserMapper {
         mappedUserDto.setEmail(userEntity.getEmail());
         mappedUserDto.setAvatar(userEntity.getAvatar());
         mappedUserDto.setCreateAt(userEntity.getCreateAt());
+        mappedUserDto.setEnable(userEntity.getEnable());
         return mappedUserDto;
     }
 }

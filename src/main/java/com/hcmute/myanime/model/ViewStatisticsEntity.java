@@ -1,12 +1,14 @@
 package com.hcmute.myanime.model;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "view_statistics")
+@Table(name = "view_statistics", schema = "movie")
 public class ViewStatisticsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -14,6 +16,7 @@ public class ViewStatisticsEntity {
 
     @ManyToOne
     @JoinColumn(name = "episode_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private EpisodeEntity episode;
     private String ipAddress;
     @CreationTimestamp

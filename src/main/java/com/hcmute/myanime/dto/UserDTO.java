@@ -17,8 +17,17 @@ public class UserDTO {
     private String fullName;
     private String email;
     private String avatar;
+    private Boolean enable;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createAt;
+
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
+    }
 
     public Timestamp getCreateAt() {
         return createAt;

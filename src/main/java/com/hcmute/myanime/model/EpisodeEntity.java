@@ -39,8 +39,19 @@ public class EpisodeEntity {
     @JsonManagedReference
     private Collection<LogHistoriesEntity> logHistoriesEntityCollection;
 
-    @OneToMany(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<ViewStatisticsEntity> viewStatisticsEntity;
+
+    @Column(columnDefinition = "boolean default false")
+    private Boolean premiumRequired = false;
+
+    public Boolean getPremiumRequired() {
+        return premiumRequired;
+    }
+
+    public void setPremiumRequired(Boolean premiumRequired) {
+        this.premiumRequired = premiumRequired;
+    }
 
     public EpisodeEntity() {
     }

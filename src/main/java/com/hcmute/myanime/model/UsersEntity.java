@@ -46,6 +46,10 @@ public class UsersEntity {
     @JsonManagedReference
     private Collection<EmailConfirmationEntity> emailConfirmationEntityCollection;
 
+    @OneToMany(mappedBy = "usersEntityById", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Collection<UserPremium> userPremiumCollection;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
