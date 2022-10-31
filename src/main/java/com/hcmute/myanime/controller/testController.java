@@ -2,11 +2,14 @@ package com.hcmute.myanime.controller;
 
 import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.service.CloudinaryService;
+import com.hcmute.myanime.service.DigitalOceanSpaceService;
 import com.hcmute.myanime.service.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 
 @RestController
@@ -17,7 +20,21 @@ public class testController {
     private CloudinaryService cloudinaryService;
     @Autowired
     private EmailSenderService emailSenderService;
+    @Autowired
+    private DigitalOceanSpaceService digitalOceanSpaceService;
 
+    @GetMapping("/test/api/do")
+    public ResponseEntity<?> testDigitalOceanSpace() {
+
+        return ResponseEntity.ok(digitalOceanSpaceService.getFileNames());
+    }
+    @PostMapping("/test/api/do")
+    public ResponseEntity<?> testDigitalOceanSpaceUploadFile(
+            @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile
+    ) throws IOException {
+        digitalOceanSpaceService.uploadFile(sourceFile, "testupload3", "episode");
+        return ResponseEntity.ok("do");
+    }
     @GetMapping("/test/api")
     public ResponseEntity<?> test() {
         return ResponseEntity.ok("Deployed 29/09/2022 Change Timezone Server USA");
