@@ -21,6 +21,10 @@ public class SubscriptionPackageEntity {
     @JsonManagedReference
     private Collection<UserPremium> userPremiums;
 
+    @OneToMany(mappedBy = "subscriptionPackageById", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Collection<GiftCodeEntity> giftCodeEntityCollection;
+
     public SubscriptionPackageEntity() {
     }
 
