@@ -111,6 +111,24 @@ public class UserController {
     @GetMapping("user/user-detail/premium/remain")
     public ResponseEntity<?> checkRemainPremium()
     {
-        return null;
+        return ResponseEntity.ok(userService.remainPremium());
+    }
+
+    @GetMapping("user/user-detail/premium/history")
+    public ResponseEntity<?> getHistoryPremium()
+    {
+        return ResponseEntity.ok(userService.getHistoryPremium());
+    }
+
+    @PostMapping("user/user-detail/premium/package/{packageId}")
+    public ResponseEntity<?> createPremium(@PathVariable int packageId)
+    {
+        if(userService.createPremium(packageId)) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK, "subcription premium success")
+            );
+        } else {
+            return ResponseEntity.badRequest().body("subcription premium fail");
+        }
     }
 }
