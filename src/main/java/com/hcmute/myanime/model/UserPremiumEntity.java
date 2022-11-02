@@ -1,16 +1,13 @@
 package com.hcmute.myanime.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Collection;
 
 @Entity
 @Table(name = "user_premiums", schema = "movie")
-public class UserPremium {
+public class UserPremiumEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

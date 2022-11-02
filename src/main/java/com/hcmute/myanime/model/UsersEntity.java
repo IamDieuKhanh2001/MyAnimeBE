@@ -6,9 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -48,7 +46,7 @@ public class UsersEntity {
 
     @OneToMany(mappedBy = "usersEntityById", fetch = FetchType.LAZY)
     @JsonManagedReference
-    private Collection<UserPremium> userPremiumCollection;
+    private Collection<UserPremiumEntity> userPremiumCollection;
 
     @Override
     public boolean equals(Object o) {

@@ -19,7 +19,7 @@ public class SubscriptionPackageEntity {
 
     @OneToMany(mappedBy = "subscriptionPackageBySubscriptionPackageId", fetch = FetchType.LAZY)
     @JsonManagedReference
-    private Collection<UserPremium> userPremiums;
+    private Collection<UserPremiumEntity> userPremiums;
 
     @OneToMany(mappedBy = "subscriptionPackageById", fetch = FetchType.LAZY)
     @JsonManagedReference

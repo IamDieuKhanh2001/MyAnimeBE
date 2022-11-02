@@ -96,4 +96,21 @@ public class UserController {
         ResponseEntity<?> responseEntity = userService.checkUserMailOTPCode(otpCode);
         return responseEntity;
     }
+
+    // Premium member
+    @GetMapping("user/user-detail/premium/check")
+    public ResponseEntity<?> checkUserIsPremium()
+    {
+        if(userService.isPremiumMember()) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.ok(false);
+        }
+    }
+
+    @GetMapping("user/user-detail/premium/remain")
+    public ResponseEntity<?> checkRemainPremium()
+    {
+        return null;
+    }
 }
