@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +38,7 @@ public class UserService {
         return usersRepository.findAll();
     }
 
-    public Boolean uploadAvatar(MultipartFile avatar, String username) throws IOException {
+    public Boolean uploadAvatar(MultipartFile avatar, String username) {
         Optional<UsersEntity> usersOptional = usersRepository.findByUsername(username);
         System.out.println(username);
         if (!usersOptional.isPresent()) {
@@ -47,7 +46,7 @@ public class UserService {
         }
         UsersEntity userLogin = usersOptional.get();
         String url = cloudinaryService.uploadFile(
-                avatar.getBytes(),
+                avatar,
                 String.valueOf(userLogin.getId()),
                 "MyAnimeProject_TLCN/user/avatar");
         if (url.equals("-1")) {

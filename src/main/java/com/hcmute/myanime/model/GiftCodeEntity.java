@@ -23,4 +23,46 @@ public class GiftCodeEntity {
     private String redemptionCode;
     @CreationTimestamp
     private Timestamp createAt;
+
+    public GiftCodeEntity() {
+    }
+
+    public GiftCodeEntity(int id, SubscriptionPackageEntity subscriptionPackageById, String redemptionCode, Timestamp createAt) {
+        this.id = id;
+        this.subscriptionPackageById = subscriptionPackageById;
+        this.redemptionCode = redemptionCode;
+        this.createAt = createAt;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public SubscriptionPackageEntity getSubscriptionPackageById() {
+        return subscriptionPackageById;
+    }
+
+    public void setSubscriptionPackageById(SubscriptionPackageEntity subscriptionPackageById) {
+        this.subscriptionPackageById = subscriptionPackageById;
+    }
+
+    public String getRedemptionCode() {
+        return redemptionCode;
+    }
+
+    public void setRedemptionCode(String redemptionCode) {
+        this.redemptionCode = redemptionCode;
+    }
+
+    public Timestamp getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Timestamp createAt) {
+        this.createAt = createAt;
+    }
 }

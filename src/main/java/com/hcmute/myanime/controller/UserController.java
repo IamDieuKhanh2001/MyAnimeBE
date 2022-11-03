@@ -97,4 +97,39 @@ public class UserController {
         ResponseEntity<?> responseEntity = userService.checkUserMailOTPCode(otpCode);
         return responseEntity;
     }
+
+    // Premium member
+    @GetMapping("user/user-detail/premium/check")
+    public ResponseEntity<?> checkUserIsPremium()
+    {
+        if(userService.isPremiumMember()) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.ok(false);
+        }
+    }
+
+    @GetMapping("user/user-detail/premium/remain")
+    public ResponseEntity<?> checkRemainPremium()
+    {
+        return ResponseEntity.ok(userService.remainPremium());
+    }
+
+    @GetMapping("user/user-detail/premium/history")
+    public ResponseEntity<?> getHistoryPremium()
+    {
+        return ResponseEntity.ok(userService.getHistoryPremium());
+    }
+
+    @PostMapping("user/user-detail/premium/package/{packageId}")
+    public ResponseEntity<?> createPremium(@PathVariable int packageId)
+    {
+        if(userService.createPremium(packageId)) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK, "subcription premium success")
+            );
+        } else {
+            return ResponseEntity.badRequest().body("subcription premium fail");
+        }
+    }
 }
