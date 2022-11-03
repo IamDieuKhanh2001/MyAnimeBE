@@ -19,6 +19,7 @@ public class GiftcodeController {
     @PostMapping("redeem")
     public ResponseEntity<?> redeem(@RequestBody GiftcodeDTO giftcodeDTO)
     {
+        giftcodeService.redeem(giftcodeDTO);
         return null;
     }
 
@@ -36,7 +37,7 @@ public class GiftcodeController {
             return ResponseEntity.badRequest().body("create giftcode fail");
         }
     }
-
+re
     @DeleteMapping("delete/{giftcodeId}")
     public ResponseEntity<?> delete(@PathVariable int giftcodeId)
     {
