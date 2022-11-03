@@ -172,6 +172,9 @@ public class EpisodeService {
         if(episodeEntity.getResourcePublicId() != null) {
             cloudinaryService.deleteFileVideo(episodeEntity.getResourcePublicId());
         }
+        if(episodeEntity.getResourceDo() != null) {
+            digitalOceanSpaceService.deleteFileVideo("episode" + "/" + episodeId + ".mp4");
+        }
         try {
             episodeRepository.deleteById(episodeId);
             return true;

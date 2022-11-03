@@ -38,6 +38,7 @@ public class EpisodeController {
                     episode.getId(),
                     episode.getCreateAt(),
                     episode.getResource(),
+                    episode.getResourceDo(),
                     episode.getTitle());
             episodeDTOList.add(episodeDTO);
         });
@@ -51,6 +52,7 @@ public class EpisodeController {
                 episodeEntity.getId(),
                 episodeEntity.getCreateAt(),
                 episodeEntity.getResource(),
+                episodeEntity.getResourceDo(),
                 episodeEntity.getTitle());
         return ResponseEntity.ok(episodeDTO);
     }

@@ -9,17 +9,42 @@ public class EpisodeDTO {
     private int id;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createAt;
-    private String resource;
+    private String resourceCD;
+    private String resourceDO;
     private String title;
 
-    public EpisodeDTO(int id, Timestamp createAt, String resource, String title) {
+    public EpisodeDTO(int id, Timestamp createAt, String resourceCD, String resourceDO, String title) {
         this.id = id;
         this.createAt = createAt;
-        this.resource = resource;
+        this.resourceCD = resourceCD;
+        this.resourceDO = resourceDO;
         this.title = title;
     }
 
+    public EpisodeDTO(int id, Timestamp createAt, String resourceCD, String title) {
+        this.id = id;
+        this.createAt = createAt;
+        this.resourceCD = resourceCD;
+        this.title = title;
+    }
+
+    public String getResourceCD() {
+        return resourceCD;
+    }
+
+    public void setResourceCD(String resourceCD) {
+        this.resourceCD = resourceCD;
+    }
+
     public EpisodeDTO() {
+    }
+
+    public String getResourceDO() {
+        return resourceDO;
+    }
+
+    public void setResourceDO(String resourceDO) {
+        this.resourceDO = resourceDO;
     }
 
     public int getId() {
@@ -38,13 +63,6 @@ public class EpisodeDTO {
         this.createAt = createAt;
     }
 
-    public String getResource() {
-        return resource;
-    }
-
-    public void setResource(String resource) {
-        this.resource = resource;
-    }
 
     public String getTitle() {
         return title;

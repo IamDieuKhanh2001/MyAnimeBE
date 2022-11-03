@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.List;
@@ -81,29 +82,12 @@ public class DigitalOceanSpaceService {
         return url;
     }
 
-    @Async
-    public void sendTextMessage() {
-
-        // dummy logic to call 3rd party services
-        sleep(2);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        System.out.println("called 3rd party to send text message : " + Thread.currentThread().getName());
-        System.out.println("mess 1 " + timestamp);
-    }
-    @Async
-    public void sendTextMessage2(MultipartFile sourceFile) {
-
-        // dummy logic to call 3rd party services
-        sleep(4);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        System.out.println("called 3rd party to send text message 2 : " + Thread.currentThread().getName());
-        System.out.println("mess 2 " + timestamp);
-    }
-    private void sleep(int args) {
+    public boolean deleteFileVideo(String path) {
         try {
-            TimeUnit.SECONDS.sleep(args);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            space.deleteObject(new DeleteObjectRequest(spaceName, path));
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 }
