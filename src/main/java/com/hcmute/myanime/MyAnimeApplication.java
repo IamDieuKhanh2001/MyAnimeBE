@@ -2,12 +2,14 @@ package com.hcmute.myanime;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 import java.util.Date;
 
 @SpringBootApplication
+@EnableAsync
 public class MyAnimeApplication {
     @PostConstruct
     public void init(){

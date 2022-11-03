@@ -35,36 +35,30 @@ public class CloudinaryService {
 
     //    Upload thanh cong return duong dan chua hinh anh
 //    Upload khong thanh cong return -1
-    public String uploadFile(MultipartFile file, String imgName, String directory) {
-        File uploadedFile = null;
-
+    public String uploadFile(byte[] fileByteArray, String imgName, String directory) {
         try {
-            if(file == null) {
+            if(fileByteArray.length == 0) {
                 return "-1";
             }
-            uploadedFile = convertMultiPartToFile(file, imgName);
-            String fileDir = directory + "/"
-                    + uploadedFile.getName(); //Dir tren cloudinary: Tạo folder id product và file name là id product
+            String fileDir = directory + "/" + imgName; //Dir tren cloudinary: Tạo folder id product và file name là id product
             //Option cho cloudinary
             Map paramsOption =
                     ObjectUtils.asMap("resource_type", "auto",
                             "public_id", fileDir);
-            Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
+            Map uploadResult = cloudinary.uploader().upload(fileByteArray,
                     paramsOption);
-
-            uploadedFile.delete(); // Xoa file tao khi push len cloudinary xong
             return (String) uploadResult.get("secure_url");
         } catch (Exception e) {
-            uploadedFile.delete(); // Xoa file tao khi push len cloudinary xong
+            e.printStackTrace();
             return "-1";
         }
     }
-
-    private File convertMultiPartToFile(MultipartFile file, String fileName) throws IOException {
-        File convFile = new File(fileName);
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
-        fos.close();
-        return convFile;
-    }
+//
+//    private File convertMultiPartToFile(MultipartFile file, String fileName) throws IOException {
+//        File convFile = new File(fileName);
+//        FileOutputStream fos = new FileOutputStream(convFile);
+//        fos.write(file.getBytes());
+//        fos.close();
+//        return convFile;
+//    }
 }

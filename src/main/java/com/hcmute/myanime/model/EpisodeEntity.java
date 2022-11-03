@@ -3,6 +3,7 @@ package com.hcmute.myanime.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,6 +13,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "episodes", schema = "movie")
+@DynamicUpdate
 public class EpisodeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -19,6 +21,7 @@ public class EpisodeEntity {
     private String title;
     private String resource;
     private String resourcePublicId;
+    private String resourceDo;
     @Column(columnDefinition = "Bigint default '0'")
     private Long totalView = Long.valueOf(0);
     @CreationTimestamp
@@ -44,6 +47,14 @@ public class EpisodeEntity {
 
     @Column(columnDefinition = "boolean default false")
     private Boolean premiumRequired = false;
+
+    public String getResourceDo() {
+        return resourceDo;
+    }
+
+    public void setResourceDo(String resourceDo) {
+        this.resourceDo = resourceDo;
+    }
 
     public Boolean getPremiumRequired() {
         return premiumRequired;
