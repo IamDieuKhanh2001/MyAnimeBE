@@ -121,6 +121,8 @@ public class UserController {
         return ResponseEntity.ok(userService.getHistoryPremium());
     }
 
+
+    // Action này không được sử dụng bởi Client
     @PostMapping("user/user-detail/premium/package/{packageId}")
     public ResponseEntity<?> createPremium(@PathVariable int packageId)
     {
