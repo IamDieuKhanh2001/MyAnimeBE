@@ -6,8 +6,12 @@ import com.hcmute.myanime.config.EmailTemplate;
 import com.hcmute.myanime.dto.UserDTO;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.EmailConfirmationEntity;
+import com.hcmute.myanime.model.SubscriptionPackageEntity;
+import com.hcmute.myanime.model.UserPremiumEntity;
 import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.repository.EmailConfirmationRepository;
+import com.hcmute.myanime.repository.SubcriptionPackageRepository;
+import com.hcmute.myanime.repository.UserPremiumRepository;
 import com.hcmute.myanime.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +24,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
@@ -34,6 +39,10 @@ public class UserService {
     private EmailSenderService emailSenderService;
     @Autowired
     private EmailConfirmationRepository emailConfirmationRepository;
+    @Autowired
+    private SubcriptionPackageRepository subcriptionPackageRepository;
+    @Autowired
+    private UserPremiumRepository userPremiumRepository;
 
     public List<UsersEntity> findAll() {
         return usersRepository.findAll();
@@ -184,5 +193,84 @@ public class UserService {
         } else {
             return ResponseEntity.badRequest().body("OTP code not valid, try again");
         }
+    }
+
+    public boolean isPremiumMember()
+    {
+        // Check user is logged
+        String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
+        Optional<UsersEntity> userByUsername = usersRepository.findByUsername(usernameLoggedIn);
+        if (!userByUsername.isPresent()) {
+            return false;
+        }
+        // Check record expired
+        List<UserPremiumEntity> userPremiumEntityList = userPremiumRepository.findByUserIdAndExpired(userByUsername.get());
+        if(userPremiumEntityList.isEmpty())
+            return false;
+
+        return true;
+    }
+
+    public Object remainPremium()
+    {
+        // Check user is logged
+        String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
+        Optional<UsersEntity> userByUsername = usersRepository.findByUsername(usernameLoggedIn);
+        if (!userByUsername.isPresent()) {
+            return null;
+        }
+
+        List<Object> list = userPremiumRepository.getTimeRemain(userByUsername.get());
+        return list.get(0);
+    }
+
+    public List<UserPremiumEntity> getHistoryPremium()
+    {
+        // Check user is logged
+        String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
+        Optional<UsersEntity> userByUsername = usersRepository.findByUsername(usernameLoggedIn);
+        if (!userByUsername.isPresent()) {
+            return null;
+        }
+
+        List<UserPremiumEntity> list = userPremiumRepository.findByUsersEntityById(userByUsername.get());
+        return list;
+    }
+
+    public boolean createPremium(int packageId)
+    {
+        // Check user is logged
+        String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
+        Optional<UsersEntity> userByUsername = usersRepository.findByUsername(usernameLoggedIn);
+        if (!userByUsername.isPresent()) {
+            return false;
+        }
+
+        // Check packageId is valid
+        Optional<SubscriptionPackageEntity> subscriptionPackageEntityOptional = subcriptionPackageRepository.findById(packageId);
+        if(!subscriptionPackageEntityOptional.isPresent())
+            return false;
+
+        UserPremiumEntity userPremiumEntity = new UserPremiumEntity();
+        userPremiumEntity.setSubscriptionPackageBySubscriptionPackageId(subscriptionPackageEntityOptional.get());
+        userPremiumEntity.setUsersEntityById(userByUsername.get());
+        // Check this user have a UserPremium now
+        if(this.isPremiumMember()) {
+            Timestamp subscribeDate = userPremiumRepository.getExpiredAt(userByUsername.get());
+            Timestamp expiredAt = new Timestamp(subscribeDate.getTime() + TimeUnit.DAYS.toMillis(subscriptionPackageEntityOptional.get().getDay()));
+
+            userPremiumEntity.setSubscribeDate(subscribeDate);
+            userPremiumEntity.setExpiredAt(expiredAt);
+
+        } else {
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            Timestamp expiredAt = new Timestamp(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(subscriptionPackageEntityOptional.get().getDay()));
+
+            userPremiumEntity.setSubscribeDate(currentTime);
+            userPremiumEntity.setExpiredAt(expiredAt);
+        }
+
+        userPremiumRepository.save(userPremiumEntity);
+        return true;
     }
 }
