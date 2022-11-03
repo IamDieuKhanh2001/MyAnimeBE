@@ -25,6 +25,8 @@ public class GiftcodeService {
     private UsersRepository usersRepository;
     @Autowired
     private ApplicationUserService applicationUserService;
+    @Autowired
+    private UserService userService;
 
     public boolean save(GiftcodeDTO giftcodeDTO, int packageId)
     {
@@ -72,6 +74,8 @@ public class GiftcodeService {
             return false;
         GiftCodeEntity giftCodeEntity = giftCodeEntityList.get(0);
         // Xu ly premium
+        userService.createPremium(giftCodeEntity.getSubscriptionPackageById().getId());
+        giftcodeRepository.delete(giftCodeEntity);
 
         return true;
     }
