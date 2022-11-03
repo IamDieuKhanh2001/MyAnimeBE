@@ -96,13 +96,14 @@ public class EpisodeController {
     public ResponseEntity<?> updateEpisodeOfSeries(
             @RequestParam String model,
             @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile,
+            @RequestParam List<String> servers,
             @PathVariable int episodeId
     ) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
         EpisodeDTO episodeDTO = mapper.readValue(model, EpisodeDTO.class);
 
-        if (episodeService.updateByEpisodeId(episodeId, episodeDTO, sourceFile)) {
+        if (episodeService.updateByEpisodeId(episodeId, episodeDTO, sourceFile, servers)) {
             return ResponseEntity.ok(
                     new ResponseDTO(HttpStatus.OK, "Update episode success")
             );

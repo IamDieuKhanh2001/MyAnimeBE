@@ -20,6 +20,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,7 +127,7 @@ public class EpisodeService {
     }
 
 
-    public boolean updateByEpisodeId(int episodeId, EpisodeDTO episodeDTO, MultipartFile sourceFile) {
+    public boolean updateByEpisodeId(int episodeId, EpisodeDTO episodeDTO, MultipartFile sourceFile, List<String> servers) {
         Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(episodeId);
         if(!episodeEntityOptional.isPresent()) {
             throw new BadRequestException("Episode id not found");
@@ -134,20 +135,32 @@ public class EpisodeService {
         EpisodeEntity updateEpisodeEntity = episodeEntityOptional.get();
         updateEpisodeEntity.setTitle(episodeDTO.getTitle());
         try {
-//            String urlSource = uploadSourceFileToCloudinary(sourceFile, updateEpisodeEntity.getId());
-//            if(!urlSource.equals("-1")) {
-//                updateEpisodeEntity.setResource(urlSource);
-//                String resourcePublicId = "MyAnimeProject_TLCN" + "/" + "episode" + "/" + updateEpisodeEntity.getId();
-//                updateEpisodeEntity.setResourcePublicId(resourcePublicId);
-//                episodeRepository.save(updateEpisodeEntity);
-//                return true;
-//            }
+                episodeRepository.save(updateEpisodeEntity);
+            //        Update source file
+            for (String server : servers) {
+                switch (server) {
+                    case "do" -> {
+                        try {
+                            this.uploadSourceFileToDigitalOcean(sourceFile.getInputStream(), sourceFile.getContentType(), episodeId);
+                        } catch (Exception e) {
+                            throw new BadRequestException("Episode update success, source DO add fail");
+                        }
+                    }
+                    case "cd" -> {
+                        try {
+                            this.uploadSourceFileToCloudinary(sourceFile.getBytes(), episodeId);
+                        } catch (Exception e) {
+                            throw new BadRequestException("Episode update success, source CD add fail");
+                        }
+                    }
+                }
+            }
+            return true;
         } catch (Exception ex) {
+            ex.printStackTrace();
             return false;
         }
-        return true;
 
-//        return false;
     }
 
     public boolean deleteById(int episodeId) {
