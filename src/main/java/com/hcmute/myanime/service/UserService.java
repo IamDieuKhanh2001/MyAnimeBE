@@ -15,13 +15,12 @@ import com.hcmute.myanime.repository.UserPremiumRepository;
 import com.hcmute.myanime.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
-import java.sql.Time;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -41,15 +40,15 @@ public class UserService {
     @Autowired
     private EmailConfirmationRepository emailConfirmationRepository;
     @Autowired
-    private UserPremiumRepository userPremiumRepository;
-    @Autowired
     private SubcriptionPackageRepository subcriptionPackageRepository;
+    @Autowired
+    private UserPremiumRepository userPremiumRepository;
 
     public List<UsersEntity> findAll() {
         return usersRepository.findAll();
     }
 
-    public Boolean uploadAvatar(MultipartFile avatar, String username) {
+    public Boolean uploadAvatar(MultipartFile avatar, String username) throws IOException {
         Optional<UsersEntity> usersOptional = usersRepository.findByUsername(username);
         System.out.println(username);
         if (!usersOptional.isPresent()) {
@@ -57,7 +56,7 @@ public class UserService {
         }
         UsersEntity userLogin = usersOptional.get();
         String url = cloudinaryService.uploadFile(
-                avatar,
+                avatar.getBytes(),
                 String.valueOf(userLogin.getId()),
                 "MyAnimeProject_TLCN/user/avatar");
         if (url.equals("-1")) {
@@ -204,7 +203,6 @@ public class UserService {
         if (!userByUsername.isPresent()) {
             return false;
         }
-
         // Check record expired
         List<UserPremiumEntity> userPremiumEntityList = userPremiumRepository.findByUserIdAndExpired(userByUsername.get());
         if(userPremiumEntityList.isEmpty())
@@ -275,5 +273,4 @@ public class UserService {
         userPremiumRepository.save(userPremiumEntity);
         return true;
     }
-
 }

@@ -6,8 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "application.jwt")
 public class JwtConfig {
-
-
     private String secretKey;
     private String tokenPrefix;
     private Integer tokenExpirationAfterDays;

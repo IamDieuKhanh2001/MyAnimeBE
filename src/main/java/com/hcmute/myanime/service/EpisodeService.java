@@ -15,12 +15,19 @@ import com.hcmute.myanime.model.ViewStatisticsEntity;
 import com.hcmute.myanime.repository.EpisodeRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
 import com.hcmute.myanime.repository.ViewStatisticsRepository;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -36,6 +43,8 @@ public class EpisodeService {
     private CloudinaryService cloudinaryService;
     @Autowired
     private ViewStatisticsRepository viewStatisticsRepository;
+    @Autowired
+    private DigitalOceanSpaceService digitalOceanSpaceService;
 
     public List<EpisodeEntity> findBySeriesId(int seriesId){
         if(!movieSeriesRepository.findById(seriesId).isPresent()){
@@ -52,9 +61,8 @@ public class EpisodeService {
         }
         return episodeEntityOptional.get();
     }
-
     @Transactional(rollbackFor = Exception.class)
-    public boolean save(EpisodeDTO episodeDTO, MultipartFile sourceFile, int seriesId) {
+    public EpisodeEntity save(EpisodeDTO episodeDTO, MultipartFile sourceFile, int seriesId) {
         Optional<MovieSeriesEntity> movieSeriesEntityOptional = movieSeriesRepository.findById(seriesId);
         if(!movieSeriesEntityOptional.isPresent()) {
             throw new BadRequestException("Series id not found");
@@ -65,29 +73,61 @@ public class EpisodeService {
         newEpisodeEntity.setTitle(episodeDTO.getTitle());
         try {
             EpisodeEntity savedEntity = episodeRepository.save(newEpisodeEntity);
-            String urlSource = uploadSourceFileToCloudinary(sourceFile, savedEntity.getId());
-            if(!urlSource.equals("-1")) {
-                savedEntity.setResource(urlSource);
-                String resourcePublicId = "MyAnimeProject_TLCN" + "/" + "episode" + "/" + savedEntity.getId();
-                savedEntity.setResourcePublicId(resourcePublicId);
-                episodeRepository.save(savedEntity);
-            }
-            return true;
+            return savedEntity;
         } catch (Exception ex) {
-            return false;
+            return null;
+        }
+    }
+    @Async
+    public void uploadSourceFileToCloudinary(byte[] fileByteArray, int episodeId) {
+        try {
+            Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(episodeId);
+            if(!episodeEntityOptional.isPresent()) {
+                throw new BadRequestException("Episode id not found");
+            }
+            EpisodeEntity episodeEntity = episodeEntityOptional.get();
+            String urlSource = cloudinaryService.uploadFile(
+                    fileByteArray,
+                    String.valueOf(episodeId),
+                    "MyAnimeProject_TLCN" + "/" + "episode");
+            System.out.println("url CD " + urlSource);
+            if(!urlSource.equals("-1")) {
+                episodeEntity.setResource(urlSource);
+                String resourcePublicId = "MyAnimeProject_TLCN" + "/" + "episode" + "/" + episodeEntity.getId();
+                episodeEntity.setResourcePublicId(resourcePublicId);
+                episodeRepository.save(episodeEntity);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new BadRequestException("Episode id " + episodeId + "add to server cloudinary fail");
+        }
+    }
+    @Async
+    public void uploadSourceFileToDigitalOcean(InputStream fileInputStream, String fileContentType, int episodeId) {
+        try {
+            Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(episodeId);
+            if(!episodeEntityOptional.isPresent()) {
+                throw new BadRequestException("Episode id not found");
+            }
+            EpisodeEntity episodeEntity = episodeEntityOptional.get();
+            String urlSource = digitalOceanSpaceService.uploadFile(
+                    fileInputStream,
+                    fileContentType,
+                    episodeId + "." + "mp4",
+                    "episode");
+            System.out.println("url DO " + urlSource);
+            if(!urlSource.equals("-1")) {
+                episodeEntity.setResourceDo(urlSource);
+                episodeRepository.save(episodeEntity);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new BadRequestException("Episode id" + episodeId + "add to server DO fail");
         }
     }
 
-    public String uploadSourceFileToCloudinary(MultipartFile sourceFile, int episodeId) {
-        String urlSource = cloudinaryService.uploadFile(
-                sourceFile,
-                String.valueOf(episodeId),
-                "MyAnimeProject_TLCN" + "/" + "episode");
-        return urlSource;
-    }
 
-
-    public boolean updateByEpisodeId(int episodeId, EpisodeDTO episodeDTO, MultipartFile sourceFile) {
+    public boolean updateByEpisodeId(int episodeId, EpisodeDTO episodeDTO, MultipartFile sourceFile, List<String> servers) {
         Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(episodeId);
         if(!episodeEntityOptional.isPresent()) {
             throw new BadRequestException("Episode id not found");
@@ -95,18 +135,32 @@ public class EpisodeService {
         EpisodeEntity updateEpisodeEntity = episodeEntityOptional.get();
         updateEpisodeEntity.setTitle(episodeDTO.getTitle());
         try {
-            String urlSource = uploadSourceFileToCloudinary(sourceFile, updateEpisodeEntity.getId());
-            if(!urlSource.equals("-1")) {
-                updateEpisodeEntity.setResource(urlSource);
-                String resourcePublicId = "MyAnimeProject_TLCN" + "/" + "episode" + "/" + updateEpisodeEntity.getId();
-                updateEpisodeEntity.setResourcePublicId(resourcePublicId);
                 episodeRepository.save(updateEpisodeEntity);
-                return true;
+            //        Update source file
+            for (String server : servers) {
+                switch (server) {
+                    case "do" -> {
+                        try {
+                            this.uploadSourceFileToDigitalOcean(sourceFile.getInputStream(), sourceFile.getContentType(), episodeId);
+                        } catch (Exception e) {
+                            throw new BadRequestException("Episode update success, source DO add fail");
+                        }
+                    }
+                    case "cd" -> {
+                        try {
+                            this.uploadSourceFileToCloudinary(sourceFile.getBytes(), episodeId);
+                        } catch (Exception e) {
+                            throw new BadRequestException("Episode update success, source CD add fail");
+                        }
+                    }
+                }
             }
+            return true;
         } catch (Exception ex) {
+            ex.printStackTrace();
             return false;
         }
-        return false;
+
     }
 
     public boolean deleteById(int episodeId) {

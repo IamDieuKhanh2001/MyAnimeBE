@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/user/avatar/upload")
-    public ResponseEntity<?> uploadAvatar(@RequestParam(value = "avatar") MultipartFile avatar){
+    public ResponseEntity<?> uploadAvatar(@RequestParam(value = "avatar") MultipartFile avatar) throws IOException {
         if((!avatar.getContentType().equals("image/png") &&
                 !avatar.getContentType().equals("image/jpeg")) || avatar.equals(null)) {
             return ResponseEntity.badRequest().body("file extension must be .jpeg or .png");
