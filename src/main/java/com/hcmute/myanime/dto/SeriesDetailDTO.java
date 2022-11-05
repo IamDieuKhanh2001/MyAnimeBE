@@ -26,6 +26,16 @@ public class SeriesDetailDTO {
     private int movieId;
     private List<CategoryEntity> categoryList;
 
+    private boolean isPremium;
+
+    public boolean getIsPremium() {
+        return isPremium;
+    }
+
+    public void setIsPremium(boolean premium) {
+        isPremium = premium;
+    }
+
     public List<CategoryEntity> getCategoryList() {
         return categoryList;
     }
