@@ -39,7 +39,7 @@ public class EpisodeController {
     ) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         EpisodeDTO episodeDTO = mapper.readValue(model, EpisodeDTO.class);
-        EpisodeEntity saveEpisodeEntity = episodeService.save(episodeDTO, sourceFile, seriesId);
+        EpisodeEntity saveEpisodeEntity = episodeService.save(episodeDTO, seriesId);
         if (saveEpisodeEntity == null) {
             return ResponseEntity.badRequest().body("add episode fail");
         }

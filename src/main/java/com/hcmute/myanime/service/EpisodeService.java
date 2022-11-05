@@ -62,7 +62,7 @@ public class EpisodeService {
         return episodeEntityOptional.get();
     }
     @Transactional(rollbackFor = Exception.class)
-    public EpisodeEntity save(EpisodeDTO episodeDTO, MultipartFile sourceFile, int seriesId) {
+    public EpisodeEntity save(EpisodeDTO episodeDTO, int seriesId) {
         Optional<MovieSeriesEntity> movieSeriesEntityOptional = movieSeriesRepository.findById(seriesId);
         if(!movieSeriesEntityOptional.isPresent()) {
             throw new BadRequestException("Series id not found");
@@ -71,6 +71,7 @@ public class EpisodeService {
         EpisodeEntity newEpisodeEntity = new EpisodeEntity();
         newEpisodeEntity.setMovieSeriesBySeriesId(movieSeriesEntity);
         newEpisodeEntity.setTitle(episodeDTO.getTitle());
+        newEpisodeEntity.setPremiumRequired(episodeDTO.getPremiumRequired());
         try {
             EpisodeEntity savedEntity = episodeRepository.save(newEpisodeEntity);
             return savedEntity;
