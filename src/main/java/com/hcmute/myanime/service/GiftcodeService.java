@@ -1,6 +1,7 @@
 package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.auth.ApplicationUserService;
+import com.hcmute.myanime.common.RandomString;
 import com.hcmute.myanime.dto.GiftcodeDTO;
 import com.hcmute.myanime.model.EpisodeEntity;
 import com.hcmute.myanime.model.GiftCodeEntity;
@@ -13,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class GiftcodeService {
@@ -28,22 +31,34 @@ public class GiftcodeService {
     @Autowired
     private UserService userService;
 
-    public boolean save(GiftcodeDTO giftcodeDTO, int packageId)
+    public boolean save(String quantityString, int packageId)
     {
         // Check package is exist
         Optional<SubscriptionPackageEntity> subscriptionPackageEntityOptional = subcriptionPackageRepository.findById(packageId);
         if(!subscriptionPackageEntityOptional.isPresent())
             return false;
 
-        GiftCodeEntity giftCodeEntity = new GiftCodeEntity();
-        giftCodeEntity.setRedemptionCode(giftcodeDTO.getRedemption_code());
-        giftCodeEntity.setSubscriptionPackageById(subscriptionPackageEntityOptional.get());
+        int quantity = -1;
         try {
-            giftcodeRepository.save(giftCodeEntity);
-            return true;
+            quantity = Integer.parseInt(quantityString);
+            quantity = quantity <= 0 ? 1 : quantity;
         } catch (Exception ex) {
             return false;
         }
+
+        RandomString randomString = new RandomString(15, ThreadLocalRandom.current());
+        for (int i = 1; i <= quantity; i++) {
+            GiftCodeEntity giftCodeEntity = new GiftCodeEntity();
+            String giftCode = subscriptionPackageEntityOptional.get().getDay().toString() + "D-" + randomString.nextString();
+            giftCodeEntity.setRedemptionCode(giftCode);
+            giftCodeEntity.setSubscriptionPackageById(subscriptionPackageEntityOptional.get());
+            try {
+                giftcodeRepository.save(giftCodeEntity);
+            } catch (Exception ex) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean destroy(int giftcodeId)
@@ -53,6 +68,16 @@ public class GiftcodeService {
             return false;
         try {
             giftcodeRepository.delete(giftCodeEntityOptional.get());
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean destroyAll()
+    {
+        try {
+            giftcodeRepository.deleteAll();
             return true;
         } catch (Exception ex) {
             return false;

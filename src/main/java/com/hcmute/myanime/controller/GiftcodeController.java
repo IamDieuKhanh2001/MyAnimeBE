@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 public class GiftcodeController {
 
@@ -16,9 +18,14 @@ public class GiftcodeController {
 
     //region Module Admin
     @PostMapping("admin/giftcode/create/package/{packageId}")
-    public ResponseEntity<?> create(@RequestBody GiftcodeDTO giftcodeDTO, @PathVariable int packageId)
+    public ResponseEntity<?> create(@RequestBody Map<String, Object> request, @PathVariable int packageId)
     {
-        if(giftcodeService.save(giftcodeDTO, packageId)) {
+        if(!request.containsKey("quantity")) {
+            return ResponseEntity.badRequest().body("Require Quantity");
+        }
+
+        String quantity = request.get("quantity").toString();
+        if(giftcodeService.save(quantity, packageId)) {
             return ResponseEntity.ok(
                     new ResponseDTO(
                             HttpStatus.OK,
@@ -44,6 +51,21 @@ public class GiftcodeController {
             return ResponseEntity.badRequest().body("delete giftcode fail");
         }
     }
+
+    @DeleteMapping("admin/giftcode/delete/all")
+    public ResponseEntity<?> deleteAll()
+    {
+        if(giftcodeService.destroyAll()) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(
+                            HttpStatus.OK,
+                            "Delete All Giftcode Success"
+                    )
+            );
+        } else {
+            return ResponseEntity.badRequest().body("Delete All Giftcode Fail");
+        }
+    }
     //endregion
 
     //region Module Client
@@ -64,6 +86,4 @@ public class GiftcodeController {
         }
     }
     //endregion
-
-
 }
