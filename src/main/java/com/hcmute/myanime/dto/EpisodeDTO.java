@@ -12,6 +12,24 @@ public class EpisodeDTO {
     private String resourceCD;
     private String resourceDO;
     private String title;
+    private boolean premiumRequired;
+
+    public boolean getPremiumRequired() {
+        return premiumRequired;
+    }
+
+    public void setPremiumRequired(boolean premiumRequired) {
+        this.premiumRequired = premiumRequired;
+    }
+
+    public EpisodeDTO(int id, Timestamp createAt, String resourceCD, String resourceDO, String title, boolean premiumRequired) {
+        this.id = id;
+        this.createAt = createAt;
+        this.resourceCD = resourceCD;
+        this.resourceDO = resourceDO;
+        this.title = title;
+        this.premiumRequired = premiumRequired;
+    }
 
     public EpisodeDTO(int id, Timestamp createAt, String resourceCD, String resourceDO, String title) {
         this.id = id;

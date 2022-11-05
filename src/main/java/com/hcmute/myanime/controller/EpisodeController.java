@@ -39,7 +39,9 @@ public class EpisodeController {
                     episode.getCreateAt(),
                     episode.getResource(),
                     episode.getResourceDo(),
-                    episode.getTitle());
+                    episode.getTitle(),
+                    episode.getPremiumRequired()
+            );
             episodeDTOList.add(episodeDTO);
         });
         return ResponseEntity.ok(episodeDTOList);
@@ -53,7 +55,9 @@ public class EpisodeController {
                 episodeEntity.getCreateAt(),
                 episodeEntity.getResource(),
                 episodeEntity.getResourceDo(),
-                episodeEntity.getTitle());
+                episodeEntity.getTitle(),
+                episodeEntity.getPremiumRequired()
+        );
         return ResponseEntity.ok(episodeDTO);
     }
 
