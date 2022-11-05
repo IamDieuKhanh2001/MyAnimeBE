@@ -2,12 +2,17 @@ package com.hcmute.myanime.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.dto.EpisodeDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.exception.BadRequestException;
+import com.hcmute.myanime.mapper.EpisodeMapper;
 import com.hcmute.myanime.model.EpisodeEntity;
+import com.hcmute.myanime.model.UsersEntity;
+import com.hcmute.myanime.repository.UsersRepository;
 import com.hcmute.myanime.service.CloudinaryService;
 import com.hcmute.myanime.service.EpisodeService;
+import com.hcmute.myanime.service.UserService;
 import com.hcmute.myanime.utils.FileUtil;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +27,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class EpisodeController {
 
     @Autowired
     private EpisodeService episodeService;
+    @Autowired
+    private UserService userService;
+
 
     //region Module Admin
     @PostMapping("/admin/episode/series/{seriesId}")
@@ -104,17 +113,23 @@ public class EpisodeController {
     //region Module Client
     @GetMapping(value = "/episode/series/{seriesId}")
     public ResponseEntity<?> getEpisodeOfSeries(@PathVariable int seriesId) {
+
+        // Check user logged is a premium member
+        boolean isPremium = userService.isPremiumMember();
+
         List<EpisodeEntity> listEpisodeBySeriesId = episodeService.findBySeriesId(seriesId);
         List<EpisodeDTO> episodeDTOList = new ArrayList<>();
         listEpisodeBySeriesId.forEach((episode) -> {
-            EpisodeDTO episodeDTO = new EpisodeDTO(
-                    episode.getId(),
-                    episode.getCreateAt(),
-                    episode.getResource(),
-                    episode.getResourceDo(),
-                    episode.getTitle(),
-                    episode.getPremiumRequired()
-            );
+            EpisodeDTO episodeDTO = EpisodeMapper.toDTO(episode);
+
+            // If episode is a premium , required user logged also premium member
+            if(episodeDTO.getPremiumRequired()) {
+                if (!isPremium) {
+                    episodeDTO.setResourceCD("Sorry you is not a premium member");
+                    episodeDTO.setResourceDO("Sorry you is not a premium member");
+                }
+            }
+
             episodeDTOList.add(episodeDTO);
         });
         return ResponseEntity.ok(episodeDTOList);
@@ -123,14 +138,7 @@ public class EpisodeController {
     @GetMapping(value = "/episode/{episodeId}")
     public ResponseEntity<?> getEpisodeById(@PathVariable int episodeId) {
         EpisodeEntity episodeEntity = episodeService.findById(episodeId);
-        EpisodeDTO episodeDTO = new EpisodeDTO(
-                episodeEntity.getId(),
-                episodeEntity.getCreateAt(),
-                episodeEntity.getResource(),
-                episodeEntity.getResourceDo(),
-                episodeEntity.getTitle(),
-                episodeEntity.getPremiumRequired()
-        );
+        EpisodeDTO episodeDTO = EpisodeMapper.toDTO(episodeEntity);
         return ResponseEntity.ok(episodeDTO);
     }
 
