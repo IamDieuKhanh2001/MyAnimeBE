@@ -3,18 +3,16 @@ package com.hcmute.myanime.service;
 import com.hcmute.myanime.auth.ApplicationUserService;
 import com.hcmute.myanime.common.RandomString;
 import com.hcmute.myanime.dto.GiftcodeDTO;
-import com.hcmute.myanime.model.EpisodeEntity;
 import com.hcmute.myanime.model.GiftCodeEntity;
 import com.hcmute.myanime.model.SubscriptionPackageEntity;
 import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.repository.GiftcodeRepository;
-import com.hcmute.myanime.repository.SubcriptionPackageRepository;
+import com.hcmute.myanime.repository.SubscriptionPackageRepository;
 import com.hcmute.myanime.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -23,7 +21,7 @@ public class GiftcodeService {
     @Autowired
     private GiftcodeRepository giftcodeRepository;
     @Autowired
-    private SubcriptionPackageRepository subcriptionPackageRepository;
+    private SubscriptionPackageRepository subcriptionPackageRepository;
     @Autowired
     private UsersRepository usersRepository;
     @Autowired

@@ -1,23 +1,23 @@
 package com.hcmute.myanime.dto;
 
-public class SubcriptionPackageDTO {
+public class SubscriptionPackageDTO {
     private int id;
-    private long day;
+    private String name;
+    private int day;
+    private double price;
     private String description;
     private boolean enable;
-    private String name;
-    private double price;
 
-    public SubcriptionPackageDTO() {
+    public SubscriptionPackageDTO() {
     }
 
-    public SubcriptionPackageDTO(int id, long day, String description, boolean enable, String name, double price) {
+    public SubscriptionPackageDTO(int id, String name, int day, double price, String description, boolean enable) {
         this.id = id;
+        this.name = name;
         this.day = day;
+        this.price = price;
         this.description = description;
         this.enable = enable;
-        this.name = name;
-        this.price = price;
     }
 
     public int getId() {
@@ -28,12 +28,28 @@ public class SubcriptionPackageDTO {
         this.id = id;
     }
 
-    public long getDay() {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getDay() {
         return day;
     }
 
-    public void setDay(long day) {
+    public void setDay(int day) {
         this.day = day;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public String getDescription() {
@@ -44,27 +60,11 @@ public class SubcriptionPackageDTO {
         this.description = description;
     }
 
-    public boolean getEnable() {
+    public boolean isEnable() {
         return enable;
     }
 
     public void setEnable(boolean enable) {
         this.enable = enable;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 }

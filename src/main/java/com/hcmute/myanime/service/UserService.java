@@ -10,7 +10,7 @@ import com.hcmute.myanime.model.SubscriptionPackageEntity;
 import com.hcmute.myanime.model.UserPremiumEntity;
 import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.repository.EmailConfirmationRepository;
-import com.hcmute.myanime.repository.SubcriptionPackageRepository;
+import com.hcmute.myanime.repository.SubscriptionPackageRepository;
 import com.hcmute.myanime.repository.UserPremiumRepository;
 import com.hcmute.myanime.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class UserService {
     @Autowired
     private EmailConfirmationRepository emailConfirmationRepository;
     @Autowired
-    private SubcriptionPackageRepository subcriptionPackageRepository;
+    private SubscriptionPackageRepository subcriptionPackageRepository;
     @Autowired
     private UserPremiumRepository userPremiumRepository;
 
