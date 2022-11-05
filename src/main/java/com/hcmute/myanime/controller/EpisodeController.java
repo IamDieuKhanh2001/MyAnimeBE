@@ -29,38 +29,7 @@ public class EpisodeController {
     @Autowired
     private EpisodeService episodeService;
 
-    @GetMapping(value = "/episode/series/{seriesId}")
-    public ResponseEntity<?> getEpisodeOfSeries(@PathVariable int seriesId) {
-        List<EpisodeEntity> listEpisodeBySeriesId = episodeService.findBySeriesId(seriesId);
-        List<EpisodeDTO> episodeDTOList = new ArrayList<>();
-        listEpisodeBySeriesId.forEach((episode) -> {
-            EpisodeDTO episodeDTO = new EpisodeDTO(
-                    episode.getId(),
-                    episode.getCreateAt(),
-                    episode.getResource(),
-                    episode.getResourceDo(),
-                    episode.getTitle(),
-                    episode.getPremiumRequired()
-            );
-            episodeDTOList.add(episodeDTO);
-        });
-        return ResponseEntity.ok(episodeDTOList);
-    }
-
-    @GetMapping(value = "/episode/{episodeId}")
-    public ResponseEntity<?> getEpisodeById(@PathVariable int episodeId) {
-        EpisodeEntity episodeEntity = episodeService.findById(episodeId);
-        EpisodeDTO episodeDTO = new EpisodeDTO(
-                episodeEntity.getId(),
-                episodeEntity.getCreateAt(),
-                episodeEntity.getResource(),
-                episodeEntity.getResourceDo(),
-                episodeEntity.getTitle(),
-                episodeEntity.getPremiumRequired()
-        );
-        return ResponseEntity.ok(episodeDTO);
-    }
-
+    //region Module Admin
     @PostMapping("/admin/episode/series/{seriesId}")
     public ResponseEntity<?> createEpisodeOfSeries(
             @RequestParam String model,
@@ -118,17 +87,7 @@ public class EpisodeController {
         }
     }
 
-    @PatchMapping("/episode/increaseview/{episodeId}")
-    public ResponseEntity<?> increaseView(@PathVariable int episodeId, HttpServletRequest request) {
-        String ipClient = request.getRemoteAddr();
-        if (episodeService.increaseView(episodeId, ipClient)) {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.OK, "Increase view success")
-            );
-        } else {
-            return ResponseEntity.badRequest().body("Increase view fail");
-        }
-    }
+
 
     @DeleteMapping("/admin/episode/{episodeId}")
     public ResponseEntity<?> deleteEpisodeById(@PathVariable int episodeId) {
@@ -140,4 +99,52 @@ public class EpisodeController {
             return ResponseEntity.badRequest().body("Delete episode fail");
         }
     }
+    //endregion
+
+    //region Module Client
+    @GetMapping(value = "/episode/series/{seriesId}")
+    public ResponseEntity<?> getEpisodeOfSeries(@PathVariable int seriesId) {
+        List<EpisodeEntity> listEpisodeBySeriesId = episodeService.findBySeriesId(seriesId);
+        List<EpisodeDTO> episodeDTOList = new ArrayList<>();
+        listEpisodeBySeriesId.forEach((episode) -> {
+            EpisodeDTO episodeDTO = new EpisodeDTO(
+                    episode.getId(),
+                    episode.getCreateAt(),
+                    episode.getResource(),
+                    episode.getResourceDo(),
+                    episode.getTitle(),
+                    episode.getPremiumRequired()
+            );
+            episodeDTOList.add(episodeDTO);
+        });
+        return ResponseEntity.ok(episodeDTOList);
+    }
+
+    @GetMapping(value = "/episode/{episodeId}")
+    public ResponseEntity<?> getEpisodeById(@PathVariable int episodeId) {
+        EpisodeEntity episodeEntity = episodeService.findById(episodeId);
+        EpisodeDTO episodeDTO = new EpisodeDTO(
+                episodeEntity.getId(),
+                episodeEntity.getCreateAt(),
+                episodeEntity.getResource(),
+                episodeEntity.getResourceDo(),
+                episodeEntity.getTitle(),
+                episodeEntity.getPremiumRequired()
+        );
+        return ResponseEntity.ok(episodeDTO);
+    }
+
+    @PatchMapping("/episode/increaseview/{episodeId}")
+    public ResponseEntity<?> increaseView(@PathVariable int episodeId, HttpServletRequest request) {
+        String ipClient = request.getRemoteAddr();
+        if (episodeService.increaseView(episodeId, ipClient)) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK, "Increase view success")
+            );
+        } else {
+            return ResponseEntity.badRequest().body("Increase view fail");
+        }
+    }
+    //endregion
+
 }

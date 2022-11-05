@@ -20,16 +20,10 @@ public class CategoryMovieController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/category-movie/{movieId}")
-    public ResponseEntity<?> getCategoryMovie(@PathVariable int movieId)
-    {
-        List<CategoryEntity> categoryByMovieId = categoryService.findCategoryByMovieId(movieId);
-        return ResponseEntity.ok(categoryByMovieId);
-    }
-
+    //region Module Admin
     @PostMapping("/admin/category-movie/{movieId}")
     public ResponseEntity<?> addNewCategoryMovie(@RequestBody List<Integer> categoryId,
-                                            @PathVariable int movieId)
+                                                 @PathVariable int movieId)
     {
         if(categoryService.saveCategoryMovie(movieId, categoryId))
         {
@@ -43,5 +37,15 @@ public class CategoryMovieController {
             throw new BadRequestException("add categories fail");
         }
     }
+    //endregion
+
+    //region Module Client
+    @GetMapping("/category-movie/{movieId}")
+    public ResponseEntity<?> getCategoryMovie(@PathVariable int movieId)
+    {
+        List<CategoryEntity> categoryByMovieId = categoryService.findCategoryByMovieId(movieId);
+        return ResponseEntity.ok(categoryByMovieId);
+    }
+    //endregion
 
 }

@@ -19,6 +19,11 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
+
+    //region Module Admin
+    //endregion
+
+    //region Module Client
     @GetMapping(value = "/user/comment/episode/{episodeId}")
     public ResponseEntity<?> getAllCommentByEpisodeId(@PathVariable int episodeId){
         List<CommentEntity> commentEntityList = commentService.findByEpisodeId(episodeId);
@@ -63,4 +68,5 @@ public class CommentController {
             return ResponseEntity.badRequest().body("Delete comment fail");
         }
     }
+    //endregion
 }

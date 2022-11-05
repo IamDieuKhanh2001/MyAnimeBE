@@ -9,28 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping()
 public class GiftcodeController {
 
     @Autowired
     private GiftcodeService giftcodeService;
 
-    // User used giftcode
-    @PostMapping("user/giftcode/redeem")
-    public ResponseEntity<?> redeem(@RequestBody GiftcodeDTO giftcodeDTO)
-    {
-        if(giftcodeService.redeem(giftcodeDTO))
-            return ResponseEntity.ok(
-                    new ResponseDTO(
-                            HttpStatus.OK,
-                            "Redeem giftcode success"
-                    )
-            );
-        else {
-            return ResponseEntity.badRequest().body("Redeem giftcode fail");
-        }
-    }
-
+    //region Module Admin
     @PostMapping("admin/giftcode/create/package/{packageId}")
     public ResponseEntity<?> create(@RequestBody GiftcodeDTO giftcodeDTO, @PathVariable int packageId)
     {
@@ -60,4 +44,26 @@ public class GiftcodeController {
             return ResponseEntity.badRequest().body("delete giftcode fail");
         }
     }
+    //endregion
+
+    //region Module Client
+
+    // User used giftcode
+    @PostMapping("user/giftcode/redeem")
+    public ResponseEntity<?> redeem(@RequestBody GiftcodeDTO giftcodeDTO)
+    {
+        if(giftcodeService.redeem(giftcodeDTO))
+            return ResponseEntity.ok(
+                    new ResponseDTO(
+                            HttpStatus.OK,
+                            "Redeem giftcode success"
+                    )
+            );
+        else {
+            return ResponseEntity.badRequest().body("Redeem giftcode fail");
+        }
+    }
+    //endregion
+
+
 }

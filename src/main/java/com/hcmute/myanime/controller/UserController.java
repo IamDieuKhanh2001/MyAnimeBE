@@ -26,6 +26,8 @@ public class UserController {
     @Autowired
     private ApplicationUserService applicationUserService;
 
+
+    //region Module Admin
     @GetMapping("/admin/get-all-user")
     public ResponseEntity<?> getAllUSer() {
         List<UsersEntity> usersEntityList = userService.findAll();
@@ -35,34 +37,6 @@ public class UserController {
         }));
         return ResponseEntity.ok(userDTOList);
     }
-
-    @PostMapping("/user/avatar/upload")
-    public ResponseEntity<?> uploadAvatar(@RequestParam(value = "avatar") MultipartFile avatar) throws IOException {
-        if((!avatar.getContentType().equals("image/png") &&
-                !avatar.getContentType().equals("image/jpeg")) || avatar.equals(null)) {
-            return ResponseEntity.badRequest().body("file extension must be .jpeg or .png");
-        }
-        String username = applicationUserService.getUsernameLoggedIn();
-        if(userService.uploadAvatar(avatar, username)) {
-            return ResponseEntity.ok(
-                    new ResponseDTO(
-                    HttpStatus.OK,
-                    "Update avatar user: " + username + " success"
-                    )
-            );
-        } else {
-            return ResponseEntity.badRequest().body("Update avatar user: " + username + " fail");
-        }
-    }
-
-    @GetMapping("/user/user-detail")
-    public ResponseEntity<?> findUserLogging()
-    {
-        UsersEntity usersEntity = userService.findUserLogging();
-        UserDTO userDtoLogging = UserMapper.toDto(usersEntity);
-        return ResponseEntity.ok(userDtoLogging);
-    }
-
     @PutMapping("/admin/disable-user/{userId}")
     public ResponseEntity<?> disableUserByUserId(@PathVariable int userId) {
 
@@ -85,7 +59,35 @@ public class UserController {
             return ResponseEntity.badRequest().body("Enable user id " + userId + " fail");
         }
     }
+    //endregion
 
+    //region Module Client
+    @PostMapping("/user/avatar/upload")
+    public ResponseEntity<?> uploadAvatar(@RequestParam(value = "avatar") MultipartFile avatar) throws IOException {
+        if((!avatar.getContentType().equals("image/png") &&
+                !avatar.getContentType().equals("image/jpeg")) || avatar.equals(null)) {
+            return ResponseEntity.badRequest().body("file extension must be .jpeg or .png");
+        }
+        String username = applicationUserService.getUsernameLoggedIn();
+        if(userService.uploadAvatar(avatar, username)) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(
+                            HttpStatus.OK,
+                            "Update avatar user: " + username + " success"
+                    )
+            );
+        } else {
+            return ResponseEntity.badRequest().body("Update avatar user: " + username + " fail");
+        }
+    }
+
+    @GetMapping("/user/user-detail")
+    public ResponseEntity<?> findUserLogging()
+    {
+        UsersEntity usersEntity = userService.findUserLogging();
+        UserDTO userDtoLogging = UserMapper.toDto(usersEntity);
+        return ResponseEntity.ok(userDtoLogging);
+    }
     @PutMapping("/user/user-detail")
     public ResponseEntity<?> updateInfoUserLogging(@RequestBody UserDTO userDTO) {
         ResponseEntity<?> responseEntity = userService.updateInfoUserLogging(userDTO);
@@ -134,4 +136,6 @@ public class UserController {
             return ResponseEntity.badRequest().body("subcription premium fail");
         }
     }
+    //endregion
+
 }

@@ -32,6 +32,7 @@ public class MovieSeriesController {
     private CategoryService categoryService;
 
 
+    //region Module Admin
     @GetMapping("/admin/movie-series")
     public ResponseEntity<?> findAll()
     {
@@ -43,6 +44,58 @@ public class MovieSeriesController {
         return ResponseEntity.ok(movieSeriesDTOList);
     }
 
+    @PostMapping("/admin/movie-series")
+    public ResponseEntity<?> storage(
+            @RequestParam String model,
+            @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile
+    ) throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
+
+        MovieSeriesEntity movieSeriesEntity = movieSeriesService.save(movieSeriesDTO, sourceFile);
+        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity);
+        return ResponseEntity.ok(
+                new ResponseDTO(
+                        HttpStatus.OK,
+                        "Create series success",
+                        movieSeriesResponseDTO
+                )
+        );
+    }
+
+    @PutMapping("/admin/movie-series/{seriesID}")
+    public ResponseEntity<?> updateSeriesById(
+            @RequestParam String model,
+            @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile,
+            @PathVariable int seriesID) throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
+
+        MovieSeriesEntity movieSeriesEntity = movieSeriesService.updateById(seriesID, movieSeriesDTO, sourceFile);
+        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity);
+        return ResponseEntity.ok(
+                new ResponseDTO(HttpStatus.OK,
+                        "Update series success",
+                        movieSeriesResponseDTO)
+        );
+    }
+
+    @DeleteMapping("/admin/movie-series/{seriesID}")
+    public ResponseEntity<?> deleteSeriesById(@PathVariable int seriesID) {
+        if(movieSeriesService.deleteById(seriesID)) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK, "Delete series success")
+            );
+        } else {
+            throw new BadRequestException("Delete series fail");
+        }
+    }
+    //endregion
+
+    //region Mudule Client
     @GetMapping("/movie-and-series/count")
     public ResponseEntity<?> countSeries(@RequestParam Map<String, String> requestParams)
     {
@@ -129,55 +182,5 @@ public class MovieSeriesController {
         });
         return ResponseEntity.ok(seriesDetailDTOList);
     }
-
-    @PostMapping("/admin/movie-series")
-    public ResponseEntity<?> storage(
-            @RequestParam String model,
-            @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile
-    ) throws JsonProcessingException {
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
-
-        MovieSeriesEntity movieSeriesEntity = movieSeriesService.save(movieSeriesDTO, sourceFile);
-        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity);
-        return ResponseEntity.ok(
-                new ResponseDTO(
-                        HttpStatus.OK,
-                        "Create series success",
-                        movieSeriesResponseDTO
-                )
-        );
-    }
-
-
-    @PutMapping("/admin/movie-series/{seriesID}")
-    public ResponseEntity<?> updateSeriesById(
-            @RequestParam String model,
-            @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile,
-            @PathVariable int seriesID) throws JsonProcessingException {
-
-        ObjectMapper mapper = new ObjectMapper();
-        MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
-
-        MovieSeriesEntity movieSeriesEntity = movieSeriesService.updateById(seriesID, movieSeriesDTO, sourceFile);
-        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity);
-        return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.OK,
-                            "Update series success",
-                            movieSeriesResponseDTO)
-        );
-    }
-
-    @DeleteMapping("/admin/movie-series/{seriesID}")
-    public ResponseEntity<?> deleteSeriesById(@PathVariable int seriesID) {
-        if(movieSeriesService.deleteById(seriesID)) {
-            return ResponseEntity.ok(
-                    new ResponseDTO(HttpStatus.OK, "Delete series success")
-            );
-        } else {
-            throw new BadRequestException("Delete series fail");
-        }
-    }
+    //endregion
 }
