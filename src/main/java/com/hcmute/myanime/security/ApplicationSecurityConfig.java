@@ -44,7 +44,7 @@ public class  ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/movie-and-series/**", "/episode/**", "/category/**", "/category-movie/**", "/statistics/**",
                             //Các API từ đây sẽ bị xóa và chuyển về has role khi xong
                             "/test/api/videoUpload",
-                            "/subcription_package/**",
+                            "/subscription-package/**",
                             "/test/**").permitAll()
                     .antMatchers("/user/**").hasAnyRole(ADMIN.name(), USER.name()) //Các API cần đăng nhập bằng tk admin, user
                     .antMatchers("/admin/**", "/test/api/adminRole").hasRole(ADMIN.name()) //Các API cần đăng nhập bằng tk admin
