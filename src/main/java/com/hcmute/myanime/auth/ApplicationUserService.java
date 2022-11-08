@@ -1,6 +1,5 @@
 package com.hcmute.myanime.auth;
 
-import com.cloudinary.api.exceptions.BadRequest;
 import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.UserDTO;
 import com.hcmute.myanime.exception.BadRequestException;
@@ -17,7 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.sql.Timestamp;
 import java.util.*;
 
