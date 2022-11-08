@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,11 +154,11 @@ public class UserController {
     }
 
     @PostMapping("account/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody Map<String, Object> request)
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, Object> request, HttpServletRequest httpServletRequest)
     {
         StringBuilder message = new StringBuilder();
 
-        if(userService.requestResetPassword(request, message)) {
+        if(userService.requestResetPassword(request, httpServletRequest.getRemoteAddr(), message)) {
             return ResponseEntity.ok(
                     new ResponseDTO(HttpStatus.OK, message.toString())
             );

@@ -5,14 +5,8 @@ import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.config.EmailTemplate;
 import com.hcmute.myanime.dto.UserDTO;
 import com.hcmute.myanime.exception.BadRequestException;
-import com.hcmute.myanime.model.EmailConfirmationEntity;
-import com.hcmute.myanime.model.SubscriptionPackageEntity;
-import com.hcmute.myanime.model.UserPremiumEntity;
-import com.hcmute.myanime.model.UsersEntity;
-import com.hcmute.myanime.repository.EmailConfirmationRepository;
-import com.hcmute.myanime.repository.SubscriptionPackageRepository;
-import com.hcmute.myanime.repository.UserPremiumRepository;
-import com.hcmute.myanime.repository.UsersRepository;
+import com.hcmute.myanime.model.*;
+import com.hcmute.myanime.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -47,6 +42,9 @@ public class UserService {
     private UserPremiumRepository userPremiumRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AttemptLogService attemptLogService;
+
 
     public List<UsersEntity> findAll() {
         return usersRepository.findAll();
@@ -211,7 +209,7 @@ public class UserService {
     }
 
     @Transactional
-    public boolean requestResetPassword(Map<String, Object> request, StringBuilder message)
+    public boolean requestResetPassword(Map<String, Object> request, String ipClient, StringBuilder message)
     {
         if(!request.containsKey("email")) {
             message.append("Key email missing");
@@ -221,6 +219,12 @@ public class UserService {
             return false;
         } else if (!request.containsKey("new_password")) {
             message.append("Key new_password missing");
+            return false;
+        }
+
+        // Check Max Attempt
+        if(!attemptLogService.isValid(ipClient, GlobalVariable.ATTEMPT_LOGS_RESET_PASSWORD_FAIL, GlobalVariable.MAX_ATTEMPT_RESET_PASSWORD_ALLOW)) {
+            message.append("Max atempt reset password allow. Please try after 10 minutes!");
             return false;
         }
 
@@ -239,6 +243,9 @@ public class UserService {
         // Check email and code confirmation correct and is valid
         Optional<EmailConfirmationEntity> emailConfirmationEntityOptional = emailConfirmationRepository.findByUserAndCodeIsValid(usersEntity, codeConfirmation);
         if(!emailConfirmationEntityOptional.isPresent()) {
+            // Reset fail save attempt reset password fail
+            attemptLogService.store(ipClient, GlobalVariable.ATTEMPT_LOGS_RESET_PASSWORD_FAIL);
+
             message.append("Code is not valid");
             return false;
         }
@@ -249,6 +256,10 @@ public class UserService {
         EmailConfirmationEntity emailConfirmationEntity = emailConfirmationEntityOptional.get();
         emailConfirmationEntity.setStatus(GlobalVariable.EMAIL_CONFIRMATION_STATUS_USED);
         emailConfirmationRepository.save(emailConfirmationEntity);
+
+        // Destroy Attempt Fail
+        attemptLogService.destroy(ipClient, GlobalVariable.ATTEMPT_LOGS_RESET_PASSWORD_FAIL);
+
         message.append("Update password success");
         return true;
     }

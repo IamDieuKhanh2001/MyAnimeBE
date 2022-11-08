@@ -1,11 +1,15 @@
 package com.hcmute.myanime.controller;
 
 import com.hcmute.myanime.auth.ApplicationUserService;
+import com.hcmute.myanime.service.AttemptLogService;
+import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.AuthenticationRequestDTO;
 import com.hcmute.myanime.dto.AuthenticationResponseDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.dto.UserDTO;
 import com.hcmute.myanime.exception.BadRequestException;
+import com.hcmute.myanime.model.AttemptLogEntity;
+import com.hcmute.myanime.repository.AttemptLogRepository;
 import com.hcmute.myanime.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +22,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("")
@@ -29,7 +35,8 @@ public class AuthenticationController {
     private ApplicationUserService applicationUserService;
     @Autowired
     private JwtUtil jwtTokenUtil;
-
+    @Autowired
+    private AttemptLogService attemptLogService;
 
     @RequestMapping(value = "/register")
     public ResponseEntity<?> saveUser(
@@ -50,15 +57,32 @@ public class AuthenticationController {
         return ResponseEntity.badRequest().body("Register fail");
     }
     @PostMapping("/login")
-    public Object authenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequest) throws Exception{
+    public Object authenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequest, HttpServletRequest httpServletRequest) throws Exception{
+        String ipClient = httpServletRequest.getRemoteAddr();
         try {
+
+            // Check Attempt
+            if(!attemptLogService.isValid(ipClient, GlobalVariable.ATTEMPT_LOGS_LOGIN_FAIL, GlobalVariable.MAX_ATTEMPT_LOGIN_ALLOW)) {
+                return ResponseEntity.badRequest().body("Max atempt login allow. Please try after 10 minutes!");
+            }
+
+            // Attempt Login
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken
                             (authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );
+
+            // Destroy Attempt Fail
+            attemptLogService.destroy(ipClient, GlobalVariable.ATTEMPT_LOGS_LOGIN_FAIL);
         } catch (BadCredentialsException exception) {
+
+            // Login fail save attempt logs fail
+            attemptLogService.store(ipClient, GlobalVariable.ATTEMPT_LOGS_LOGIN_FAIL);
+
             return ResponseEntity.badRequest().body("Username or password is invalid");
         }
+
+
         final UserDetails userDetails = applicationUserService
                 .loadUserByUsername(authenticationRequest.getUsername());
         String role = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
