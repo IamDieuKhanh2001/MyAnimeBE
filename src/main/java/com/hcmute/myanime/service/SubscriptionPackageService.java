@@ -9,19 +9,60 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubscriptionPackageService {
     @Autowired
-    private SubscriptionPackageRepository subcriptionPackageRepository;
+    private SubscriptionPackageRepository subscriptionPackageRepository;
 
     public List<SubcriptionPackageDTO> GetSubcriptionPackageActive()
     {
-        List<SubscriptionPackageEntity> subscriptionPackageEntityList = subcriptionPackageRepository.findAllByEnableActive();
+        List<SubscriptionPackageEntity> subscriptionPackageEntityList = subscriptionPackageRepository.findAllByEnableActive();
         List<SubcriptionPackageDTO> subcriptionPackageDTOList = new ArrayList<>();
         subscriptionPackageEntityList.forEach((subscriptionPackageEntity)->{
             subcriptionPackageDTOList.add(SubscriptionPackageMapper.toDTO(subscriptionPackageEntity));
         });
         return subcriptionPackageDTOList;
+    }
+
+    public boolean store(SubcriptionPackageDTO subcriptionPackageDTO)
+    {
+        SubscriptionPackageEntity subscriptionPackageEntity = SubscriptionPackageMapper.toEntity(subcriptionPackageDTO);
+        try {
+            subscriptionPackageRepository.save(subscriptionPackageEntity);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean destroy(int packageID)
+    {
+        try {
+            SubscriptionPackageEntity subscriptionPackageEntity = subscriptionPackageRepository.findById(packageID).isPresent() ? subscriptionPackageRepository.findById(packageID).get() : null;
+            if(subscriptionPackageEntity == null)
+                return false;
+            subscriptionPackageRepository.delete(subscriptionPackageEntity);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean update(SubcriptionPackageDTO subcriptionPackageDTO, int packageID)
+    {
+        Optional<SubscriptionPackageEntity> subscriptionPackageEntityOptional = subscriptionPackageRepository.findById(packageID);
+        if (!subscriptionPackageEntityOptional.isPresent())
+            return false;
+
+        SubscriptionPackageEntity subscriptionPackageEntity = subscriptionPackageEntityOptional.get();
+        try {
+            subscriptionPackageEntity = SubscriptionPackageMapper.toEntity(subscriptionPackageEntity, subcriptionPackageDTO);
+            subscriptionPackageRepository.save(subscriptionPackageEntity);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 }

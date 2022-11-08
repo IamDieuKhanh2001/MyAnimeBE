@@ -15,4 +15,27 @@ public class SubscriptionPackageMapper {
         subcriptionPackageDTO.setPrice(subscriptionPackageEntity.getPrice());
         return subcriptionPackageDTO;
     }
+
+    public static SubscriptionPackageEntity toEntity (SubcriptionPackageDTO subcriptionPackageDTO)
+    {
+        SubscriptionPackageEntity subscriptionPackageEntity = new SubscriptionPackageEntity();
+
+        subscriptionPackageEntity.setDay(subcriptionPackageDTO.getDay());
+        subscriptionPackageEntity.setDescription(subcriptionPackageDTO.getDescription());
+        subscriptionPackageEntity.setEnable(subcriptionPackageDTO.getEnable());
+        subscriptionPackageEntity.setName(subcriptionPackageDTO.getName());
+        subscriptionPackageEntity.setPrice(subcriptionPackageDTO.getPrice());
+
+        return subscriptionPackageEntity;
+    }
+
+    public static SubscriptionPackageEntity toEntity(SubscriptionPackageEntity subscriptionPackageEntity, SubcriptionPackageDTO subcriptionPackageDTO)
+    {
+        subscriptionPackageEntity.setDay(subcriptionPackageDTO.getDay());
+        subscriptionPackageEntity.setDescription(subcriptionPackageDTO.getDescription());
+        subscriptionPackageEntity.setEnable(subcriptionPackageDTO.getEnable());
+        subscriptionPackageEntity.setName(subcriptionPackageDTO.getName());
+        subscriptionPackageEntity.setPrice(subcriptionPackageDTO.getPrice());
+        return subscriptionPackageEntity;
+    }
 }
