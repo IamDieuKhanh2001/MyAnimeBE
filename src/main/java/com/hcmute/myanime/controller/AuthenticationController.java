@@ -38,7 +38,7 @@ public class AuthenticationController {
     @Autowired
     private AttemptLogService attemptLogService;
 
-    @RequestMapping(value = "/register")
+    @PostMapping(value = "/register")
     public ResponseEntity<?> saveUser(
             @RequestBody @Valid UserDTO user,
             BindingResult bindingResult) {
