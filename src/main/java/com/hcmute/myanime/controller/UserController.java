@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping()
@@ -136,6 +137,34 @@ public class UserController {
             return ResponseEntity.badRequest().body("subcription premium fail");
         }
     }
-    //endregion
 
+    @PostMapping("account/forget-password")
+    public ResponseEntity<?> forgetPassword(@RequestBody Map<String, Object> request)
+    {
+        StringBuilder message = new StringBuilder();
+
+        if(userService.requestSendEmailForgetPassword(request, message)) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK, message.toString())
+            );
+        } else {
+            return ResponseEntity.badRequest().body(message.toString());
+        }
+    }
+
+    @PostMapping("account/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, Object> request)
+    {
+        StringBuilder message = new StringBuilder();
+
+        if(userService.requestResetPassword(request, message)) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK, message.toString())
+            );
+        } else {
+            return ResponseEntity.badRequest().body(message.toString());
+        }
+    }
+
+    //endregion
 }

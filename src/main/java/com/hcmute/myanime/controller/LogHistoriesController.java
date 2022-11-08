@@ -4,6 +4,7 @@ import com.hcmute.myanime.dto.FavoritesDTO;
 import com.hcmute.myanime.dto.LogHistoryDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.exception.BadRequestException;
+import com.hcmute.myanime.mapper.LogHistoryMapper;
 import com.hcmute.myanime.model.LogHistoriesEntity;
 import com.hcmute.myanime.service.LogHistoriesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +27,7 @@ public class LogHistoriesController {
         List<LogHistoriesEntity> historyByUserLogging = logHistoriesService.getByUserLogging();
         List<LogHistoryDTO> logHistoryDTOList = new ArrayList<>();
         historyByUserLogging.forEach(history -> {
-            logHistoryDTOList.add(
-                    new LogHistoryDTO(
-                            history.getId(),
-                            history.getLastSecond(),
-                            history.getCreateAt(),
-                            history.getEpisodeEntity().getId(),
-                            history.getMovieSeriesEntity().getId(),
-                            history.getMovieSeriesEntity().getImage(),
-                            history.getMovieSeriesEntity().getName(),
-                            history.getEpisodeEntity().getTitle()
-                            )
-            );
+            logHistoryDTOList.add(LogHistoryMapper.toDTO(history));
         });
         return ResponseEntity.ok(logHistoryDTOList);
     }
@@ -45,16 +35,7 @@ public class LogHistoriesController {
     @PostMapping("/history") //Case if episode id and user is similar will be replaced
     public ResponseEntity<?> createHistoryUserLogging(@RequestBody LogHistoryDTO logHistoryDTO) {
         LogHistoriesEntity historyEntity = logHistoriesService.save(logHistoryDTO);
-        LogHistoryDTO logHistoryResponseDTO = new LogHistoryDTO(
-                historyEntity.getId(),
-                historyEntity.getLastSecond(),
-                historyEntity.getCreateAt(),
-                historyEntity.getEpisodeEntity().getId(),
-                historyEntity.getMovieSeriesEntity().getId(),
-                historyEntity.getMovieSeriesEntity().getImage(),
-                historyEntity.getMovieSeriesEntity().getName(),
-                historyEntity.getEpisodeEntity().getTitle()
-        );
+        LogHistoryDTO logHistoryResponseDTO = LogHistoryMapper.toDTO(historyEntity);
         return ResponseEntity.ok(
                     new ResponseDTO(
                             HttpStatus.OK,
