@@ -15,6 +15,7 @@ import com.hcmute.myanime.repository.UserPremiumRepository;
 import com.hcmute.myanime.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,7 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -40,9 +42,11 @@ public class UserService {
     @Autowired
     private EmailConfirmationRepository emailConfirmationRepository;
     @Autowired
-    private SubscriptionPackageRepository subcriptionPackageRepository;
+    private SubscriptionPackageRepository subscriptionPackageRepository;
     @Autowired
     private UserPremiumRepository userPremiumRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<UsersEntity> findAll() {
         return usersRepository.findAll();
@@ -155,13 +159,90 @@ public class UserService {
         }
     }
 
-    public void sendRecoveryEmail(String addressGmail, String username, String otpCode) throws MessagingException {
+    public boolean requestSendEmailForgetPassword(UserDTO userDTO, StringBuilder message)
+    {
+        String email = userDTO.getEmail();
+        Optional<UsersEntity> usersEntityOptional = usersRepository.findByEmail(email);
+        if (!usersEntityOptional.isPresent()) {
+            message.append("Email is not found");
+            return false;
+        }
+        UsersEntity usersEntity = usersEntityOptional.get();
+
+        try {
+            String otpCode = GlobalVariable.GetOTP();
+
+            sendRecoveryEmail(email, usersEntity.getUsername(), otpCode);
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            Timestamp expiredTime = new Timestamp(currentTime.getTime() + 600*1000);
+
+            String confirmationType = "ForgetPassword";
+
+            // Destroy code old
+            List<EmailConfirmationEntity> emailConfirmationEntityListOld = emailConfirmationRepository.findByUsersEntityByUserIdAndExpiredAndStatusPending(confirmationType, usersEntity);
+            System.out.println(emailConfirmationEntityListOld.size());
+            emailConfirmationRepository.deleteAll(emailConfirmationEntityListOld);
+
+            // Block 5 times reset password on each 10 minutes
+//            List<EmailConfirmationEntity> emailConfirmationEntityList = emailConfirmationRepository.findByConfirmationTypeAndUserEntity(confirmationType, usersEntity);
+//            System.out.println(emailConfirmationEntityList.size());
+
+            EmailConfirmationEntity emailConfirmationEntity = new
+                    EmailConfirmationEntity(
+                    otpCode,
+                    GlobalVariable.EMAIL_CONFIRMATION_STATUS_PENDING,
+                    email,
+                    confirmationType,
+                    expiredTime,
+                    currentTime,
+                    usersEntity);
+            emailConfirmationRepository.save(emailConfirmationEntity);
+            message.append("Send email forgot password success");
+            return true;
+        } catch (Exception ex) {
+            message.append("Send email forgot password error for exception");
+            return false;
+        }
+    }
+
+    @Transactional
+    public boolean requestResetPassword(Map<String, Object> request, StringBuilder message)
+    {
+        String email = request.get("email").toString();
+        String codeConfirmation = request.get("code_confirmation").toString();
+        String newPassword = request.get("new_password").toString();
+
+        // check email is valid user
+        Optional<UsersEntity> usersEntityOptional = usersRepository.findByEmail(email);
+        if (!usersEntityOptional.isPresent()) {
+            message.append("Email is not found");
+            return false;
+        }
+        UsersEntity usersEntity = usersEntityOptional.get();
+
+        // Check email and code confirmation correct and is valid
+        Optional<EmailConfirmationEntity> emailConfirmationEntityOptional = emailConfirmationRepository.findByUserAndCodeIsValid(usersEntity, codeConfirmation);
+        if(!emailConfirmationEntityOptional.isPresent()) {
+            message.append("Code is not valid");
+            return false;
+        }
+
+        usersEntity.setPassword(passwordEncoder.encode(newPassword));
+        usersRepository.save(usersEntity);
+
+        EmailConfirmationEntity emailConfirmationEntity = emailConfirmationEntityOptional.get();
+        emailConfirmationEntity.setStatus(GlobalVariable.EMAIL_CONFIRMATION_STATUS_USED);
+        emailConfirmationRepository.save(emailConfirmationEntity);
+        message.append("Update password success");
+        return true;
+    }
+
+    private void sendRecoveryEmail(String addressGmail, String username, String otpCode) throws MessagingException {
         emailSenderService.sendAsHTML(
                 addressGmail,
                 "[My anime corporation] You have request for adding new gmail for" + username,
                 EmailTemplate.TemplateRecoveryPassword(username, otpCode)
         );
-
     }
 
     public ResponseEntity<?> checkUserMailOTPCode(String otpCode) {
@@ -247,7 +328,7 @@ public class UserService {
         }
 
         // Check packageId is valid
-        Optional<SubscriptionPackageEntity> subscriptionPackageEntityOptional = subcriptionPackageRepository.findById(packageId);
+        Optional<SubscriptionPackageEntity> subscriptionPackageEntityOptional = subscriptionPackageRepository.findById(packageId);
         if(!subscriptionPackageEntityOptional.isPresent())
             return false;
 
