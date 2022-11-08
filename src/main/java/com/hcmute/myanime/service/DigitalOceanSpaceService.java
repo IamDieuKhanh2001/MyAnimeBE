@@ -75,7 +75,6 @@ public class DigitalOceanSpaceService {
                             ).withCannedAcl(CannedAccessControlList.PublicRead)
             );
             url = space.getUrl(spaceName,  directory + "/" + imgName).toString();
-            url = url.replace("sgp1.digitaloceanspaces", "sgp1.cdn.digitaloceanspaces");
         } catch (Exception exception) {
             return url;
         }
