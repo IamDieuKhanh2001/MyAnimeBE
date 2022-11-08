@@ -159,9 +159,14 @@ public class UserService {
         }
     }
 
-    public boolean requestSendEmailForgetPassword(UserDTO userDTO, StringBuilder message)
+    public boolean requestSendEmailForgetPassword(Map<String, Object> request, StringBuilder message)
     {
-        String email = userDTO.getEmail();
+        if(!request.containsKey("email")) {
+            message.append("Key email missing");
+            return false;
+        }
+
+        String email = request.get("email").toString();
         Optional<UsersEntity> usersEntityOptional = usersRepository.findByEmail(email);
         if (!usersEntityOptional.isPresent()) {
             message.append("Email is not found");
@@ -208,6 +213,17 @@ public class UserService {
     @Transactional
     public boolean requestResetPassword(Map<String, Object> request, StringBuilder message)
     {
+        if(!request.containsKey("email")) {
+            message.append("Key email missing");
+            return false;
+        } else if (!request.containsKey("code_confirmation")) {
+            message.append("Key code_confirmation missing");
+            return false;
+        } else if (!request.containsKey("new_password")) {
+            message.append("Key new_password missing");
+            return false;
+        }
+
         String email = request.get("email").toString();
         String codeConfirmation = request.get("code_confirmation").toString();
         String newPassword = request.get("new_password").toString();

@@ -139,11 +139,11 @@ public class UserController {
     }
 
     @PostMapping("account/forget-password")
-    public ResponseEntity<?> forgetPassword(@RequestBody UserDTO userDTO)
+    public ResponseEntity<?> forgetPassword(@RequestBody Map<String, Object> request)
     {
         StringBuilder message = new StringBuilder();
 
-        if(userService.requestSendEmailForgetPassword(userDTO, message)) {
+        if(userService.requestSendEmailForgetPassword(request, message)) {
             return ResponseEntity.ok(
                     new ResponseDTO(HttpStatus.OK, message.toString())
             );
@@ -156,16 +156,6 @@ public class UserController {
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, Object> request)
     {
         StringBuilder message = new StringBuilder();
-        if(!request.containsKey("email")) {
-            message.append("Key email missing");
-            return ResponseEntity.badRequest().body(message.toString());
-        } else if (!request.containsKey("code_confirmation")) {
-            message.append("Key code_confirmation missing");
-            return ResponseEntity.badRequest().body(message.toString());
-        } else if (!request.containsKey("new_password")) {
-            message.append("Key new_password missing");
-            return ResponseEntity.badRequest().body(message.toString());
-        }
 
         if(userService.requestResetPassword(request, message)) {
             return ResponseEntity.ok(

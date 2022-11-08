@@ -2,6 +2,7 @@ package com.hcmute.myanime.controller;
 
 import com.hcmute.myanime.dto.CommentUserDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
+import com.hcmute.myanime.mapper.CommentUserMapper;
 import com.hcmute.myanime.model.CommentEntity;
 import com.hcmute.myanime.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,7 @@ public class CommentController {
         List<CommentEntity> commentEntityList = commentService.findByEpisodeId(episodeId);
         List<CommentUserDTO> commentUserDTOList = new ArrayList<>();
         commentEntityList.forEach((commentEntity -> {
-            CommentUserDTO commentUserDTO = new CommentUserDTO(
-                    commentEntity.getId(),
-                    commentEntity.getContent(),
-                    commentEntity.getCreateAt(),
-                    commentEntity.getEpisodeByEpisodeId().getId(),
-                    commentEntity.getUsersByUserId().getUsername(),
-                    commentEntity.getUsersByUserId().getAvatar()
-            );
+            CommentUserDTO commentUserDTO = CommentUserMapper.toDTO(commentEntity);
             commentUserDTOList.add(commentUserDTO);
         }));
         return ResponseEntity.ok(commentUserDTOList);

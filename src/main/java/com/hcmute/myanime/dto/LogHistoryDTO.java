@@ -15,6 +15,8 @@ public class LogHistoryDTO {
     private String seriesName;
     private String episodeNumber;
 
+
+
     public LogHistoryDTO(int id, Long lastSecond, Timestamp createAt, int episode_id, int series_id, String image, String seriesName, String episodeNumber) {
         this.id = id;
         this.lastSecond = lastSecond;

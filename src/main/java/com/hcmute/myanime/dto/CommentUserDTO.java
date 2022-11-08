@@ -29,6 +29,9 @@ public class CommentUserDTO {
         this.avatar = avatar;
     }
 
+    public CommentUserDTO() {
+    }
+
     public CommentUserDTO(int id, String content, Timestamp createAt, int episodeId, String username, String avatar) {
         this.id = id;
         this.content = content;
