@@ -29,6 +29,8 @@ public class CommentUserDTO {
         this.avatar = avatar;
     }
 
+
+
     public CommentUserDTO() {
     }
 

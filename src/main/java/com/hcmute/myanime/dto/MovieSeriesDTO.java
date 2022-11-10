@@ -14,9 +14,20 @@ public class MovieSeriesDTO {
     private String image;
     private String name;
     private int totalEpisode;
+
+    private long totalViewOfSeries;
+
     private int movieId;
 
     private MovieDTO movieData;
+
+    public long getTotalViewOfSeries() {
+        return totalViewOfSeries;
+    }
+
+    public void setTotalViewOfSeries(long totalViewOfSeries) {
+        this.totalViewOfSeries = totalViewOfSeries;
+    }
 
     public MovieDTO getMovieData() {
         return movieData;

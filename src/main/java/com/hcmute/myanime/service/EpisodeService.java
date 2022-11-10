@@ -254,8 +254,6 @@ public class EpisodeService {
     }
 
     public List<StatisticsMovieSeriesDTO> getTopSeriesMostView(int numberOfDay, int size) {
-        System.out.println(numberOfDay);
-        System.out.println(size);
         List<StatisticsMovieSeriesDTO> statisticsMovieSeriesDTOList = new ArrayList<>();
         List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = this.getTopEpisodeMostView(numberOfDay, 999999);
         if (statisticsEpisodeDTOList.size() == 0)

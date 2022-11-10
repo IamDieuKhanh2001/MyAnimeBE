@@ -4,8 +4,10 @@ import com.hcmute.myanime.dto.CommentUserDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.mapper.CommentUserMapper;
 import com.hcmute.myanime.model.CommentEntity;
+import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +63,12 @@ public class CommentController {
         } else {
             return ResponseEntity.badRequest().body("Delete comment fail");
         }
+    }
+
+    @GetMapping("movie-and-series/comment/recent/{limit}")
+    public ResponseEntity<?> getSeriesCommentRecent(@PathVariable int limit)
+    {
+        return ResponseEntity.ok(commentService.findSeriesCommentRecent(limit));
     }
     //endregion
 }
