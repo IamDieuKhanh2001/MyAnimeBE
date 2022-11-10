@@ -15,8 +15,11 @@ public interface UserPremiumRepository extends JpaRepository<UserPremiumEntity, 
     @Query("SELECT u FROM UserPremiumEntity u WHERE u.usersEntityById = :usersEntity AND u.expiredAt > current_timestamp()")
     List<UserPremiumEntity> findByUserIdAndExpired(UsersEntity usersEntity);
 
-    @Query("SELECT TIME(TIMEDIFF(MAX(u.expiredAt), current_timestamp())) AS time_remain FROM UserPremiumEntity u WHERE u.usersEntityById = :usersEntity")
-    List<Object> getTimeRemain(UsersEntity usersEntity);
+//    @Query("SELECT TIME(TIMEDIFF(MAX(u.expiredAt), current_timestamp())) AS time_remain FROM UserPremiumEntity u WHERE u.usersEntityById = :usersEntity")
+//    List<Object> getTimeRemain(UsersEntity usersEntity);
+
+    @Query("SELECT u.expiredAt FROM UserPremiumEntity u WHERE u.usersEntityById = :usersEntity")
+    List<Timestamp> getTimeRemain(UsersEntity usersEntity);
 
     @Query("SELECT MAX(u.expiredAt) AS expired_at FROM UserPremiumEntity u WHERE u.usersEntityById = :usersEntity")
     Timestamp getExpiredAt(UsersEntity usersEntity);

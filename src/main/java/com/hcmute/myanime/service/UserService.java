@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
@@ -319,17 +320,25 @@ public class UserService {
         return true;
     }
 
-    public Object remainPremium()
+    public long remainPremium()
     {
+        if(!this.isPremiumMember())
+            return -1;
+
         // Check user is logged
         String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
         Optional<UsersEntity> userByUsername = usersRepository.findByUsername(usernameLoggedIn);
         if (!userByUsername.isPresent()) {
-            return null;
+            return -1;
         }
 
-        List<Object> list = userPremiumRepository.getTimeRemain(userByUsername.get());
-        return list.get(0);
+        List<Timestamp> list = userPremiumRepository.getTimeRemain(userByUsername.get());
+        list.sort((a, b) -> b.compareTo(a));
+
+        Timestamp remainTime = list.get(0);
+        long diff = remainTime.getTime() - (new Timestamp(System.currentTimeMillis())).getTime();
+        long day = TimeUnit.MILLISECONDS.toDays(diff);
+        return day;
     }
 
     public List<UserPremiumEntity> getHistoryPremium()
