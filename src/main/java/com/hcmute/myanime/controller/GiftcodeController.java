@@ -2,12 +2,17 @@ package com.hcmute.myanime.controller;
 
 import com.hcmute.myanime.dto.GiftcodeDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
+import com.hcmute.myanime.mapper.GiftcodeMapper;
+import com.hcmute.myanime.mapper.SubscriptionPackageMapper;
+import com.hcmute.myanime.model.GiftCodeEntity;
 import com.hcmute.myanime.service.GiftcodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -17,6 +22,21 @@ public class GiftcodeController {
     private GiftcodeService giftcodeService;
 
     //region Module Admin
+
+    @GetMapping("admin/giftcode/all")
+    public ResponseEntity<?> getAllGiftCodeSpawned()
+    {
+        List<GiftCodeEntity> giftCodeEntityList = giftcodeService.findAll();
+        List<GiftcodeDTO> giftcodeDTOList = new ArrayList<>();
+        giftCodeEntityList.forEach(giftCodeEntity -> {
+            GiftcodeDTO newGitGiftcodeDTO = GiftcodeMapper.toDTO(giftCodeEntity);
+            newGitGiftcodeDTO.setSubcriptionPackageDTO(SubscriptionPackageMapper.toDTO(giftCodeEntity.getSubscriptionPackageById()));
+            giftcodeDTOList.add(newGitGiftcodeDTO);
+        });
+        return ResponseEntity.ok(
+                giftcodeDTOList
+        );
+    }
     @PostMapping("admin/giftcode/create/package/{packageId}")
     public ResponseEntity<?> create(@RequestBody Map<String, Object> request, @PathVariable int packageId)
     {
