@@ -86,7 +86,6 @@ public class EpisodeController {
 
         ObjectMapper mapper = new ObjectMapper();
         EpisodeDTO episodeDTO = mapper.readValue(model, EpisodeDTO.class);
-
         if (episodeService.updateByEpisodeId(episodeId, episodeDTO, sourceFile, servers)) {
             return ResponseEntity.ok(
                     new ResponseDTO(HttpStatus.OK, "Update episode success")

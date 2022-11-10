@@ -135,23 +135,26 @@ public class EpisodeService {
         }
         EpisodeEntity updateEpisodeEntity = episodeEntityOptional.get();
         updateEpisodeEntity.setTitle(episodeDTO.getTitle());
+        updateEpisodeEntity.setPremiumRequired(episodeDTO.getPremiumRequired());
         try {
                 episodeRepository.save(updateEpisodeEntity);
             //        Update source file
-            for (String server : servers) {
-                switch (server) {
-                    case "do" -> {
-                        try {
-                            this.uploadSourceFileToDigitalOcean(sourceFile.getInputStream(), sourceFile.getContentType(), episodeId);
-                        } catch (Exception e) {
-                            throw new BadRequestException("Episode update success, source DO add fail");
+            if(sourceFile.getSize() != 0) { //File not send, not update old source
+                for (String server : servers) {
+                    switch (server) {
+                        case "do" -> {
+                            try {
+                                this.uploadSourceFileToDigitalOcean(sourceFile.getInputStream(), sourceFile.getContentType(), episodeId);
+                            } catch (Exception e) {
+                                throw new BadRequestException("Episode update success, source DO add fail");
+                            }
                         }
-                    }
-                    case "cd" -> {
-                        try {
-                            this.uploadSourceFileToCloudinary(sourceFile.getBytes(), episodeId);
-                        } catch (Exception e) {
-                            throw new BadRequestException("Episode update success, source CD add fail");
+                        case "cd" -> {
+                            try {
+                                this.uploadSourceFileToCloudinary(sourceFile.getBytes(), episodeId);
+                            } catch (Exception e) {
+                                throw new BadRequestException("Episode update success, source CD add fail");
+                            }
                         }
                     }
                 }
