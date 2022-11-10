@@ -70,7 +70,6 @@ public class MovieSeriesController {
             @RequestParam String model,
             @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile,
             @PathVariable int seriesID) throws JsonProcessingException {
-
         ObjectMapper mapper = new ObjectMapper();
         MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
 

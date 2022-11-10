@@ -12,6 +12,7 @@ import com.hcmute.myanime.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,6 +30,10 @@ public class GiftcodeService {
     @Autowired
     private UserService userService;
 
+    public List<GiftCodeEntity> findAll() {
+        List<GiftCodeEntity> giftCodeEntityList = giftcodeRepository.findAll();
+        return giftCodeEntityList;
+    }
     public boolean save(String quantityString, int packageId)
     {
         // Check package is exist

@@ -18,6 +18,12 @@ public class GiftcodeDTO {
         this.subcriptionPackageDTO = subcriptionPackageDTO;
     }
 
+    public GiftcodeDTO(int id, String redemption_code, Timestamp createAt) {
+        this.id = id;
+        this.redemption_code = redemption_code;
+        this.createAt = createAt;
+    }
+
     public GiftcodeDTO() {
     }
 
