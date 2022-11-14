@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
@@ -80,6 +81,8 @@ public class AuthenticationController {
             attemptLogService.store(ipClient, GlobalVariable.ATTEMPT_LOGS_LOGIN_FAIL);
 
             return ResponseEntity.badRequest().body("Username or password is invalid");
+        } catch (DisabledException disabledException) {
+            return ResponseEntity.badRequest().body("User is disabled");
         }
 
 
@@ -92,4 +95,5 @@ public class AuthenticationController {
                         authenticationRequest.getUsername(),
                         role));
     }
+
 }
