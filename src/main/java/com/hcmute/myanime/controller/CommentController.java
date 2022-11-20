@@ -27,7 +27,7 @@ public class CommentController {
     //endregion
 
     //region Module Client
-    @GetMapping(value = "/user/comment/episode/{episodeId}")
+    @GetMapping(value = "/comment/episode/{episodeId}")
     public ResponseEntity<?> getAllCommentByEpisodeId(@PathVariable int episodeId){
         List<CommentEntity> commentEntityList = commentService.findByEpisodeId(episodeId);
         List<CommentUserDTO> commentUserDTOList = new ArrayList<>();
