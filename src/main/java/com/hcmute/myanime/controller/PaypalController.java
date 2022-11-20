@@ -1,7 +1,13 @@
 package com.hcmute.myanime.controller;
 
+import com.hcmute.myanime.model.OrderPremiumEntity;
+import com.hcmute.myanime.model.PaypalOrderEntity;
+import com.hcmute.myanime.repository.OrderPremiumRepository;
+import com.hcmute.myanime.repository.PaypalOrderRepository;
+import com.hcmute.myanime.service.PaypalOrderService;
 import com.hcmute.myanime.service.PaypalService;
 import com.hcmute.myanime.beans.Order;
+import com.hcmute.myanime.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("payment/paypal")
@@ -31,7 +38,6 @@ public class PaypalController {
                 .replacePath(null)
                 .build()
                 .toUriString();
-
         baseUrl += "/payment/paypal/";
 
         try {
@@ -40,7 +46,6 @@ public class PaypalController {
                     baseUrl + SUCCESS_URL);
             for(Links link:payment.getLinks()) {
                 if(link.getRel().equals("approval_url")) {
-                    //return "redirect:"+link.getHref();
                     return ResponseEntity.ok(link.getHref());
                 }
             }
@@ -55,18 +60,56 @@ public class PaypalController {
         response.sendRedirect("/");
     }
 
+    @Autowired
+    private PaypalOrderService paypalOrderService;
+    @Autowired
+    private PaypalOrderRepository paypalOrderRepository;
+    @Autowired
+    private OrderPremiumRepository orderPremiumRepository;
+    @Autowired
+    private UserService userService;
+
     @GetMapping(value = SUCCESS_URL)
-    public ResponseEntity<?> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+    public ResponseEntity<?> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId, @RequestParam("token") String token) {
         try {
             Payment payment = paypalService.executePayment(paymentId, payerId);
             System.out.println(payment.toJSON());
             if (payment.getState().equals("approved")) {
+
+                // Xu ly premium va update paypal order
+                Optional<PaypalOrderEntity> paypalOrderRepositoryByToken = paypalOrderRepository.findByToken(token);
+                if(paypalOrderRepositoryByToken.isPresent()) {
+
+
+
+                    PaypalOrderEntity paypalOrderEntity = paypalOrderRepositoryByToken.get();
+
+                    if(paypalOrderEntity.getStatus().equals("paid")) {
+                        return ResponseEntity.badRequest().body("This order has been delivered.");
+                    }
+
+                    paypalOrderEntity.setPayerId(payerId);
+                    paypalOrderEntity.setPaymentId(paymentId);
+                    paypalOrderEntity.setStatus("paid");
+                    paypalOrderRepository.save(paypalOrderEntity);
+
+                    OrderPremiumEntity orderPremiumEntity = paypalOrderEntity.getOrderPremiumEntity();
+                    orderPremiumEntity.setStatus("paid");
+                    orderPremiumRepository.save(orderPremiumEntity);
+
+                    // Xu ly premium
+                    userService.createPremium(orderPremiumEntity.getSubscriptionPackageById().getId(), orderPremiumEntity.getUsersEntityById());
+
+
+                }
+
+
                 return ResponseEntity.ok("Payment success");
             }
         } catch (PayPalRESTException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return ResponseEntity.badRequest().body("Payment error");
+        return ResponseEntity.badRequest().body("Payment not done");
     }
 }
 

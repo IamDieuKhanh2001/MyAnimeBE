@@ -1,19 +1,24 @@
 package com.hcmute.myanime.controller;
 
 import com.hcmute.myanime.auth.ApplicationUserService;
+import com.hcmute.myanime.dto.OrderPremiumDTO;
 import com.hcmute.myanime.dto.ResponseDTO;
 import com.hcmute.myanime.dto.UserDTO;
 import com.hcmute.myanime.mapper.UserMapper;
+import com.hcmute.myanime.model.OrderPremiumEntity;
 import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.service.EmailSenderService;
+import com.hcmute.myanime.service.OrderPremiumService;
 import com.hcmute.myanime.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,6 +164,62 @@ public class UserController {
         StringBuilder message = new StringBuilder();
 
         if(userService.requestResetPassword(request, httpServletRequest.getRemoteAddr(), message)) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK, message.toString())
+            );
+        } else {
+            return ResponseEntity.badRequest().body(message.toString());
+        }
+    }
+
+    // Create order premium
+    @Autowired
+    private OrderPremiumService orderPremiumService;
+    @PostMapping("user/premium/create/order")
+    public ResponseEntity<?> requestOrderPremium(@RequestBody Map<String, Object> request, HttpServletRequest httpServletRequest)
+    {
+        String baseUrl = ServletUriComponentsBuilder.fromRequestUri(httpServletRequest)
+                .replacePath(null)
+                .build()
+                .toUriString();
+        baseUrl += "/payment/premium/pay/order/";
+
+        StringBuilder message = new StringBuilder();
+        int orderPremiumId = orderPremiumService.Create(request, message);
+        if(orderPremiumId >= 0) {
+            return ResponseEntity.ok(baseUrl + orderPremiumId);
+        } else {
+            return ResponseEntity.badRequest().body(message.toString());
+        }
+    }
+
+    @PostMapping("user/premium/cancel/order/{orderPremiumId}")
+    public ResponseEntity<?> requestOrderPremium(@PathVariable int orderPremiumId)
+    {
+        StringBuilder message = new StringBuilder();
+        if(orderPremiumService.Cancel(orderPremiumId, message)) {
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK, message.toString())
+            );
+        } else {
+            return ResponseEntity.badRequest().body(message.toString());
+        }
+    }
+
+    @GetMapping("payment/premium/pay/order/{orderPremiumId}")
+    public ResponseEntity<?> payOrderPremium(@PathVariable int orderPremiumId, HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException
+    {
+        String baseUrl = ServletUriComponentsBuilder.fromRequestUri(httpServletRequest)
+                .replacePath(null)
+                .build()
+                .toUriString();
+        baseUrl += "/payment/paypal/";
+
+        System.out.println(baseUrl);
+
+        StringBuilder message = new StringBuilder();
+        if(orderPremiumService.CreatePay(orderPremiumId, baseUrl, message)) {
+            response.sendRedirect(message.toString());
             return ResponseEntity.ok(
                     new ResponseDTO(HttpStatus.OK, message.toString())
             );

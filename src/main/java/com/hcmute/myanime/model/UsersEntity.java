@@ -48,6 +48,10 @@ public class UsersEntity {
     @JsonManagedReference
     private Collection<UserPremiumEntity> userPremiumCollection;
 
+    @OneToMany(mappedBy = "usersEntityById", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Collection<OrderPremiumEntity> orderPremiumEntityCollection;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

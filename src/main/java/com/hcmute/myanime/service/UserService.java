@@ -320,6 +320,16 @@ public class UserService {
         return true;
     }
 
+    public boolean isPremiumMember(UsersEntity usersEntity)
+    {
+        // Check record expired
+        List<UserPremiumEntity> userPremiumEntityList = userPremiumRepository.findByUserIdAndExpired(usersEntity);
+        if(userPremiumEntityList.isEmpty())
+            return false;
+
+        return true;
+    }
+
     public long remainPremium()
     {
         if(!this.isPremiumMember())
@@ -374,6 +384,36 @@ public class UserService {
         // Check this user have a UserPremium now
         if(this.isPremiumMember()) {
             Timestamp subscribeDate = userPremiumRepository.getExpiredAt(userByUsername.get());
+            Timestamp expiredAt = new Timestamp(subscribeDate.getTime() + TimeUnit.DAYS.toMillis(subscriptionPackageEntityOptional.get().getDay()));
+
+            userPremiumEntity.setSubscribeDate(subscribeDate);
+            userPremiumEntity.setExpiredAt(expiredAt);
+
+        } else {
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            Timestamp expiredAt = new Timestamp(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(subscriptionPackageEntityOptional.get().getDay()));
+
+            userPremiumEntity.setSubscribeDate(currentTime);
+            userPremiumEntity.setExpiredAt(expiredAt);
+        }
+
+        userPremiumRepository.save(userPremiumEntity);
+        return true;
+    }
+
+    public boolean createPremium(int packageId, UsersEntity usersEntity)
+    {
+        // Check packageId is valid
+        Optional<SubscriptionPackageEntity> subscriptionPackageEntityOptional = subscriptionPackageRepository.findById(packageId);
+        if(!subscriptionPackageEntityOptional.isPresent())
+            return false;
+
+        UserPremiumEntity userPremiumEntity = new UserPremiumEntity();
+        userPremiumEntity.setSubscriptionPackageBySubscriptionPackageId(subscriptionPackageEntityOptional.get());
+        userPremiumEntity.setUsersEntityById(usersEntity);
+        // Check this user have a UserPremium now
+        if(this.isPremiumMember(usersEntity)) {
+            Timestamp subscribeDate = userPremiumRepository.getExpiredAt(usersEntity);
             Timestamp expiredAt = new Timestamp(subscribeDate.getTime() + TimeUnit.DAYS.toMillis(subscriptionPackageEntityOptional.get().getDay()));
 
             userPremiumEntity.setSubscribeDate(subscribeDate);
