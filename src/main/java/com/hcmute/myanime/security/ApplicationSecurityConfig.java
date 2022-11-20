@@ -42,6 +42,7 @@ public class  ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/", "/login", "/register",
                             "/movie-and-series/**", "/episode/**", "/category/**", "/category-movie/**", "/statistics/**",
+                            "/payment/**",
                             //Các API từ đây sẽ bị xóa và chuyển về has role khi xong
                             "/test/api/videoUpload",
                             "/subscription-package/**",
