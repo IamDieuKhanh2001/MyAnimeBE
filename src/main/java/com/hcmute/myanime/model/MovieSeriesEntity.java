@@ -56,6 +56,7 @@ public class MovieSeriesEntity {
         this.favoritesEntityCollection = favoritesEntityCollection;
     }
 
+
     public int getId() {
         return id;
     }

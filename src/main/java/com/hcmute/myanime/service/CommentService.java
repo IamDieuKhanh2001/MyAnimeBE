@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -97,28 +98,49 @@ public class CommentService {
 
     public List<MovieSeriesDTO> findSeriesCommentRecent(int limit)
     {
-        List<Integer> listEpisodeCommentRecent = commentsRepository.getEpisodeIDCommentRecentWithLimit(PageRequest.of(0, 50));
-
-        List<Integer> listIdEpTemp = new ArrayList<>();
-        listEpisodeCommentRecent.forEach(id->{
-            if(listIdEpTemp.size() >= limit)
-                return;
-            if(listIdEpTemp.contains(id))
-                return;
-            listIdEpTemp.add(id);
-        });
-
         List<MovieSeriesDTO> movieSeriesDTOList = new ArrayList<>();
-        listIdEpTemp.forEach(epID-> {
-            Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(epID);
-            if(episodeEntityOptional.isPresent()) {
-                EpisodeEntity episodeEntity = episodeEntityOptional.get();
-                MovieSeriesEntity movieSeriesEntity = episodeEntity.getMovieSeriesBySeriesId();
-                Long viewOfSeries = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
-                movieSeriesDTOList.add(MovieSeriesMapper.toDTO(movieSeriesEntity, viewOfSeries));
-            }
+        List<Object[]> episodeIDCommentRecentWithLimit = commentsRepository.getEpisodeIDCommentRecentWithLimit(limit)   ;
+        episodeIDCommentRecentWithLimit.forEach(obj -> {
+            MovieSeriesDTO movieSeriesDTO = new MovieSeriesDTO();
+            movieSeriesDTO.setId((int)obj[0]);
+            movieSeriesDTO.setName((String) obj[1]);
+            movieSeriesDTO.setDescription((String) obj[2]);
+            movieSeriesDTO.setDateAired((Timestamp) obj[3]);
+            movieSeriesDTO.setTotalEpisode((int) obj[4]);
+            movieSeriesDTO.setImage((String) obj[5]);
+            movieSeriesDTO.setCreateAt((Timestamp) obj[6]);
+            movieSeriesDTO.setMovieId((int)obj[7]);
+            movieSeriesDTOList.add(movieSeriesDTO);
         });
 
+        System.out.println(movieSeriesDTOList.size());
         return movieSeriesDTOList;
     }
+
+//    public List<MovieSeriesDTO> findSeriesCommentRecent(int limit)
+//    {
+//        List<Integer> listEpisodeCommentRecent = commentsRepository.getEpisodeIDCommentRecentWithLimit(PageRequest.of(0, 50));
+//
+//        List<Integer> listIdEpTemp = new ArrayList<>();
+//        listEpisodeCommentRecent.forEach(id->{
+//            if(listIdEpTemp.size() >= limit)
+//                return;
+//            if(listIdEpTemp.contains(id))
+//                return;
+//            listIdEpTemp.add(id);
+//        });
+//
+//        List<MovieSeriesDTO> movieSeriesDTOList = new ArrayList<>();
+//        listIdEpTemp.forEach(epID-> {
+//            Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(epID);
+//            if(episodeEntityOptional.isPresent()) {
+//                EpisodeEntity episodeEntity = episodeEntityOptional.get();
+//                MovieSeriesEntity movieSeriesEntity = episodeEntity.getMovieSeriesBySeriesId();
+//                Long viewOfSeries = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+//                movieSeriesDTOList.add(MovieSeriesMapper.toDTO(movieSeriesEntity, viewOfSeries));
+//            }
+//        });
+//
+//        return movieSeriesDTOList;
+//    }
 }
