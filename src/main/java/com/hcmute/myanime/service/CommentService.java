@@ -30,6 +30,8 @@ public class CommentService {
     private ApplicationUserService applicationUserService;
     @Autowired
     private MovieSeriesRepository movieSeriesRepository;
+    @Autowired
+    private MovieSeriesService movieSeriesService;
 
     public List<CommentEntity> findByEpisodeId(int episodeId) {
         EpisodeEntity episodeEntity = episodeRepository.findById(episodeId).get();
@@ -111,7 +113,9 @@ public class CommentService {
             Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(epID);
             if(episodeEntityOptional.isPresent()) {
                 EpisodeEntity episodeEntity = episodeEntityOptional.get();
-                movieSeriesDTOList.add(MovieSeriesMapper.toDTO(episodeEntity.getMovieSeriesBySeriesId()));
+                MovieSeriesEntity movieSeriesEntity = episodeEntity.getMovieSeriesBySeriesId();
+                Long viewOfSeries = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+                movieSeriesDTOList.add(MovieSeriesMapper.toDTO(movieSeriesEntity, viewOfSeries));
             }
         });
 

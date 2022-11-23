@@ -39,7 +39,8 @@ public class MovieSeriesController {
         List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.findAll();
         List<MovieSeriesDTO> movieSeriesDTOList = new ArrayList<>();
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
-            movieSeriesDTOList.add(MovieSeriesMapper.toDTO(movieSeriesEntity));
+            Long viewOfSeries = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+            movieSeriesDTOList.add(MovieSeriesMapper.toDTO(movieSeriesEntity, viewOfSeries));
         });
         return ResponseEntity.ok(movieSeriesDTOList);
     }
@@ -55,7 +56,8 @@ public class MovieSeriesController {
         MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
 
         MovieSeriesEntity movieSeriesEntity = movieSeriesService.save(movieSeriesDTO, sourceFile);
-        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity);
+        Long viewOfSeries = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity, viewOfSeries);
         return ResponseEntity.ok(
                 new ResponseDTO(
                         HttpStatus.OK,
@@ -74,7 +76,8 @@ public class MovieSeriesController {
         MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
 
         MovieSeriesEntity movieSeriesEntity = movieSeriesService.updateById(seriesID, movieSeriesDTO, sourceFile);
-        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity);
+        Long viewOfSeries = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity, viewOfSeries);
         return ResponseEntity.ok(
                 new ResponseDTO(HttpStatus.OK,
                         "Update series success",

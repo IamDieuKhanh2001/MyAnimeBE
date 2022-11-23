@@ -126,9 +126,11 @@ public class MovieSeriesService {
 
     public Long totalViewByMovieSeriesEntity(MovieSeriesEntity movieSeriesEntity) {
         Long totalView = Long.valueOf(0);
-        for (EpisodeEntity episodeEntity : movieSeriesEntity.getEpisodesById()) {
-            totalView += episodeEntity.getTotalView();
-        }
+        try {
+            for (EpisodeEntity episodeEntity : movieSeriesEntity.getEpisodesById()) {
+                totalView += episodeEntity.getTotalView();
+            }
+        } catch (Exception ex) {}
         return totalView;
     }
 
