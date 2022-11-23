@@ -139,7 +139,7 @@ public class EpisodeService {
         try {
                 episodeRepository.save(updateEpisodeEntity);
             //        Update source file
-            if(sourceFile != null) { //File not send, not update old source
+            if(sourceFile != null && sourceFile.getSize() > 0) { //File not send, not update old source
                 for (String server : servers) {
                     switch (server) {
                         case "do" -> {
