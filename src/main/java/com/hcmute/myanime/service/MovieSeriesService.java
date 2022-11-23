@@ -95,13 +95,16 @@ public class MovieSeriesService {
         updateMovieSeriesEntity.setTotalEpisode(movieSeriesDTO.getTotalEpisode());
         try {
             MovieSeriesEntity savedEntity = movieSeriesRepository.save(updateMovieSeriesEntity);
-            String urlSource = uploadSourceFileToCloudinary(sourceFile, savedEntity.getId());
-            if(!urlSource.equals("-1")) {
-                savedEntity.setImage(urlSource);
-                savedEntity = movieSeriesRepository.save(savedEntity);
+            if(sourceFile.getSize() > 0) {
+                String urlSource = uploadSourceFileToCloudinary(sourceFile, savedEntity.getId());
+                if(!urlSource.equals("-1")) {
+                    savedEntity.setImage(urlSource);
+                    savedEntity = movieSeriesRepository.save(savedEntity);
+                }
             }
             return savedEntity;
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new BadRequestException("Can not update series");
         }
     }
