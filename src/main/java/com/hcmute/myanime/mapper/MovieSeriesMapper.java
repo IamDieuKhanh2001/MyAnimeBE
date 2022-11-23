@@ -34,9 +34,11 @@ public class MovieSeriesMapper {
         movieSeriesDTO.setMovieData(MovieMapper.toDTO(movieSeriesEntity.getMovieByMovieId()));
 
         movieSeriesDTO.setTotalViewOfSeries(0);
-        movieSeriesEntity.getEpisodesById().forEach(ep->{
-            movieSeriesDTO.setTotalViewOfSeries(movieSeriesDTO.getTotalViewOfSeries() + ep.getTotalView());
-        });
+        if(movieSeriesEntity.getEpisodesById() != null) {
+            movieSeriesEntity.getEpisodesById().forEach(ep->{
+                movieSeriesDTO.setTotalViewOfSeries(movieSeriesDTO.getTotalViewOfSeries() + ep.getTotalView());
+            });
+        }
 
         return movieSeriesDTO;
     }
