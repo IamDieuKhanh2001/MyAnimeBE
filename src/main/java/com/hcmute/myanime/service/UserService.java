@@ -51,6 +51,15 @@ public class UserService {
         return usersRepository.findAll();
     }
 
+    public UsersEntity findByUsername(String username) {
+        Optional<UsersEntity> usersEntityOptional = usersRepository.findByUsername(username);
+        if(!usersEntityOptional.isPresent()) {
+            return null;
+        }
+        UsersEntity usersEntity = usersEntityOptional.get();
+        return usersEntity;
+    }
+
     public Boolean uploadAvatar(MultipartFile avatar, String username) throws IOException {
         Optional<UsersEntity> usersOptional = usersRepository.findByUsername(username);
         System.out.println(username);
