@@ -43,11 +43,13 @@ public class AuthenticationController {
     public ResponseEntity<?> saveUser(
             @RequestBody @Valid UserDTO user,
             BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors().get(0).getDefaultMessage());
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(
+                    new ResponseDTO(HttpStatus.BAD_REQUEST, bindingResult.getAllErrors().get(0).getDefaultMessage())
+            );
         }
         try {
-            if(applicationUserService.save(user)) {
+            if (applicationUserService.save(user)) {
                 return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK,
                         "Create user " + user.getUsername() + " success"));
             }
@@ -55,15 +57,16 @@ public class AuthenticationController {
             return ResponseEntity.badRequest()
                     .body(new ResponseDTO(HttpStatus.BAD_REQUEST, "username is used"));
         }
-        return ResponseEntity.badRequest().body("Register fail");
+        return ResponseEntity.badRequest().body(new ResponseDTO(HttpStatus.BAD_REQUEST, "Something when wrong, register fail"));
     }
+
     @PostMapping("/login")
-    public Object authenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequest, HttpServletRequest httpServletRequest) throws Exception{
+    public Object authenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequest, HttpServletRequest httpServletRequest) throws Exception {
         String ipClient = httpServletRequest.getRemoteAddr();
         try {
 
             // Check Attempt
-            if(!attemptLogService.isValid(ipClient, GlobalVariable.ATTEMPT_LOGS_LOGIN_FAIL, GlobalVariable.MAX_ATTEMPT_LOGIN_ALLOW)) {
+            if (!attemptLogService.isValid(ipClient, GlobalVariable.ATTEMPT_LOGS_LOGIN_FAIL, GlobalVariable.MAX_ATTEMPT_LOGIN_ALLOW)) {
                 return ResponseEntity.badRequest().body("Max atempt login allow. Please try after 10 minutes!");
             }
 
