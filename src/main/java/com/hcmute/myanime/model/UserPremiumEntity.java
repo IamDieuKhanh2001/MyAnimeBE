@@ -1,6 +1,7 @@
 package com.hcmute.myanime.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -22,8 +23,9 @@ public class UserPremiumEntity {
     @JoinColumn(name = "subscription_package_id", referencedColumnName = "id", nullable = false)
     @JsonBackReference
     private SubscriptionPackageEntity subscriptionPackageBySubscriptionPackageId;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp subscribeDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp expiredAt;
 
     public UserPremiumEntity() {
