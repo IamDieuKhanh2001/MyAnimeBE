@@ -19,4 +19,9 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Intege
             "series.movieByMovieId movie join " +
             "movie.categoryEntityCollection categoryMovie where categoryMovie.id = :categoryId")
     Long countSeriesByCategoryId(@Param("categoryId") int categoryId);
+    //Call by stored procedures
+    @Query(value = "{call findAll_categories}", nativeQuery = true)
+    List<CategoryEntity> findAllByStoredProcedures();
+    @Query(value = "{call findById_categories(:id)}", nativeQuery = true)
+    CategoryEntity findByIdByStoredProcedures(int id);
 }
