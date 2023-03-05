@@ -172,7 +172,9 @@ public class MovieSeriesService {
             movieSeriesEntityList = movieSeriesRepository.findByNameContaining(keywordSearch,pageable);
         }
         else{
-            movieSeriesEntityList = movieSeriesRepository.findAll(pageable).stream().toList();
+//            movieSeriesEntityList = movieSeriesRepository.findAll(pageable).stream().toList(); //Use spring data jpa
+            movieSeriesEntityList = movieSeriesRepository
+                    .findAllByStoredProcedures(Integer.parseInt(page), Integer.parseInt(limit)); //Use stored procedures
         }
         return movieSeriesEntityList;
     }

@@ -8,4 +8,8 @@ import java.util.List;
 
 public interface GiftcodeRepository extends JpaRepository<GiftCodeEntity, Integer> {
     List<GiftCodeEntity> findByRedemptionCode(String redemptionCode);
+
+    //Call View
+    @Query(value = "select * from GiftcodeView", nativeQuery = true)
+    List<GiftCodeEntity> findAllByView();
 }

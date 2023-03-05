@@ -98,6 +98,12 @@
             <optional>true</optional>
         </dependency>
 
+<!--        Tesseract API provides OCR support image formats JPEG, GIF, PNG, and BMP.-->
+        <dependency>
+            <groupId>net.sourceforge.tess4j</groupId>
+            <artifactId>tess4j</artifactId>
+            <version>4.5.1</version>
+        </dependency>
 
     </dependencies>
 
