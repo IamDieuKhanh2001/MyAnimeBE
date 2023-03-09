@@ -65,4 +65,9 @@ public class SubscriptionPackageService {
             return false;
         }
     }
+
+    public int countPackageByPackageIdAndStatus(int packageId, String status) {
+        Integer numberOfTopUpPackage = subscriptionPackageRepository.countTopUpPackageByFunction(packageId, status);
+        return numberOfTopUpPackage;
+    }
 }

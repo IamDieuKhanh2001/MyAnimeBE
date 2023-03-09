@@ -1,12 +1,15 @@
 package com.hcmute.myanime.controller;
 
 import com.hcmute.myanime.dto.ResponseDTO;
+import com.hcmute.myanime.dto.StatisticsSubscriptionPackageDTO;
 import com.hcmute.myanime.dto.SubcriptionPackageDTO;
 import com.hcmute.myanime.service.SubscriptionPackageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 public class SubscriptionPackageController{
@@ -61,6 +64,18 @@ public class SubscriptionPackageController{
     public ResponseEntity<?> GetAllPackage()
     {
         return ResponseEntity.ok(subscriptionPackageService.GetSubcriptionPackageActive());
+    }
+    @GetMapping("subscription-package/{packageID}")
+    public ResponseEntity<?> countTopUpPackageByPackageID(@PathVariable int packageID,
+                                                         @RequestParam Map<String, String> requestParams)
+    {
+        String paymentStatus = requestParams.get("paymentStatus");
+        StatisticsSubscriptionPackageDTO statisticsSubscriptionPackageDTO = new StatisticsSubscriptionPackageDTO(
+                subscriptionPackageService.countPackageByPackageIdAndStatus(packageID, paymentStatus)
+        );
+        return ResponseEntity.ok(
+                statisticsSubscriptionPackageDTO
+        );
     }
     //endregion
 
