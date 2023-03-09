@@ -78,4 +78,15 @@ public class UserPremiumEntity {
     public void setExpiredAt(Timestamp expiredAt) {
         this.expiredAt = expiredAt;
     }
+
+    @Override
+    public String toString() {
+        return "UserPremiumEntity{" +
+                "id=" + id +
+                ", usersEntityById=" + usersEntityById +
+                ", subscriptionPackageBySubscriptionPackageId=" + subscriptionPackageBySubscriptionPackageId +
+                ", subscribeDate=" + subscribeDate +
+                ", expiredAt=" + expiredAt +
+                '}';
+    }
 }

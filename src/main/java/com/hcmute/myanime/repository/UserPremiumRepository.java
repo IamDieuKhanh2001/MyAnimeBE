@@ -1,5 +1,6 @@
 package com.hcmute.myanime.repository;
 
+import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.model.UserPremiumEntity;
 import com.hcmute.myanime.model.UsersEntity;
 import org.apache.catalina.User;
@@ -23,5 +24,10 @@ public interface UserPremiumRepository extends JpaRepository<UserPremiumEntity, 
 
     @Query("SELECT MAX(u.expiredAt) AS expired_at FROM UserPremiumEntity u WHERE u.usersEntityById = :usersEntity")
     Timestamp getExpiredAt(UsersEntity usersEntity);
-
+    List<UserPremiumEntity> findAllByExpiredAtAfter(Timestamp day);
+    int countByExpiredAtAfter(Timestamp day);
+    
+    //Function MySql
+    @Query(value = "select countPremiumUser()", nativeQuery = true)
+    Integer countPremiumUserByFunction();
 }
