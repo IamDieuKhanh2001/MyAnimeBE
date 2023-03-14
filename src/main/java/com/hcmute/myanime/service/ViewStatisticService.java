@@ -12,4 +12,8 @@ public class ViewStatisticService {
     public Long countViewStatisticsByYearAndMonth(int yearCreateAt, int montCreateAt) {
         return viewStatisticsRepository.countByYearCreateAtAndMonthCreateAt_FunctionSQL(yearCreateAt, montCreateAt);
     }
+
+    public Long countViewStatisticsByYear(int yearCreateAt) {
+        return viewStatisticsRepository.countByYearCreateAt_FunctionSQL(yearCreateAt);
+    }
 }
