@@ -1,8 +1,7 @@
 package com.hcmute.myanime.controller;
 
 import com.hcmute.myanime.dto.ResponseDTO;
-import com.hcmute.myanime.dto.StatisticsSubscriptionPackageDTO;
-import com.hcmute.myanime.dto.SubcriptionPackageDTO;
+import com.hcmute.myanime.dto.SubscriptionPackageDTO;
 import com.hcmute.myanime.service.SubscriptionPackageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ public class SubscriptionPackageController{
 
     //region Module Admin
     @PostMapping("admin/subscription-package/create")
-    public ResponseEntity<?> Create(@RequestBody SubcriptionPackageDTO subcriptionPackageDTO)
+    public ResponseEntity<?> Create(@RequestBody SubscriptionPackageDTO subcriptionPackageDTO)
     {
         if(subscriptionPackageService.store(subcriptionPackageDTO)) {
             return ResponseEntity.ok(
@@ -46,7 +45,7 @@ public class SubscriptionPackageController{
     }
 
     @PutMapping("admin/subscription-package/update/{packageID}")
-    public ResponseEntity<?> Update(@RequestBody SubcriptionPackageDTO subcriptionPackageDTO, @PathVariable int packageID)
+    public ResponseEntity<?> Update(@RequestBody SubscriptionPackageDTO subcriptionPackageDTO, @PathVariable int packageID)
     {
         if(subscriptionPackageService.update(subcriptionPackageDTO, packageID)) {
             return ResponseEntity.ok(
@@ -64,18 +63,6 @@ public class SubscriptionPackageController{
     public ResponseEntity<?> GetAllPackage()
     {
         return ResponseEntity.ok(subscriptionPackageService.GetSubcriptionPackageActive());
-    }
-    @GetMapping("subscription-package/{packageID}")
-    public ResponseEntity<?> countTopUpPackageByPackageID(@PathVariable int packageID,
-                                                         @RequestParam Map<String, String> requestParams)
-    {
-        String paymentStatus = requestParams.get("paymentStatus");
-        StatisticsSubscriptionPackageDTO statisticsSubscriptionPackageDTO = new StatisticsSubscriptionPackageDTO(
-                subscriptionPackageService.countPackageByPackageIdAndStatus(packageID, paymentStatus)
-        );
-        return ResponseEntity.ok(
-                statisticsSubscriptionPackageDTO
-        );
     }
     //endregion
 

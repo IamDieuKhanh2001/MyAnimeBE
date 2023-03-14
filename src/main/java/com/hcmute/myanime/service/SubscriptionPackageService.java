@@ -1,6 +1,6 @@
 package com.hcmute.myanime.service;
 
-import com.hcmute.myanime.dto.SubcriptionPackageDTO;
+import com.hcmute.myanime.dto.SubscriptionPackageDTO;
 import com.hcmute.myanime.mapper.SubscriptionPackageMapper;
 import com.hcmute.myanime.model.SubscriptionPackageEntity;
 import com.hcmute.myanime.repository.SubscriptionPackageRepository;
@@ -16,17 +16,19 @@ public class SubscriptionPackageService {
     @Autowired
     private SubscriptionPackageRepository subscriptionPackageRepository;
 
-    public List<SubcriptionPackageDTO> GetSubcriptionPackageActive()
+    public List<SubscriptionPackageDTO> GetSubcriptionPackageActive()
     {
         List<SubscriptionPackageEntity> subscriptionPackageEntityList = subscriptionPackageRepository.findAllByEnableActive();
-        List<SubcriptionPackageDTO> subcriptionPackageDTOList = new ArrayList<>();
+        List<SubscriptionPackageDTO> subcriptionPackageDTOList = new ArrayList<>();
         subscriptionPackageEntityList.forEach((subscriptionPackageEntity)->{
-            subcriptionPackageDTOList.add(SubscriptionPackageMapper.toDTO(subscriptionPackageEntity));
+            SubscriptionPackageDTO subscriptionPackageDTO = SubscriptionPackageMapper.toDTO(subscriptionPackageEntity);
+            subscriptionPackageDTO.setNumberOfTopUp(countPackageByPackageIdAndStatus(subscriptionPackageEntity.getId(), "paid"));
+            subcriptionPackageDTOList.add(subscriptionPackageDTO);
         });
         return subcriptionPackageDTOList;
     }
 
-    public boolean store(SubcriptionPackageDTO subcriptionPackageDTO)
+    public boolean store(SubscriptionPackageDTO subcriptionPackageDTO)
     {
         SubscriptionPackageEntity subscriptionPackageEntity = SubscriptionPackageMapper.toEntity(subcriptionPackageDTO);
         try {
@@ -50,7 +52,7 @@ public class SubscriptionPackageService {
         }
     }
 
-    public boolean update(SubcriptionPackageDTO subcriptionPackageDTO, int packageID)
+    public boolean update(SubscriptionPackageDTO subcriptionPackageDTO, int packageID)
     {
         Optional<SubscriptionPackageEntity> subscriptionPackageEntityOptional = subscriptionPackageRepository.findById(packageID);
         if (!subscriptionPackageEntityOptional.isPresent())

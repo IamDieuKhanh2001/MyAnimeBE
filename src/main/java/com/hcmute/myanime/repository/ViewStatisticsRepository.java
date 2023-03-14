@@ -19,4 +19,8 @@ public interface ViewStatisticsRepository extends JpaRepository<ViewStatisticsEn
 
     Optional<ViewStatisticsEntity> findByIpAddress(String ipAddress);
     Optional<ViewStatisticsEntity> findByEpisode(EpisodeEntity episodeEntity);
+
+    //Function SQL
+    @Query(value = "select countViewStatisticsByYearAndMonth(:yearCreateAt, :monthCreateAt)", nativeQuery = true)
+    Long countByYearCreateAtAndMonthCreateAt_FunctionSQL(int yearCreateAt, int monthCreateAt);
 }

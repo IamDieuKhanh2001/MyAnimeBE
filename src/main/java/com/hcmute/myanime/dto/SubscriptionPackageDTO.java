@@ -2,22 +2,33 @@ package com.hcmute.myanime.dto;
 
 public class SubscriptionPackageDTO {
     private int id;
-    private String name;
-    private int day;
-    private double price;
+    private long day;
     private String description;
     private boolean enable;
+    private String name;
+    private double price;
+    private int numberOfTopUp;
 
     public SubscriptionPackageDTO() {
     }
 
-    public SubscriptionPackageDTO(int id, String name, int day, double price, String description, boolean enable) {
+    public SubscriptionPackageDTO(int id, long day, String description, boolean enable, String name, double price) {
         this.id = id;
-        this.name = name;
         this.day = day;
-        this.price = price;
         this.description = description;
         this.enable = enable;
+        this.name = name;
+        this.price = price;
+    }
+
+    public SubscriptionPackageDTO(int id, long day, String description, boolean enable, String name, double price, int numberOfTopUp) {
+        this.id = id;
+        this.day = day;
+        this.description = description;
+        this.enable = enable;
+        this.name = name;
+        this.price = price;
+        this.numberOfTopUp = numberOfTopUp;
     }
 
     public int getId() {
@@ -28,28 +39,12 @@ public class SubscriptionPackageDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getDay() {
+    public long getDay() {
         return day;
     }
 
-    public void setDay(int day) {
+    public void setDay(long day) {
         this.day = day;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public String getDescription() {
@@ -60,11 +55,39 @@ public class SubscriptionPackageDTO {
         this.description = description;
     }
 
-    public boolean isEnable() {
+    public boolean getEnable() {
         return enable;
     }
 
     public void setEnable(boolean enable) {
         this.enable = enable;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public int getNumberOfTopUp() {
+        return numberOfTopUp;
+    }
+
+    public void setNumberOfTopUp(int numberOfTopUp) {
+        this.numberOfTopUp = numberOfTopUp;
     }
 }

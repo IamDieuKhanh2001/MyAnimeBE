@@ -1,12 +1,12 @@
 package com.hcmute.myanime.mapper;
 
-import com.hcmute.myanime.dto.SubcriptionPackageDTO;
+import com.hcmute.myanime.dto.SubscriptionPackageDTO;
 import com.hcmute.myanime.model.SubscriptionPackageEntity;
 
 public class SubscriptionPackageMapper {
-    public static SubcriptionPackageDTO toDTO (SubscriptionPackageEntity subscriptionPackageEntity)
+    public static SubscriptionPackageDTO toDTO (SubscriptionPackageEntity subscriptionPackageEntity)
     {
-        SubcriptionPackageDTO subcriptionPackageDTO = new SubcriptionPackageDTO();
+        SubscriptionPackageDTO subcriptionPackageDTO = new SubscriptionPackageDTO();
         subcriptionPackageDTO.setId(subscriptionPackageEntity.getId());
         subcriptionPackageDTO.setDay(subscriptionPackageEntity.getDay());
         subcriptionPackageDTO.setDescription(subscriptionPackageEntity.getDescription());
@@ -16,7 +16,7 @@ public class SubscriptionPackageMapper {
         return subcriptionPackageDTO;
     }
 
-    public static SubscriptionPackageEntity toEntity (SubcriptionPackageDTO subcriptionPackageDTO)
+    public static SubscriptionPackageEntity toEntity (SubscriptionPackageDTO subcriptionPackageDTO)
     {
         SubscriptionPackageEntity subscriptionPackageEntity = new SubscriptionPackageEntity();
 
@@ -29,7 +29,7 @@ public class SubscriptionPackageMapper {
         return subscriptionPackageEntity;
     }
 
-    public static SubscriptionPackageEntity toEntity(SubscriptionPackageEntity subscriptionPackageEntity, SubcriptionPackageDTO subcriptionPackageDTO)
+    public static SubscriptionPackageEntity toEntity(SubscriptionPackageEntity subscriptionPackageEntity, SubscriptionPackageDTO subcriptionPackageDTO)
     {
         subscriptionPackageEntity.setDay(subcriptionPackageDTO.getDay());
         subscriptionPackageEntity.setDescription(subcriptionPackageDTO.getDescription());

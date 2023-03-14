@@ -13,7 +13,7 @@ public class OrderPremiumDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createAt;
 
-    private SubcriptionPackageDTO subcriptionPackageDTO;
+    private SubscriptionPackageDTO subcriptionPackageDTO;
     private UserDTO userDTO;
 
     public OrderPremiumDTO() {
@@ -59,11 +59,11 @@ public class OrderPremiumDTO {
         this.createAt = createAt;
     }
 
-    public SubcriptionPackageDTO getSubcriptionPackageDTO() {
+    public SubscriptionPackageDTO getSubcriptionPackageDTO() {
         return subcriptionPackageDTO;
     }
 
-    public void setSubcriptionPackageDTO(SubcriptionPackageDTO subcriptionPackageDTO) {
+    public void setSubcriptionPackageDTO(SubscriptionPackageDTO subcriptionPackageDTO) {
         this.subcriptionPackageDTO = subcriptionPackageDTO;
     }
 

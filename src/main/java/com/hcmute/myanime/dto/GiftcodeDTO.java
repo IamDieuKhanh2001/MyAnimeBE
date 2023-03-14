@@ -9,9 +9,9 @@ public class GiftcodeDTO {
     private String redemption_code;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createAt;
-    private SubcriptionPackageDTO subcriptionPackageDTO;
+    private SubscriptionPackageDTO subcriptionPackageDTO;
 
-    public GiftcodeDTO(int id, String redemption_code, Timestamp createAt, SubcriptionPackageDTO subcriptionPackageDTO) {
+    public GiftcodeDTO(int id, String redemption_code, Timestamp createAt, SubscriptionPackageDTO subcriptionPackageDTO) {
         this.id = id;
         this.redemption_code = redemption_code;
         this.createAt = createAt;
@@ -51,11 +51,11 @@ public class GiftcodeDTO {
         this.createAt = createAt;
     }
 
-    public SubcriptionPackageDTO getSubcriptionPackageDTO() {
+    public SubscriptionPackageDTO getSubcriptionPackageDTO() {
         return subcriptionPackageDTO;
     }
 
-    public void setSubcriptionPackageDTO(SubcriptionPackageDTO subcriptionPackageDTO) {
+    public void setSubcriptionPackageDTO(SubscriptionPackageDTO subcriptionPackageDTO) {
         this.subcriptionPackageDTO = subcriptionPackageDTO;
     }
 }

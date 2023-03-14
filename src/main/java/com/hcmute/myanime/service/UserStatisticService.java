@@ -1,13 +1,10 @@
 package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.common.GlobalVariable;
-import com.hcmute.myanime.model.UserPremiumEntity;
 import com.hcmute.myanime.repository.UserPremiumRepository;
 import com.hcmute.myanime.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
 
 @Service
 public class UserStatisticService {
