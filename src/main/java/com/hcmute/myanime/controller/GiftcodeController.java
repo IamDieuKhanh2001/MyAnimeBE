@@ -6,6 +6,8 @@ import com.hcmute.myanime.mapper.GiftcodeMapper;
 import com.hcmute.myanime.mapper.SubscriptionPackageMapper;
 import com.hcmute.myanime.model.GiftCodeEntity;
 import com.hcmute.myanime.service.GiftcodeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +18,15 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@Api( tags = "Gift Code")
 public class GiftcodeController {
 
     @Autowired
     private GiftcodeService giftcodeService;
 
     //region Module Admin
-
+    @ApiOperation(value = "Get all giftcode"
+    )
     @GetMapping("admin/giftcode/all")
     public ResponseEntity<?> getAllGiftCodeSpawned()
     {

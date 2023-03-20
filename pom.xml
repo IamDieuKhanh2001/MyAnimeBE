@@ -97,7 +97,11 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
 <!--        Tesseract API provides OCR support image formats JPEG, GIF, PNG, and BMP.-->
         <dependency>
             <groupId>net.sourceforge.tess4j</groupId>

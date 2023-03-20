@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -40,7 +41,7 @@ public class  ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/", "/login", "/register",
+                    .antMatchers("/", "/authentication/**",
                             "/movie-and-series/**", "/episode/**", "/category/**", "/category-movie/**", "/statistics/**",
                             "/comment/**",
                             "/payment/**",
@@ -48,9 +49,22 @@ public class  ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/test/api/videoUpload",
                             "/subscription-package/**",
                             "/account/**",
+                            //swagger UI doc
+                            "/csrf",
+                            "/v3/api-docs",
+                            "/configuration/ui",
+                            "/swagger-resources",
+                            "/swagger-resources/configuration/security",
+                            "/swagger-resources/configuration/ui",
+                            "/configuration/security",
+                            "/swagger-ui/**",
+                            "/webjars/**",
+                            //Test API
                             "/test/**").permitAll()
                     .antMatchers("/user/**").hasAnyRole(ADMIN.name(), USER.name()) //Các API cần đăng nhập bằng tk admin, user
-                    .antMatchers("/admin/**", "/test/api/adminRole").hasRole(ADMIN.name()) //Các API cần đăng nhập bằng tk admin
+                    .antMatchers(
+                            "/admin/**"
+                    ).hasRole(ADMIN.name()) //Các API cần đăng nhập bằng tk admin
                     .antMatchers().hasRole(USER.name()) //Các API cần đăng nhập bằng tk user
                 .anyRequest()
                     .authenticated() //Other API need authorized
