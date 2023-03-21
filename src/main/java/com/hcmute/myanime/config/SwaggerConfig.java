@@ -38,7 +38,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder().title("My Anime API")
                 .description("API for website backend server MyAnime").termsOfServiceUrl("")
-                .contact(new Contact("Quach Dieu Khanh", "https://www.facebook.com/profile.php?id=100010729807005", "quachdieukhanh@gmail.com"))
+//                .contact(new Contact("Quach Dieu Khanh", "https://www.facebook.com/profile.php?id=100010729807005", "quachdieukhanh@gmail.com"))
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
                 .version("0.0.1")
