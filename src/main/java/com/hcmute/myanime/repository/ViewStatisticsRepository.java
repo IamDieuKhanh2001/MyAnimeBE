@@ -25,4 +25,6 @@ public interface ViewStatisticsRepository extends JpaRepository<ViewStatisticsEn
     Long countByYearCreateAtAndMonthCreateAt_FunctionSQL(int yearCreateAt, int monthCreateAt);
     @Query(value = "select countTotalViewByYear(:yearCreateAt)", nativeQuery = true)
     Long countByYearCreateAt_FunctionSQL(int yearCreateAt);
+    @Query(value = "select countViewStatisticsByCategoryId(:categoryId)", nativeQuery = true)
+    Long countByCategoryId_FunctionSQL(int categoryId);
 }

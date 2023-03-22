@@ -1,5 +1,6 @@
 package com.hcmute.myanime.controller;
 
+import com.hcmute.myanime.dto.CategoryViewDTO;
 import com.hcmute.myanime.dto.ViewStatisticsInMonthDTO;
 import com.hcmute.myanime.dto.ViewStatisticsInYearDTO;
 import com.hcmute.myanime.service.EpisodeService;
@@ -77,5 +78,12 @@ public class ViewStatisticsController {
         );
         viewStatisticsInYearDTO.setTotalView(viewStatisticService.countViewStatisticsByYear(year));
         return ResponseEntity.ok(viewStatisticsInYearDTO);
+    }
+
+    @GetMapping("/view/categories")
+    public ResponseEntity<?> getAllCategoriesViewStatistics()
+    {
+        List<CategoryViewDTO> categoryViewDTOList = viewStatisticService.getAllCategoriesViewStatistics();
+        return ResponseEntity.ok(categoryViewDTOList);
     }
 }
