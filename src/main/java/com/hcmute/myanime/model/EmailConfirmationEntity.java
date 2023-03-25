@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "email_confirmation", schema = "movie")
+@Table(name = "email_confirmation", schema = "hcmutemyanime")
 public class EmailConfirmationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

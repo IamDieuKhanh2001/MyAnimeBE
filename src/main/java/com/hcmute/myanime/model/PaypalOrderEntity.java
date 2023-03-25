@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "paypal_order", schema = "movie")
+@Table(name = "paypal_order", schema = "hcmutemyanime")
 public class PaypalOrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

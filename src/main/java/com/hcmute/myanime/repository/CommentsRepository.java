@@ -20,6 +20,6 @@ public interface CommentsRepository extends JpaRepository<CommentEntity, Integer
             "LIMIT :limit", nativeQuery = true)
     List<Object[]> getEpisodeIDCommentRecentWithLimit(int limit);
     //Stored procedures
-    @Query(value = "{call getEpisodeIDCommentRecentWithLimit(:limitSeries)}", nativeQuery = true)
+    @Query(value = "{call hcmutemyanime.getEpisodeIDCommentRecentWithLimit(:limitSeries)}", nativeQuery = true)
     List<Object[]> getEpisodeIDCommentRecentWithLimitByStoredProcedures(int limitSeries);
 }

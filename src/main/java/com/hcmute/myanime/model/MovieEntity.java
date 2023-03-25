@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "movies", schema = "movie")
+@Table(name = "movies", schema = "hcmutemyanime")
 public class MovieEntity implements Cloneable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

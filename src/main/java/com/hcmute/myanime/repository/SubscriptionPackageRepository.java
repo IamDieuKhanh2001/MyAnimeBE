@@ -13,7 +13,7 @@ public interface SubscriptionPackageRepository extends JpaRepository<Subscriptio
 
     //Function SQL
     //Function MySql
-    @Query(value = "select countTopupPackage(:subscriptionPackageId, :paymentStatus)", nativeQuery = true)
+    @Query(value = "select hcmutemyanime.countTopupPackage(:subscriptionPackageId, :paymentStatus)", nativeQuery = true)
     Integer countTopUpPackageByFunction(
             @Param("subscriptionPackageId") int packageId,
             @Param("paymentStatus") String paymentStatus

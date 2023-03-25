@@ -3,7 +3,7 @@ package com.hcmute.myanime.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "category_movie", schema = "movie")
+@Table(name = "category_movie", schema = "hcmutemyanime")
 public class CategoryMovieEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

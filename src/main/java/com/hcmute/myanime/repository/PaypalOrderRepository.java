@@ -12,6 +12,6 @@ public interface PaypalOrderRepository extends JpaRepository<PaypalOrderEntity, 
     public Optional<PaypalOrderEntity> findByToken(String token);
 
     //SQL function
-    @Query(value = "select totalRevenueInYearAndMonth(:year, :month)", nativeQuery = true)
+    @Query(value = "select hcmutemyanime.totalRevenueInYearAndMonth(:year, :month)", nativeQuery = true)
     Double totalRevenueInYearAndMonth_FunctionSQL(int year, int month);
 }

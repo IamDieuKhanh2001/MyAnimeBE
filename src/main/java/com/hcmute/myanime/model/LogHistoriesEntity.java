@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "log_histories", schema = "movie")
+@Table(name = "log_histories", schema = "hcmutemyanime")
 public class LogHistoriesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

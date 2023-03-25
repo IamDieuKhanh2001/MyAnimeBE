@@ -21,10 +21,10 @@ public interface ViewStatisticsRepository extends JpaRepository<ViewStatisticsEn
     Optional<ViewStatisticsEntity> findByEpisode(EpisodeEntity episodeEntity);
 
     //Function SQL
-    @Query(value = "select countViewStatisticsByYearAndMonth(:yearCreateAt, :monthCreateAt)", nativeQuery = true)
+    @Query(value = "select hcmutemyanime.countViewStatisticsByYearAndMonth(:yearCreateAt, :monthCreateAt)", nativeQuery = true)
     Long countByYearCreateAtAndMonthCreateAt_FunctionSQL(int yearCreateAt, int monthCreateAt);
-    @Query(value = "select countTotalViewByYear(:yearCreateAt)", nativeQuery = true)
+    @Query(value = "select hcmutemyanime.countTotalViewByYear(:yearCreateAt)", nativeQuery = true)
     Long countByYearCreateAt_FunctionSQL(int yearCreateAt);
-    @Query(value = "select countViewStatisticsByCategoryId(:categoryId)", nativeQuery = true)
+    @Query(value = "select hcmutemyanime.countViewStatisticsByCategoryId(:categoryId)", nativeQuery = true)
     Long countByCategoryId_FunctionSQL(int categoryId);
 }

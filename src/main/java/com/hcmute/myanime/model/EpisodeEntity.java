@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "episodes", schema = "movie")
+@Table(name = "episodes", schema = "hcmutemyanime")
 @DynamicUpdate
 public class EpisodeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)

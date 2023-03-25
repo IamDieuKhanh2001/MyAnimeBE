@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "movie_series", schema = "movie")
+@Table(name = "movie_series", schema = "hcmutemyanime")
 public class MovieSeriesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

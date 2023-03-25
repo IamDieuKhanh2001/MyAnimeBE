@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "subscription_packages", schema = "movie")
+@Table(name = "subscription_packages", schema = "hcmutemyanime")
 public class SubscriptionPackageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "roles", schema = "movie")
+@Table(name = "roles", schema = "hcmutemyanime")
 public class RolesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

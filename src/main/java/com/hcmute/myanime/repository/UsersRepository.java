@@ -16,6 +16,6 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
     boolean existsByUsername(String username);
 
     //function SQL
-    @Query(value = "select countNormalUser()", nativeQuery = true)
+    @Query(value = "select hcmutemyanime.countNormalUser()", nativeQuery = true)
     Integer countNormalUserByFunction();
 }

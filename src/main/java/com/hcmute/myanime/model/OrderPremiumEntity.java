@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "order_premium", schema = "movie")
+@Table(name = "order_premium", schema = "hcmutemyanime")
 public class OrderPremiumEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

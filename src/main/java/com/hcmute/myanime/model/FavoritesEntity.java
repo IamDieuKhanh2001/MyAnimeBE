@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "favorites", schema = "movie")
+@Table(name = "favorites", schema = "hcmutemyanime")
 public class FavoritesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

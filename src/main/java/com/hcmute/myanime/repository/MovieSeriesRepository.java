@@ -21,6 +21,6 @@ public interface MovieSeriesRepository extends JpaRepository<MovieSeriesEntity, 
     List<MovieSeriesEntity> findByCategoryId(@Param("categoryId") int categoryId, Pageable pageable);
     List<MovieSeriesEntity> findAllByCreateAtAfter(Timestamp day, Pageable pageable);
     //Call by stored procedures
-    @Query(value = "{call movieSeriesPageable(:currentPage, :productLimit)}", nativeQuery = true)
+    @Query(value = "{call hcmutemyanime.movieSeriesPageable(:currentPage, :productLimit)}", nativeQuery = true)
     List<MovieSeriesEntity> findAllByStoredProcedures(int currentPage, int productLimit);
 }

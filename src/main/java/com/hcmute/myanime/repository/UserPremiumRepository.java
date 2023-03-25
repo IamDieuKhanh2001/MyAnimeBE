@@ -28,6 +28,6 @@ public interface UserPremiumRepository extends JpaRepository<UserPremiumEntity, 
     int countByExpiredAtAfter(Timestamp day);
     
     //Function MySql
-    @Query(value = "select countPremiumUser()", nativeQuery = true)
+    @Query(value = "select hcmutemyanime.countPremiumUser()", nativeQuery = true)
     Integer countPremiumUserByFunction();
 }

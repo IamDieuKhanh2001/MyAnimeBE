@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "categories", schema = "movie")
+@Table(name = "categories", schema = "hcmutemyanime")
 public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
