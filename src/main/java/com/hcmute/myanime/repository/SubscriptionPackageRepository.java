@@ -8,7 +8,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface SubscriptionPackageRepository extends JpaRepository<SubscriptionPackageEntity, Integer> {
-    @Query("SELECT s FROM SubscriptionPackageEntity s WHERE s.enable = '1'")
+    @Query(value = "SELECT * FROM hcmutemyanime.subscription_packages WHERE subscription_packages.enable = 1"
+    , nativeQuery = true)
     List<SubscriptionPackageEntity> findAllByEnableActive();
 
     //Function SQL

@@ -14,7 +14,18 @@ public interface ViewStatisticsRepository extends JpaRepository<ViewStatisticsEn
     @Query(value = "SELECT v FROM ViewStatisticsEntity v WHERE v.ipAddress=:ipclient AND v.episode=:episode ORDER BY v.createAt DESC")
     List<ViewStatisticsEntity> findByIpAddressAndEpisode(String ipclient, EpisodeEntity episode, Pageable pageable);
 
-    @Query(value = "SELECT v.episode, COUNT(v.id) AS statisticsView FROM ViewStatisticsEntity v WHERE DATEDIFF(current_timestamp, v.createAt) <= :numberOfDay GROUP BY v.episode ORDER BY statisticsView DESC")
+//Query for MySQL
+//    @Query(value = "SELECT v.episode, COUNT(v.id) AS statisticsView " +
+//            "FROM ViewStatisticsEntity v " +
+//            "WHERE DATEDIFF(current_timestamp, v.createAt) <= :numberOfDay " +
+//            "GROUP BY v.episode " +
+//            "ORDER BY statisticsView DESC")
+//Query for MSSQL
+    @Query(value = "SELECT v.episode, COUNT(v.id) AS statisticsView " +
+            "FROM ViewStatisticsEntity v " +
+            "WHERE DATEDIFF(day, v.createAt, current_timestamp) <= :numberOfDay " +
+            "GROUP BY v.episode " +
+            "ORDER BY statisticsView DESC")
     List<Object[]> findTopMostViewWithDay(int numberOfDay, Pageable pageable);
 
     Optional<ViewStatisticsEntity> findByIpAddress(String ipAddress);

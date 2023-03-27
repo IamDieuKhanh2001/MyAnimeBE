@@ -115,14 +115,4 @@ public class MovieEntity implements Cloneable {
     public MovieEntity clone() throws CloneNotSupportedException {
         return (MovieEntity) super.clone();
     }
-    @Override
-    public String toString() {
-        return "MovieEntity{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", studioName='" + studioName + '\'' +
-                ", createAt=" + createAt +
-                ", movieSeriesById=" + movieSeriesById +
-                '}';
-    }
 }
