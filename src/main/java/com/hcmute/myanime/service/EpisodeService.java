@@ -1,13 +1,10 @@
 package com.hcmute.myanime.service;
 
-import com.hcmute.myanime.common.Common;
 import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.EpisodeDTO;
-import com.hcmute.myanime.dto.MovieSeriesDTO;
 import com.hcmute.myanime.dto.StatisticsEpisodeDTO;
 import com.hcmute.myanime.dto.StatisticsMovieSeriesDTO;
 import com.hcmute.myanime.exception.BadRequestException;
-import com.hcmute.myanime.mapper.MovieMapper;
 import com.hcmute.myanime.mapper.MovieSeriesMapper;
 import com.hcmute.myanime.model.EpisodeEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
@@ -15,18 +12,13 @@ import com.hcmute.myanime.model.ViewStatisticsEntity;
 import com.hcmute.myanime.repository.EpisodeRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
 import com.hcmute.myanime.repository.ViewStatisticsRepository;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.*;
@@ -115,7 +107,7 @@ public class EpisodeService {
                     fileInputStream,
                     fileContentType,
                     episodeId + "." + "mp4",
-                    "episode");
+                    "movie_series/" + episodeEntity.getMovieSeriesBySeriesId().getId()  + "/episode");
             System.out.println("url DO " + urlSource);
             if(!urlSource.equals("-1")) {
                 episodeEntity.setResourceDo(urlSource);
@@ -239,7 +231,6 @@ public class EpisodeService {
         if(listObject.size() == 0)
             return statisticsEpisodeDTOList;
 
-
         listObject.forEach((itemObj)->{
             EpisodeEntity episodeEntity = (EpisodeEntity) itemObj[0];
             long statisticsView = (Long) itemObj[1];
@@ -253,9 +244,35 @@ public class EpisodeService {
         return statisticsEpisodeDTOList;
     }
 
+    public List<StatisticsEpisodeDTO> getTopEpisodeMostView_StoredProcedures(int numberOfDay, int size)
+    {
+        List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = new ArrayList<>();
+
+        List<Object[]> listObject = viewStatisticsRepository.findTopMostViewWithDay_StoredProcedures(numberOfDay, size);
+        if(listObject.size() == 0)
+            return statisticsEpisodeDTOList;
+
+        listObject.forEach((itemObj)->{
+            long statisticsView = (long) (int) itemObj[10];
+            StatisticsEpisodeDTO statisticsEpisodeDTO =
+                    new StatisticsEpisodeDTO(
+                            (int) itemObj[0], //episode id
+                            (Timestamp) itemObj[1], //episode create at
+                            (String) itemObj[4], //episode resource
+                            (String) itemObj[7], //episode title
+                            statisticsView,
+                            (int) itemObj[9]
+                    );
+            statisticsEpisodeDTOList.add(statisticsEpisodeDTO);
+        });
+
+        return statisticsEpisodeDTOList;
+    }
+
     public List<StatisticsMovieSeriesDTO> getTopSeriesMostView(int numberOfDay, int size) {
         List<StatisticsMovieSeriesDTO> statisticsMovieSeriesDTOList = new ArrayList<>();
-        List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = this.getTopEpisodeMostView(numberOfDay, 999999);
+//        List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = this.getTopEpisodeMostView(numberOfDay, 9999);
+        List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = this.getTopEpisodeMostView_StoredProcedures(numberOfDay, 9999);
         if (statisticsEpisodeDTOList.size() == 0)
             return statisticsMovieSeriesDTOList;
 
