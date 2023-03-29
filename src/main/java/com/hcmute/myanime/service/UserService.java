@@ -213,6 +213,7 @@ public class UserService {
             message.append("Send email forgot password success");
             return true;
         } catch (Exception ex) {
+            ex.printStackTrace();
             message.append("Send email forgot password error for exception");
             return false;
         }
