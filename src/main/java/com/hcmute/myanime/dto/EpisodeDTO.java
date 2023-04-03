@@ -13,6 +13,25 @@ public class EpisodeDTO {
     private String resourceDO;
     private String title;
     private boolean premiumRequired;
+    private int numEpisodes;
+
+    public EpisodeDTO(String title, boolean premiumRequired, int numEpisodes) {
+        this.title = title;
+        this.premiumRequired = premiumRequired;
+        this.numEpisodes = numEpisodes;
+    }
+
+    public boolean isPremiumRequired() {
+        return premiumRequired;
+    }
+
+    public int getNumEpisodes() {
+        return numEpisodes;
+    }
+
+    public void setNumEpisodes(int numEpisodes) {
+        this.numEpisodes = numEpisodes;
+    }
 
     public boolean getPremiumRequired() {
         return premiumRequired;
@@ -22,13 +41,14 @@ public class EpisodeDTO {
         this.premiumRequired = premiumRequired;
     }
 
-    public EpisodeDTO(int id, Timestamp createAt, String resourceCD, String resourceDO, String title, boolean premiumRequired) {
+    public EpisodeDTO(int id, Timestamp createAt, String resourceCD, String resourceDO, String title, boolean premiumRequired, int numEpisodes) {
         this.id = id;
         this.createAt = createAt;
         this.resourceCD = resourceCD;
         this.resourceDO = resourceDO;
         this.title = title;
         this.premiumRequired = premiumRequired;
+        this.numEpisodes = numEpisodes;
     }
 
     public EpisodeDTO(int id, Timestamp createAt, String resourceCD, String resourceDO, String title) {

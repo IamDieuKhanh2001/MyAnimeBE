@@ -64,6 +64,7 @@ public class EpisodeService {
         newEpisodeEntity.setMovieSeriesBySeriesId(movieSeriesEntity);
         newEpisodeEntity.setTitle(episodeDTO.getTitle());
         newEpisodeEntity.setPremiumRequired(episodeDTO.getPremiumRequired());
+        newEpisodeEntity.setNumEpisodes(episodeDTO.getNumEpisodes());
         try {
             EpisodeEntity savedEntity = episodeRepository.save(newEpisodeEntity);
             return savedEntity;

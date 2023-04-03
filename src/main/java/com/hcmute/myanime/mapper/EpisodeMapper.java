@@ -12,7 +12,8 @@ public class EpisodeMapper {
                 episodeEntity.getResource(),
                 episodeEntity.getResourceDo(),
                 episodeEntity.getTitle(),
-                episodeEntity.getPremiumRequired()
+                episodeEntity.getPremiumRequired(),
+                episodeEntity.getNumEpisodes()
         );
         return  episodeDTO;
     }

@@ -2,12 +2,12 @@ package com.hcmute.myanime.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Collection;
 
@@ -19,6 +19,9 @@ public class EpisodeEntity {
     @Id
     private int id;
     private String title;
+    @Column(columnDefinition = "int default 0") //default num of episode is -1 (Unset)
+    @ColumnDefault(value = "0")
+    private int numEpisodes;
     private String resource;
     private String resourcePublicId;
     private String resourceDo;
@@ -47,6 +50,14 @@ public class EpisodeEntity {
 
     @Column(columnDefinition = "boolean default false")
     private Boolean premiumRequired = false;
+
+    public int getNumEpisodes() {
+        return numEpisodes;
+    }
+
+    public void setNumEpisodes(int numEpisodes) {
+        this.numEpisodes = numEpisodes;
+    }
 
     public String getResourceDo() {
         return resourceDo;
