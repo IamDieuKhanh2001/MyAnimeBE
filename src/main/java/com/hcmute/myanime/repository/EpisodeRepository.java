@@ -11,4 +11,9 @@ import java.util.List;
 public interface EpisodeRepository extends JpaRepository<EpisodeEntity, Integer> {
     @Query(value = "SELECT o FROM EpisodeEntity o WHERE o.movieSeriesBySeriesId.id=:seriesId")
     List<EpisodeEntity> findBySeriesId(int seriesId);
+
+
+    //Stored procedure sql server 2019
+    @Query(value = "EXEC hcmutemyanime.findAllEpisodesBySeriesId :seriesId", nativeQuery = true)
+    List<EpisodeEntity> findBySeriesId_StoredProcedure(int seriesId);
 }

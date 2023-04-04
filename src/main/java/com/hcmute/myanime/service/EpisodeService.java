@@ -42,7 +42,8 @@ public class EpisodeService {
         if(!movieSeriesRepository.findById(seriesId).isPresent()){
             throw new BadRequestException("Series not found");
         }
-        List<EpisodeEntity> episodeEntityList = episodeRepository.findBySeriesId(seriesId);
+//        List<EpisodeEntity> episodeEntityList = episodeRepository.findBySeriesId(seriesId); //call with jpa
+        List<EpisodeEntity> episodeEntityList = episodeRepository.findBySeriesId_StoredProcedure(seriesId); //call with procedure
         return episodeEntityList;
     }
 
