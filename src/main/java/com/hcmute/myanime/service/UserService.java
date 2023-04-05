@@ -8,6 +8,8 @@ import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.model.*;
 import com.hcmute.myanime.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,9 +49,46 @@ public class UserService {
     @Autowired
     private AttemptLogService attemptLogService;
 
+    private Boolean isNumber(String s) {
+        try {
+            Long.parseLong(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
-    public List<UsersEntity> findAll() {
-        return usersRepository.findAll();
+    private Boolean isValidPage(String page) {
+        return page != null && !page.equals("") && isNumber(page) && Long.parseLong(page) >= 0;
+    }
+
+    public Long countByUsername(String keywordSearch) {
+        Long totalUsers;
+        if(keywordSearch != null) {
+            totalUsers = usersRepository.countByUsernameContaining(keywordSearch);
+        } else {
+            totalUsers = usersRepository.count();
+        }
+        return totalUsers;
+    }
+
+    public List<UsersEntity> findAll(String page, String limit, String keywordSearch) {
+        limit = (limit == null || limit.equals("")
+                || !isNumber(limit) || Long.parseLong(limit) < 0) ? GlobalVariable.DEFAULT_LIMIT : limit;
+
+        page = (!isValidPage(page)) ? GlobalVariable.DEFAULT_PAGE : page;
+        Pageable pageable = PageRequest.of((Integer.parseInt(page) - 1), Integer.parseInt(limit));
+
+        List<UsersEntity> usersEntityList = new ArrayList<>();
+        if(keywordSearch != null) {
+            usersEntityList = usersRepository.findByUsernameContaining(keywordSearch,pageable);
+        }
+        else{
+            usersEntityList = usersRepository
+                    .findAllByStoredProcedures(Integer.parseInt(page), Integer.parseInt(limit)); //Use stored procedures
+        }
+
+        return usersEntityList;
     }
 
     public UsersEntity findByUsername(String username) {

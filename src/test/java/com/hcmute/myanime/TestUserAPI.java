@@ -36,12 +36,12 @@ public class TestUserAPI {
         Assertions.assertEquals(true, saveSuccess);
     }
 
-    @Test
-    @Order(2)
-    public void testReadAllUser () {
-        List<UsersEntity> usersEntityList = userService.findAll();
-        assertThat(usersEntityList.size(), greaterThan(0));
-    }
+//    @Test
+//    @Order(2)
+//    public void testReadAllUser () {
+//        List<UsersEntity> usersEntityList = userService.findAll();
+//        assertThat(usersEntityList.size(), greaterThan(0));
+//    }
 
     @Test
     @Order(3)

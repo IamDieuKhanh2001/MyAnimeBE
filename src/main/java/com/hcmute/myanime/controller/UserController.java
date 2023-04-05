@@ -1,9 +1,7 @@
 package com.hcmute.myanime.controller;
 
 import com.hcmute.myanime.auth.ApplicationUserService;
-import com.hcmute.myanime.dto.OrderPremiumDTO;
-import com.hcmute.myanime.dto.ResponseDTO;
-import com.hcmute.myanime.dto.UserDTO;
+import com.hcmute.myanime.dto.*;
 import com.hcmute.myanime.mapper.UserMapper;
 import com.hcmute.myanime.model.OrderPremiumEntity;
 import com.hcmute.myanime.model.UsersEntity;
@@ -33,11 +31,21 @@ public class UserController {
     @Autowired
     private ApplicationUserService applicationUserService;
 
+    //region Mudule Client
+    @GetMapping("/admin/user/count")
+    public ResponseEntity<?> countUsers(@RequestParam Map<String, String> requestParams)
+    {
+        String keywordSearch = requestParams.get("keyword");
+        return ResponseEntity.ok(new TotalUsersCountDTO(userService.countByUsername(keywordSearch)));
+    }
 
     //region Module Admin
     @GetMapping("/admin/get-all-user")
-    public ResponseEntity<?> getAllUSer() {
-        List<UsersEntity> usersEntityList = userService.findAll();
+    public ResponseEntity<?> getAllUSer(@RequestParam Map<String, String> requestParams) {
+        String page = requestParams.get("page");
+        String limit = requestParams.get("limit");
+        String keywordSearch = requestParams.get("keyword");
+        List<UsersEntity> usersEntityList = userService.findAll(page, limit, keywordSearch);
         List<UserDTO> userDTOList = new ArrayList<>();
         usersEntityList.forEach((usersEntity -> {
             userDTOList.add(UserMapper.toDto(usersEntity));
