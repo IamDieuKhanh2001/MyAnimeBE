@@ -32,10 +32,22 @@ public class MovieSeriesService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
-
-    public List<MovieSeriesEntity> findAll()
+    public List<MovieSeriesEntity> findAll(String page, String limit, String keywordSearch)
     {
-        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesRepository.findAll(Sort.by("createAt").descending());
+        limit = (limit == null || limit.equals("")
+                || !isNumber(limit) || Long.parseLong(limit) < 0) ? GlobalVariable.DEFAULT_LIMIT : limit;
+
+        page = (!isValidPage(page)) ? GlobalVariable.DEFAULT_PAGE : page;
+        Pageable pageable = PageRequest.of((Integer.parseInt(page) - 1), Integer.parseInt(limit));
+
+        List<MovieSeriesEntity> movieSeriesEntityList = new ArrayList<>();
+
+        if(keywordSearch != null) {
+            //movieSeriesEntityList = movieSeriesRepository.findAll(Sort.by("createAt").descending());
+            movieSeriesEntityList = movieSeriesRepository.findByNameContaining(keywordSearch, pageable);
+        }else {
+            movieSeriesEntityList = movieSeriesRepository.findAllByStoredProcedures(Integer.parseInt(page), Integer.parseInt(limit));
+        }
         return movieSeriesEntityList;
     }
 

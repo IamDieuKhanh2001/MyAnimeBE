@@ -34,9 +34,12 @@ public class MovieSeriesController {
 
     //region Module Admin
     @GetMapping("/admin/movie-series")
-    public ResponseEntity<?> findAll()
+    public ResponseEntity<?> findAll(@RequestParam Map<String, String> requestParams)
     {
-        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.findAll();
+        String page = requestParams.get("page");
+        String limit = requestParams.get("limit");
+        String keywordSearch = requestParams.get("keyword");
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.findAll(page, limit, keywordSearch);
         List<MovieSeriesDTO> movieSeriesDTOList = new ArrayList<>();
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
             Long viewOfSeries = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);

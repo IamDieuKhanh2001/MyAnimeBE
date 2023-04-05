@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -20,9 +21,12 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
     @GetMapping("/movie")
-    public ResponseEntity<?> getAllMovie()
+    public ResponseEntity<?> getAllMovie(@RequestParam Map<String, String> requestParams)
     {
-        return ResponseEntity.ok(movieService.findAll());
+        String page = requestParams.get("page");
+        String limit = requestParams.get("limit");
+        String keywordSearch = requestParams.get("keyword");
+        return ResponseEntity.ok(movieService.findAll(page, limit, keywordSearch));
     }
     @PostMapping("/movie")
     public ResponseEntity<?> createNewMovie(@RequestBody MovieDTO movieDTO)

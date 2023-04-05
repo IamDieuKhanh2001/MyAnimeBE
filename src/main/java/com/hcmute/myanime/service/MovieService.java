@@ -1,5 +1,6 @@
 package com.hcmute.myanime.service;
 
+import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.MovieDTO;
 import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.mapper.MovieMapper;
@@ -7,6 +8,8 @@ import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +23,45 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 public class MovieService {
     @Autowired
     private MovieRepository movieRepository;
-    public List<MovieDTO> findAll()
+
+    private Boolean isNumber(String s) {
+        try {
+            Long.parseLong(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private Boolean isValidPage(String page) {
+        return page != null && !page.equals("") && isNumber(page) && Long.parseLong(page) >= 0;
+    }
+
+    public List<MovieDTO> findAll(String page, String limit, String keywordSearch)
     {
-        List<MovieEntity> movieEntities = movieRepository.findAll(Sort.by("createAt").descending());
+        limit = (limit == null || limit.equals("")
+                || !isNumber(limit) || Long.parseLong(limit) < 0) ? GlobalVariable.DEFAULT_LIMIT : limit;
+
+        page = (!isValidPage(page)) ? GlobalVariable.DEFAULT_PAGE : page;
+        Pageable pageable = PageRequest.of((Integer.parseInt(page) - 1), Integer.parseInt(limit));
+
+        List<MovieEntity> movieEntities = new ArrayList<>();
         List<MovieDTO> movieDTO = new ArrayList<>();
-        movieEntities.forEach((movieEntity) -> {
-            MovieDTO movieDTO1 = MovieMapper.toDTO(movieEntity);
-            movieDTO.add(movieDTO1);
-        });
+        if(keywordSearch != null) {
+            //        List<MovieEntity> movieEntities = movieRepository.findAll(Sort.by("createAt").descending());
+            movieEntities = movieRepository.findByTitleContaining(keywordSearch, pageable);
+            movieEntities.forEach((movieEntity) -> {
+                MovieDTO movieDTO1 = MovieMapper.toDTO(movieEntity);
+                movieDTO.add(movieDTO1);
+            });
+        } else {
+            //        List<MovieEntity> movieEntities = movieRepository.findAll(Sort.by("createAt").descending());
+            movieEntities = movieRepository.findAllByStoredProcedures(Integer.parseInt(page), Integer.parseInt(limit));
+            movieEntities.forEach((movieEntity) -> {
+                MovieDTO movieDTO1 = MovieMapper.toDTO(movieEntity);
+                movieDTO.add(movieDTO1);
+            });
+        }
         return movieDTO;
     }
 
