@@ -14,7 +14,7 @@ public class LogHistoryMapper {
                 logHistoriesEntity.getMovieSeriesEntity().getId(),
                 logHistoriesEntity.getMovieSeriesEntity().getImage(),
                 logHistoriesEntity.getMovieSeriesEntity().getName(),
-                logHistoriesEntity.getEpisodeEntity().getTitle()
+                logHistoriesEntity.getEpisodeEntity().getNumEpisodes()
         );
     }
 }

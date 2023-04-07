@@ -13,11 +13,11 @@ public class LogHistoryDTO {
     private int series_id;
     private String image;
     private String seriesName;
-    private String episodeNumber;
+    private int episodeNumber;
 
 
 
-    public LogHistoryDTO(int id, Long lastSecond, Timestamp createAt, int episode_id, int series_id, String image, String seriesName, String episodeNumber) {
+    public LogHistoryDTO(int id, Long lastSecond, Timestamp createAt, int episode_id, int series_id, String image, String seriesName, int episodeNumber) {
         this.id = id;
         this.lastSecond = lastSecond;
         this.createAt = createAt;
@@ -36,11 +36,11 @@ public class LogHistoryDTO {
         this.series_id = series_id;
     }
 
-    public String getEpisodeNumber() {
+    public int getEpisodeNumber() {
         return episodeNumber;
     }
 
-    public void setEpisodeNumber(String episodeNumber) {
+    public void setEpisodeNumber(int episodeNumber) {
         this.episodeNumber = episodeNumber;
     }
 
