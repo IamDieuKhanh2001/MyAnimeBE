@@ -99,8 +99,8 @@ public class CommentService {
     public List<MovieSeriesDTO> findSeriesCommentRecent(int limit)
     {
         List<MovieSeriesDTO> movieSeriesDTOList = new ArrayList<>();
-        List<Object[]> episodeIDCommentRecentWithLimit = commentsRepository.getEpisodeIDCommentRecentWithLimit(limit); //Use spring jpa
-//        List<Object[]> episodeIDCommentRecentWithLimit = commentsRepository.getEpisodeIDCommentRecentWithLimitByStoredProcedures(limit);// use stored procedures
+//        List<Object[]> episodeIDCommentRecentWithLimit = commentsRepository.getEpisodeIDCommentRecentWithLimit(limit); //Use spring jpa
+        List<Object[]> episodeIDCommentRecentWithLimit = commentsRepository.getEpisodeIDCommentRecentWithLimitByStoredProcedures(limit);// use stored procedures
         episodeIDCommentRecentWithLimit.forEach(obj -> {
             MovieSeriesDTO movieSeriesDTO = new MovieSeriesDTO();
             movieSeriesDTO.setId((int)obj[0]);

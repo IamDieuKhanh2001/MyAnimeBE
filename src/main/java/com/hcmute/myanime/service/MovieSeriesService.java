@@ -185,12 +185,12 @@ public class MovieSeriesService {
         }
         else{
             //Use spring data jpa
-            Sort sort = Sort.by("createAt").descending();
-            Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-            movieSeriesEntityList = movieSeriesRepository.findAll(pageableWithSort).stream().toList();
+//            Sort sort = Sort.by("createAt").descending();
+//            Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+//            movieSeriesEntityList = movieSeriesRepository.findAll(pageableWithSort).stream().toList();
 
-//            movieSeriesEntityList = movieSeriesRepository
-//                    .findAllByStoredProcedures(Integer.parseInt(page), Integer.parseInt(limit)); //Use stored procedures
+            movieSeriesEntityList = movieSeriesRepository
+                    .findAllByStoredProcedures(Integer.parseInt(page), Integer.parseInt(limit)); //Use stored procedures
         }
         return movieSeriesEntityList;
     }
