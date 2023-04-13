@@ -13,9 +13,9 @@ import java.util.Optional;
 @Repository
 public interface AttemptLogRepository extends JpaRepository<AttemptLogEntity, Integer> {
     //Use this query for MYSQL
-//    @Query("SELECT COUNT(a.id) AS total FROM AttemptLogEntity a WHERE a.ipAddress = :ipAddress AND a.attemptType = :attemptType AND TIMESTAMPADD(MINUTE, 10, a.createAt) > current_timestamp GROUP BY a.ipAddress")
+    @Query("SELECT COUNT(a.id) AS total FROM AttemptLogEntity a WHERE a.ipAddress = :ipAddress AND a.attemptType = :attemptType AND TIMESTAMPADD(MINUTE, 10, a.createAt) > current_timestamp GROUP BY a.ipAddress")
     //Use this query for MSSQL
-    @Query("SELECT COUNT(a.id) AS total FROM AttemptLogEntity a WHERE a.ipAddress = :ipAddress AND a.attemptType = :attemptType AND DATEADD(MINUTE, 10, a.createAt) > current_timestamp GROUP BY a.ipAddress")
+//    @Query("SELECT COUNT(a.id) AS total FROM AttemptLogEntity a WHERE a.ipAddress = :ipAddress AND a.attemptType = :attemptType AND DATEADD(MINUTE, 10, a.createAt) > current_timestamp GROUP BY a.ipAddress")
     Optional<Object> getCountWithIpAndAttemptType(String ipAddress, String attemptType);
 
     @Modifying

@@ -42,8 +42,8 @@ public class EpisodeService {
         if(!movieSeriesRepository.findById(seriesId).isPresent()){
             throw new BadRequestException("Series not found");
         }
-//        List<EpisodeEntity> episodeEntityList = episodeRepository.findBySeriesId(seriesId); //call with jpa
-        List<EpisodeEntity> episodeEntityList = episodeRepository.findBySeriesId_StoredProcedure(seriesId); //call with procedure
+        List<EpisodeEntity> episodeEntityList = episodeRepository.findBySeriesId(seriesId); //call with jpa
+//        List<EpisodeEntity> episodeEntityList = episodeRepository.findBySeriesId_StoredProcedure(seriesId); //call with procedure
         return episodeEntityList;
     }
 
@@ -273,8 +273,8 @@ public class EpisodeService {
 
     public List<StatisticsMovieSeriesDTO> getTopSeriesMostView(int numberOfDay, int size) {
         List<StatisticsMovieSeriesDTO> statisticsMovieSeriesDTOList = new ArrayList<>();
-//        List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = this.getTopEpisodeMostView(numberOfDay, 9999);
-        List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = this.getTopEpisodeMostView_StoredProcedures(numberOfDay, 9999);
+        List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = this.getTopEpisodeMostView(numberOfDay, 9999);
+//        List<StatisticsEpisodeDTO> statisticsEpisodeDTOList = this.getTopEpisodeMostView_StoredProcedures(numberOfDay, 9999);
         if (statisticsEpisodeDTOList.size() == 0)
             return statisticsMovieSeriesDTOList;
 
