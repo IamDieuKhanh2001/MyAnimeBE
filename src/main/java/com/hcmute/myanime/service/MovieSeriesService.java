@@ -107,7 +107,7 @@ public class MovieSeriesService {
         updateMovieSeriesEntity.setTotalEpisode(movieSeriesDTO.getTotalEpisode());
         try {
             MovieSeriesEntity savedEntity = movieSeriesRepository.save(updateMovieSeriesEntity);
-            if(sourceFile.getSize() > 0) {
+            if(sourceFile != null) {
                 String urlSource = uploadSourceFileToCloudinary(sourceFile, savedEntity.getId());
                 if(!urlSource.equals("-1")) {
                     savedEntity.setImage(urlSource);
