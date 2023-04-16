@@ -65,6 +65,15 @@ public class MovieService {
         return movieDTO;
     }
 
+    public MovieDTO findById(Integer movieId) {
+        Optional<MovieEntity> movieEntityOptional = movieRepository.findById(movieId);
+        if(!movieEntityOptional.isPresent()) {
+            throw new BadRequestException("Can not find movie with id " + movieId);
+        }
+        MovieEntity movieEntity = movieEntityOptional.get();
+        return MovieMapper.toDTO(movieEntity);
+    }
+
     public MovieEntity save(MovieDTO movieDTO)
     {
         MovieEntity movieEntity = new MovieEntity(

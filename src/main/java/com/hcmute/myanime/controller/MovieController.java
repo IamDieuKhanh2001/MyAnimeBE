@@ -28,6 +28,11 @@ public class MovieController {
         String keywordSearch = requestParams.get("keyword");
         return ResponseEntity.ok(movieService.findAll(page, limit, keywordSearch));
     }
+    @GetMapping("/movie/{movieID}")
+    public ResponseEntity<?> getMovieById(@PathVariable int movieID)
+    {
+        return ResponseEntity.ok(movieService.findById(movieID));
+    }
     @PostMapping("/movie")
     public ResponseEntity<?> createNewMovie(@RequestBody MovieDTO movieDTO)
     {

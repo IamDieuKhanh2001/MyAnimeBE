@@ -15,6 +15,16 @@ public class MovieDTO {
 
     private List<CategoryDTO> categoryData;
 
+    public MovieDTO() {
+    }
+
+    public MovieDTO(int id, String title, String studioName, Timestamp createAt) {
+        this.id = id;
+        this.title = title;
+        this.studioName = studioName;
+        this.createAt = createAt;
+    }
+
     public List<CategoryDTO> getCategoryData() {
         return categoryData;
     }
