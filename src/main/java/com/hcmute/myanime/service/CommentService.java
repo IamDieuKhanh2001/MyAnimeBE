@@ -1,15 +1,19 @@
 package com.hcmute.myanime.service;
 
 import com.hcmute.myanime.auth.ApplicationUserService;
+import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.CommentUserDTO;
 import com.hcmute.myanime.dto.MovieSeriesDTO;
+import com.hcmute.myanime.exception.BadRequestException;
 import com.hcmute.myanime.mapper.MovieSeriesMapper;
 import com.hcmute.myanime.model.*;
 import com.hcmute.myanime.repository.CommentsRepository;
 import com.hcmute.myanime.repository.EpisodeRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
 import com.hcmute.myanime.repository.UsersRepository;
+import com.hcmute.myanime.utils.PagingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageRequest;
 
@@ -34,28 +38,42 @@ public class CommentService {
     @Autowired
     private MovieSeriesService movieSeriesService;
 
-    public List<CommentEntity> findByEpisodeId(int episodeId) {
-        EpisodeEntity episodeEntity = episodeRepository.findById(episodeId).get();
-        List<CommentEntity> commentEntityList = episodeEntity.getCommentsById().stream().toList();
+    public List<CommentEntity> findByEpisodeId(int episodeId, String page, String limit) {
+        limit = (limit == null || limit.equals("")
+                || !PagingUtil.isNumber(limit) || Long.parseLong(limit) < 0) ? GlobalVariable.DEFAULT_LIMIT : limit;
+
+        page = (!PagingUtil.isValidPage(page)) ? GlobalVariable.DEFAULT_PAGE : page;
+        Pageable pageable = PageRequest.of((Integer.parseInt(page)), Integer.parseInt(limit));
+        //
+        Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(episodeId);
+        if(!episodeEntityOptional.isPresent()) {
+            throw new BadRequestException("Can not find comments with episode id: " + episodeId);
+        }
+        EpisodeEntity episodeEntity = episodeEntityOptional.get();
+//        List<CommentEntity> commentEntityList = episodeEntity.getCommentsById().stream().toList(); //jpa
+        List<CommentEntity> commentEntityList = commentsRepository
+                .getByEpisodeIdPageable_sp(episodeEntity.getId(), pageable.getPageNumber(), pageable.getPageSize());
         return commentEntityList;
     }
 
-    public boolean save(CommentUserDTO commentUserDTO) {
+    public CommentEntity save(CommentUserDTO commentUserDTO) {
         String usernameLoggedIn = applicationUserService.getUsernameLoggedIn();
         Optional<UsersEntity> userLoggedIn = usersRepository.findByUsername(usernameLoggedIn);
         Optional<EpisodeEntity> episodeEntityOptional = episodeRepository.findById(commentUserDTO.getEpisodeId());
         if(!episodeEntityOptional.isPresent() || !userLoggedIn.isPresent()) {
-            return false;
+            throw new BadRequestException("Can not comment episode");
         }
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setContent(commentUserDTO.getContent());
         commentEntity.setEpisodeByEpisodeId(episodeEntityOptional.get());
+        Timestamp createAt = new Timestamp(System.currentTimeMillis());
+        System.out.println(createAt);
+        commentEntity.setCreateAt(createAt);
         commentEntity.setUsersByUserId(userLoggedIn.get());
         try {
-            commentsRepository.save(commentEntity);
-            return true;
+            return commentsRepository.save(commentEntity);
         } catch (Exception ex) {
-            return false;
+            throw new BadRequestException("Can not save comment for user: " + usernameLoggedIn);
         }
     }
 
