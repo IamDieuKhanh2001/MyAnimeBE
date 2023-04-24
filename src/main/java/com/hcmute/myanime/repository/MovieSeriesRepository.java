@@ -23,4 +23,6 @@ public interface MovieSeriesRepository extends JpaRepository<MovieSeriesEntity, 
     //Call by stored procedures
     @Query(value = "{call hcmutemyanime.movieSeriesPageable(:currentPage, :productLimit)}", nativeQuery = true)
     List<MovieSeriesEntity> findAllByStoredProcedures(int currentPage, int productLimit);
+    @Query(value = "{call hcmutemyanime.movieSeriesByCategoryIdPageable(:categoryId, :currentPage, :productLimit)}", nativeQuery = true)
+    List<MovieSeriesEntity> findByCategoryIdByStoredProcedures(int categoryId,int currentPage, int productLimit);
 }

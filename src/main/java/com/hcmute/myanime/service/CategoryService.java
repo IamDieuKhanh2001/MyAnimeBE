@@ -12,7 +12,6 @@ import com.hcmute.myanime.repository.CategoryRepository;
 import com.hcmute.myanime.repository.MovieRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -65,15 +64,8 @@ public class CategoryService {
         Pageable pageable = PageRequest.of((Integer.parseInt(page) - 1), Integer.parseInt(limit));
 
         List<MovieSeriesEntity> movieSeriesEntityList = new ArrayList<>();
-        movieSeriesEntityList = movieSeriesRepository.findByCategoryId(categoryId, pageable);
-//        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(categoryId);
-//        if(categoryEntityOptional.isPresent()) {
-//            CategoryEntity categoryEntity = categoryEntityOptional.get();
-//            List<MovieEntity> movieEntityList = categoryEntity.getMovieEntityCollection().stream().toList();
-//            movieEntityList.forEach(movieEntity -> {
-//                movieSeriesEntityList.addAll(movieSeriesRepository.findAllByMovieByMovieId(movieEntity, pageable));
-//            });
-//        }
+//        movieSeriesEntityList = movieSeriesRepository.findByCategoryId(categoryId, pageable); //call with jpa
+        movieSeriesEntityList = movieSeriesRepository.findByCategoryIdByStoredProcedures(categoryId, pageable.getPageNumber() + 1, pageable.getPageSize()); //call with stored procedure
         return movieSeriesEntityList;
     }
     public boolean save(CategoryDTO categoryDTO) {
