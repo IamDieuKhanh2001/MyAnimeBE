@@ -91,6 +91,60 @@ public class UserService {
         return usersEntityList;
     }
 
+    public List<UsersEntity> findAllPremiumUser(String page, String limit, String keywordSearch) {
+        limit = (limit == null || limit.equals("")
+                || !isNumber(limit) || Long.parseLong(limit) < 0) ? GlobalVariable.DEFAULT_LIMIT : limit;
+
+        page = (!isValidPage(page)) ? GlobalVariable.DEFAULT_PAGE : page;
+        Pageable pageable = PageRequest.of((Integer.parseInt(page)), Integer.parseInt(limit));
+
+        List<UsersEntity> usersEntityList = new ArrayList<>();
+        if(keywordSearch != null) {
+            usersEntityList = usersRepository.findAllUserPremiumByStoredProcedures(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    keywordSearch
+            );
+        }
+        else{
+            usersEntityList = usersRepository
+                    .findAllUserPremiumByStoredProcedures(
+                            pageable.getPageNumber(),
+                            pageable.getPageSize(),
+                            ""
+                    ); //Use stored procedures
+        }
+
+        return usersEntityList;
+    }
+
+    public List<UsersEntity> findAllNormalUser(String page, String limit, String keywordSearch) {
+        limit = (limit == null || limit.equals("")
+                || !isNumber(limit) || Long.parseLong(limit) < 0) ? GlobalVariable.DEFAULT_LIMIT : limit;
+
+        page = (!isValidPage(page)) ? GlobalVariable.DEFAULT_PAGE : page;
+        Pageable pageable = PageRequest.of((Integer.parseInt(page)), Integer.parseInt(limit));
+
+        List<UsersEntity> usersEntityList = new ArrayList<>();
+        if(keywordSearch != null) {
+            usersEntityList = usersRepository.findAllNormalUserByStoredProcedures(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    keywordSearch
+            );
+        }
+        else{
+            usersEntityList = usersRepository
+                    .findAllNormalUserByStoredProcedures(
+                            pageable.getPageNumber(),
+                            pageable.getPageSize(),
+                            ""
+                    ); //Use stored procedures
+        }
+
+        return usersEntityList;
+    }
+
     public UsersEntity findByUsername(String username) {
         Optional<UsersEntity> usersEntityOptional = usersRepository.findByUsername(username);
         if(!usersEntityOptional.isPresent()) {

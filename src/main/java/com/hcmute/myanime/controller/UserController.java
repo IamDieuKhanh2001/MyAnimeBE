@@ -52,6 +52,33 @@ public class UserController {
         }));
         return ResponseEntity.ok(userDTOList);
     }
+
+    @GetMapping("/admin/get-all-premium-user")
+    public ResponseEntity<?> getAllPremiumUSer(@RequestParam Map<String, String> requestParams) {
+        String page = requestParams.get("page");
+        String limit = requestParams.get("limit");
+        String keywordSearch = requestParams.get("keyword");
+        List<UsersEntity> usersEntityList = userService.findAllPremiumUser(page, limit, keywordSearch);
+        List<UserDTO> userDTOList = new ArrayList<>();
+        usersEntityList.forEach((usersEntity -> {
+            userDTOList.add(UserMapper.toDto(usersEntity));
+        }));
+        return ResponseEntity.ok(userDTOList);
+    }
+
+    @GetMapping("/admin/get-all-normal-user")
+    public ResponseEntity<?> getAllNormalUSer(@RequestParam Map<String, String> requestParams) {
+        String page = requestParams.get("page");
+        String limit = requestParams.get("limit");
+        String keywordSearch = requestParams.get("keyword");
+        List<UsersEntity> usersEntityList = userService.findAllNormalUser(page, limit, keywordSearch);
+        List<UserDTO> userDTOList = new ArrayList<>();
+        usersEntityList.forEach((usersEntity -> {
+            userDTOList.add(UserMapper.toDto(usersEntity));
+        }));
+        return ResponseEntity.ok(userDTOList);
+    }
+
     @PutMapping("/admin/disable-user/{userId}")
     public ResponseEntity<?> disableUserByUserId(@PathVariable int userId) {
 

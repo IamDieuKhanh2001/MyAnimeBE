@@ -25,4 +25,8 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
     //Stored Procedure
     @Query(value = "{call hcmutemyanime.usersPageable(:currentPage, :productLimit)}", nativeQuery = true)
     List<UsersEntity> findAllByStoredProcedures(int currentPage, int productLimit);
+    @Query(value = "{call hcmutemyanime.getListPremiumUser(:currentPage, :productLimit, :searchString)}", nativeQuery = true)
+    List<UsersEntity> findAllUserPremiumByStoredProcedures(int currentPage, int productLimit, String searchString);
+    @Query(value = "{call hcmutemyanime.getListNormalUser(:currentPage, :productLimit, :searchString)}", nativeQuery = true)
+    List<UsersEntity> findAllNormalUserByStoredProcedures(int currentPage, int productLimit, String searchString);
 }
