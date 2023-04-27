@@ -31,7 +31,7 @@ public class GiftcodeService {
     private UserService userService;
 
     public List<GiftCodeEntity> findAll() {
-//        List<GiftCodeEntity> giftCodeEntityList = giftcodeRepository.findAll();
+//        List<GiftCodeEntity> giftCodeEntityList = giftcodeRepository.findAll(); //jpa
         List<GiftCodeEntity> giftCodeEntityList = giftcodeRepository.findAllByView();
 
         return giftCodeEntityList;

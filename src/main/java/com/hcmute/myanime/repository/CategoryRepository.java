@@ -1,8 +1,6 @@
 package com.hcmute.myanime.repository;
 
 import com.hcmute.myanime.model.CategoryEntity;
-import com.hcmute.myanime.model.MovieEntity;
-import com.hcmute.myanime.model.MovieSeriesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,6 +17,9 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Intege
             "series.movieByMovieId movie join " +
             "movie.categoryEntityCollection categoryMovie where categoryMovie.id = :categoryId")
     Long countSeriesByCategoryId(@Param("categoryId") int categoryId);
+    //View
+    @Query(value = "select * from hcmutemyanime.ListCategoryView", nativeQuery = true)
+    List<CategoryEntity> findAllByView();
     //Call by stored procedures
     @Query(value = "{call hcmutemyanime.findAll_categories}", nativeQuery = true)
     List<CategoryEntity> findAllByStoredProcedures();

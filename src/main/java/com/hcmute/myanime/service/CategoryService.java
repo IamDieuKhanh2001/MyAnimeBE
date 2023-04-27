@@ -35,7 +35,8 @@ public class CategoryService {
     private MovieSeriesRepository movieSeriesRepository;
 
     public List<CategoryDTO> findAll() {
-        List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
+//        List<CategoryEntity> categoryEntityList = categoryRepository.findAll(); //JPA
+        List<CategoryEntity> categoryEntityList = categoryRepository.findAllByView();
         List<CategoryDTO> categoryDTOList = new ArrayList<>();
         categoryEntityList.forEach((categoryEntity -> {
             categoryDTOList.add(CategoryMapper.toDTO(categoryEntity));
