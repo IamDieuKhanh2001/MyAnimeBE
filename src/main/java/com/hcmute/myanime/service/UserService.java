@@ -534,4 +534,36 @@ public class UserService {
         userPremiumRepository.save(userPremiumEntity);
         return true;
     }
+
+    public boolean sendProductInvoiceMailUserLogging(
+            String paymentId,
+            String itemName,
+            String price,
+            String quantity,
+            String paymentMethod,
+            String username
+    ) {
+        boolean sendMailSuccess = false;
+        try {
+            UsersEntity usersEntity = findByUsername(username);
+            if(usersEntity.getEmail() != null) {
+                emailSenderService.sendAsHTML(
+                        usersEntity.getEmail(),
+                        "[My anime E-Bill] Thanks for your subscribe " + usersEntity.getUsername(),
+                        EmailTemplate.TemplateProductInvoice(
+                                paymentId,
+                                itemName,
+                                price,
+                                quantity,
+                                paymentMethod,
+                                usersEntity.getUsername()
+                        )
+                );
+                sendMailSuccess = true;
+            }
+            return sendMailSuccess;
+        } catch (Exception e) {
+            return sendMailSuccess;
+        }
+    }
 }
