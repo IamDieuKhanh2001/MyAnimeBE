@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,7 @@ public class MovieSeriesController {
 
     //region Module Admin
     @GetMapping("/admin/movie-series")
-    public ResponseEntity<?> findAll(@RequestParam Map<String, String> requestParams)
-    {
+    public ResponseEntity<?> findAll(@RequestParam Map<String, String> requestParams) {
         String page = requestParams.get("page");
         String limit = requestParams.get("limit");
         String keywordSearch = requestParams.get("keyword");
@@ -53,21 +53,27 @@ public class MovieSeriesController {
             @RequestParam String model,
             @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile
     ) throws JsonProcessingException {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
-
-        MovieSeriesEntity movieSeriesEntity = movieSeriesService.save(movieSeriesDTO, sourceFile);
-        Long viewOfSeries = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
-        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity, viewOfSeries);
-        return ResponseEntity.ok(
-                new ResponseDTO(
-                        HttpStatus.OK,
-                        "Create series success",
-                        movieSeriesResponseDTO
-                )
-        );
+            MovieSeriesEntity movieSeriesEntity = movieSeriesService.save(movieSeriesDTO, sourceFile);
+            Long viewOfSeries = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+            MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity, viewOfSeries);
+            return ResponseEntity.ok(
+                    new ResponseDTO(
+                            HttpStatus.OK,
+                            "Create series success",
+                            movieSeriesResponseDTO
+                    )
+            );
+        }
+        catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseDTO(HttpStatus.BAD_REQUEST, "Error: " + ex.getMessage()));
+        }
     }
 
     @PutMapping("/admin/movie-series/{seriesID}")
@@ -90,7 +96,7 @@ public class MovieSeriesController {
 
     @DeleteMapping("/admin/movie-series/{seriesID}")
     public ResponseEntity<?> deleteSeriesById(@PathVariable int seriesID) {
-        if(movieSeriesService.deleteById(seriesID)) {
+        if (movieSeriesService.deleteById(seriesID)) {
             return ResponseEntity.ok(
                     new ResponseDTO(HttpStatus.OK, "Delete series success")
             );
@@ -102,33 +108,30 @@ public class MovieSeriesController {
 
     //region Mudule Client
     @GetMapping("/movie-and-series/count")
-    public ResponseEntity<?> countSeries(@RequestParam Map<String, String> requestParams)
-    {
+    public ResponseEntity<?> countSeries(@RequestParam Map<String, String> requestParams) {
         String keywordSearch = requestParams.get("keyword");
         return ResponseEntity.ok(new TotalSeriesDTO(movieSeriesService.countSeriesByKeyword(keywordSearch)));
     }
 
     //Movie va series co phan trang
     @GetMapping("/movie-and-series")
-    public ResponseEntity<?> movieAndSeriesFindAll(@RequestParam Map<String, String> requestParams)
-    {
+    public ResponseEntity<?> movieAndSeriesFindAll(@RequestParam Map<String, String> requestParams) {
         String page = requestParams.get("page");
         String limit = requestParams.get("limit");
         String keywordSearch = requestParams.get("keyword");
-        List<MovieSeriesEntity> movieSeriesEntityList  = movieSeriesService.getByPageAndLimit(page, limit, keywordSearch);
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.getByPageAndLimit(page, limit, keywordSearch);
         List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
             Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
             Long seriesTotalComment = commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity);
-            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView,seriesTotalComment));
+            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView, seriesTotalComment));
         });
         return ResponseEntity.ok(seriesDetailDTOList);
     }
 
     //Movie va series by category co phan trang
     @GetMapping("/movie-and-series/category/{categoryId}")
-    public ResponseEntity<?> movieAndSeriesFindByCategory(@PathVariable int categoryId, @RequestParam Map<String, String> requestParams)
-    {
+    public ResponseEntity<?> movieAndSeriesFindByCategory(@PathVariable int categoryId, @RequestParam Map<String, String> requestParams) {
         String page = requestParams.get("page");
         String limit = requestParams.get("limit");
         List<MovieSeriesEntity> movieSeriesEntityList = categoryService.findMovieSeriesEntitiesByCategory(categoryId, page, limit);
@@ -136,54 +139,50 @@ public class MovieSeriesController {
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
             Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
             Long seriesTotalComment = commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity);
-            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView,seriesTotalComment));
+            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView, seriesTotalComment));
         });
         return ResponseEntity.ok(seriesDetailDTOList);
     }
 
     //so luong category id
     @GetMapping("/movie-and-series/category/{categoryId}/count")
-    public ResponseEntity<?> countSeriesByCategoryId(@PathVariable int categoryId)
-    {
+    public ResponseEntity<?> countSeriesByCategoryId(@PathVariable int categoryId) {
         return ResponseEntity.ok(new TotalSeriesDTO(categoryService.countSeriesByCategoryId(categoryId)));
     }
 
     //Movie va series lay id
     @GetMapping("/movie-and-series/{seriesId}")
-    public ResponseEntity<?> movieAndSeriesBySeriesId(@PathVariable int seriesId)
-    {
+    public ResponseEntity<?> movieAndSeriesBySeriesId(@PathVariable int seriesId) {
         MovieSeriesEntity movieSeriesEntity = movieSeriesService.findById(seriesId);
         Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
         Long seriesTotalComment = commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity);
-        SeriesDetailDTO seriesDetailDTO = SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView,seriesTotalComment);
+        SeriesDetailDTO seriesDetailDTO = SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView, seriesTotalComment);
         return ResponseEntity.ok(seriesDetailDTO);
     }
 
     //Movie va series lay cac series cùng 1 movie id
     @GetMapping("/movie-and-series/get-all-series/{seriesId}")
-    public ResponseEntity<?> getAllMovieAndSeriesBySeriesId(@PathVariable int seriesId)
-    {
+    public ResponseEntity<?> getAllMovieAndSeriesBySeriesId(@PathVariable int seriesId) {
         List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.findAllMovieAndSeriesById(seriesId);
         List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
             Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
             Long seriesTotalComment = commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity);
-            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView,seriesTotalComment));
+            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView, seriesTotalComment));
         });
         return ResponseEntity.ok(seriesDetailDTOList);
     }
 
     @GetMapping("/movie-and-series/get-recently-added-series")
-    public ResponseEntity<?> getRecentlyAddedMovieAndSeries(@RequestParam Map<String, String> requestParams)
-    {
+    public ResponseEntity<?> getRecentlyAddedMovieAndSeries(@RequestParam Map<String, String> requestParams) {
         String page = requestParams.get("page");
         String limit = requestParams.get("limit");
-        List<MovieSeriesEntity> movieSeriesEntityList  = movieSeriesService.getRecentlyAddedShow(page, limit, 7);
+        List<MovieSeriesEntity> movieSeriesEntityList = movieSeriesService.getRecentlyAddedShow(page, limit, 7);
         List<SeriesDetailDTO> seriesDetailDTOList = new ArrayList<>();
         movieSeriesEntityList.forEach(movieSeriesEntity -> {
             Long seriesTotalView = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
             Long seriesTotalComment = commentService.totalCommentByMovieSeriesEntity(movieSeriesEntity);
-            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView,seriesTotalComment));
+            seriesDetailDTOList.add(SeriesDetailMapper.toDTO(movieSeriesEntity, seriesTotalView, seriesTotalComment));
         });
         return ResponseEntity.ok(seriesDetailDTOList);
     }

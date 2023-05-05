@@ -16,4 +16,6 @@ public interface MovieRepository extends JpaRepository<MovieEntity, Integer> {
     //Stored procedure
     @Query(value = "{call hcmutemyanime.moviePageable(:currentPage, :productLimit)}", nativeQuery = true)
     List<MovieEntity> findAllByStoredProcedures(int currentPage, int productLimit);
+    @Query(value = "{call hcmutemyanime.usp_InsertOrUpdateMovie(:id, :studioName, :title)}", nativeQuery = true)
+    MovieEntity usp_InsertOrUpdateMovie(int id, String studioName, String title); //ID = 0 insert, id != 0 update
 }
