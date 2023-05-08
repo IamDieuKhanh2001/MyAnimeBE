@@ -11,6 +11,7 @@ import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.service.CategoryService;
 import com.hcmute.myanime.service.CommentService;
 import com.hcmute.myanime.service.MovieSeriesService;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,17 +82,23 @@ public class MovieSeriesController {
             @RequestParam String model,
             @RequestParam(value = "sourceFile", required = false) MultipartFile sourceFile,
             @PathVariable int seriesID) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            MovieSeriesDTO movieSeriesDTO = mapper.readValue(model, MovieSeriesDTO.class);
 
-        MovieSeriesEntity movieSeriesEntity = movieSeriesService.updateById(seriesID, movieSeriesDTO, sourceFile);
-        Long viewOfSeries = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
-        MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity, viewOfSeries);
-        return ResponseEntity.ok(
-                new ResponseDTO(HttpStatus.OK,
-                        "Update series success",
-                        movieSeriesResponseDTO)
-        );
+            MovieSeriesEntity movieSeriesEntity = movieSeriesService.updateById(seriesID, movieSeriesDTO, sourceFile);
+            Long viewOfSeries = movieSeriesService.totalViewByMovieSeriesEntity(movieSeriesEntity);
+            MovieSeriesDTO movieSeriesResponseDTO = MovieSeriesMapper.toDTO(movieSeriesEntity, viewOfSeries);
+            return ResponseEntity.ok(
+                    new ResponseDTO(HttpStatus.OK,
+                            "Update series success",
+                            movieSeriesResponseDTO)
+            );
+        } catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseDTO(HttpStatus.BAD_REQUEST, "Error: " + ex.getMessage()));
+        }
     }
 
     @DeleteMapping("/admin/movie-series/{seriesID}")

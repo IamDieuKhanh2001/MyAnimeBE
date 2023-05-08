@@ -9,7 +9,9 @@ import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.repository.MovieRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -60,7 +62,7 @@ public class MovieSeriesService {
         return movieSeriesByMovieIdList;
     }
 
-    public MovieSeriesEntity save(MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile) throws SQLException {
+    public MovieSeriesEntity save(MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile) {
         MovieSeriesEntity movieSeriesEntity = MovieSeriesMapper.toEntity(movieSeriesDTO);
         Optional<MovieEntity> movieEntityOptional = movieRepository.findById(movieSeriesDTO.getMovieId());
         if(!movieEntityOptional.isPresent()) {
@@ -96,9 +98,13 @@ public class MovieSeriesService {
             }
             return savedEntity;
         }
+        catch (DataAccessException e) {
+            // exception get from sql server (Trigger, procedure)
+            throw new BadRequestException("add series fail SQL EXCEPTION: " + e.getRootCause().getMessage());
+        }
         catch (Exception ex)
         {
-                throw new BadRequestException("add series fail " + ex.getMessage());
+            throw new BadRequestException("add series fail " + ex.getMessage());
         }
     }
 
@@ -131,7 +137,12 @@ public class MovieSeriesService {
                 }
             }
             return savedEntity;
-        } catch (Exception ex) {
+        }
+        catch (DataAccessException e) {
+            // exception get from sql server (Trigger, procedure)
+            throw new BadRequestException("Update series fail SQL EXCEPTION: " + e.getRootCause().getMessage());
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
             throw new BadRequestException("Can not update series");
         }

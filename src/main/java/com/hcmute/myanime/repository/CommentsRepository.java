@@ -24,4 +24,6 @@ public interface CommentsRepository extends JpaRepository<CommentEntity, Integer
     List<Object[]> getEpisodeIDCommentRecentWithLimitByStoredProcedures(int limitSeries);
     @Query(value = "{call hcmutemyanime.commentsByEpisodeIdPageable(:episodeId, :currentPage, :productLimit)}", nativeQuery = true)
     List<CommentEntity> getByEpisodeIdPageable_sp(int episodeId,int currentPage, int productLimit);
+    @Query(value = "{call hcmutemyanime.usp_InsertOrUpdateComment(:id, :content, :episodeId, :userId)}", nativeQuery = true)
+    CommentEntity insertOrUpdateComment(int id, String content, int episodeId, int userId);
 }
