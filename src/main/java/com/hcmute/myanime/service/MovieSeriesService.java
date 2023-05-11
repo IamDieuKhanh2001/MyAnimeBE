@@ -1,6 +1,5 @@
 package com.hcmute.myanime.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hcmute.myanime.common.GlobalVariable;
 import com.hcmute.myanime.dto.MovieSeriesDTO;
 import com.hcmute.myanime.exception.BadRequestException;
@@ -10,14 +9,16 @@ import com.hcmute.myanime.model.MovieEntity;
 import com.hcmute.myanime.model.MovieSeriesEntity;
 import com.hcmute.myanime.repository.MovieRepository;
 import com.hcmute.myanime.repository.MovieSeriesRepository;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +62,7 @@ public class MovieSeriesService {
         return movieSeriesByMovieIdList;
     }
 
-    public MovieSeriesEntity save(MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile)
-    {
+    public MovieSeriesEntity save(MovieSeriesDTO movieSeriesDTO, MultipartFile sourceFile) {
         MovieSeriesEntity movieSeriesEntity = MovieSeriesMapper.toEntity(movieSeriesDTO);
         Optional<MovieEntity> movieEntityOptional = movieRepository.findById(movieSeriesDTO.getMovieId());
         if(!movieEntityOptional.isPresent()) {
@@ -72,17 +72,39 @@ public class MovieSeriesService {
         movieSeriesEntity.setMovieByMovieId(movieEntity);
         try
         {
-            MovieSeriesEntity savedEntity = movieSeriesRepository.save(movieSeriesEntity);
+//            MovieSeriesEntity savedEntity = movieSeriesRepository.save(movieSeriesEntity); //jpa
+            MovieSeriesEntity savedEntity = movieSeriesRepository.InsertOrUpdateMovieSeriesByStoredProcedures(
+                    0, //id = 0 will auto inscrease in db
+                    movieSeriesEntity.getName(),
+                    movieSeriesEntity.getDescription(),
+                    movieSeriesEntity.getDateAired(),
+                    movieSeriesEntity.getTotalEpisode(),
+                    movieSeriesEntity.getMovieByMovieId().getId(),
+                    movieSeriesEntity.getImage()
+            ); // stored procedure
             String urlSource = uploadSourceFileToCloudinary(sourceFile, savedEntity.getId());
             if(!urlSource.equals("-1")) {
                 savedEntity.setImage(urlSource);
-                savedEntity = movieSeriesRepository.save(savedEntity);
+//                savedEntity = movieSeriesRepository.save(savedEntity); //jpa
+                savedEntity = movieSeriesRepository.InsertOrUpdateMovieSeriesByStoredProcedures(
+                        savedEntity.getId(), //with id finded will update instead
+                        savedEntity.getName(),
+                        savedEntity.getDescription(),
+                        savedEntity.getDateAired(),
+                        savedEntity.getTotalEpisode(),
+                        savedEntity.getMovieByMovieId().getId(),
+                        savedEntity.getImage()
+                ); // stored procedure
             }
             return savedEntity;
         }
+        catch (DataAccessException e) {
+            // exception get from sql server (Trigger, procedure)
+            throw new BadRequestException("add series fail SQL EXCEPTION: " + e.getRootCause().getMessage());
+        }
         catch (Exception ex)
         {
-            throw new BadRequestException("Can not add series");
+            throw new BadRequestException("add series fail " + ex.getMessage());
         }
     }
 
@@ -115,7 +137,12 @@ public class MovieSeriesService {
                 }
             }
             return savedEntity;
-        } catch (Exception ex) {
+        }
+        catch (DataAccessException e) {
+            // exception get from sql server (Trigger, procedure)
+            throw new BadRequestException("Update series fail SQL EXCEPTION: " + e.getRootCause().getMessage());
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
             throw new BadRequestException("Can not update series");
         }

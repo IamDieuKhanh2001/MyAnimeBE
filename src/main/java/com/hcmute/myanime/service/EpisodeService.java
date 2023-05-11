@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -70,6 +71,7 @@ public class EpisodeService {
             EpisodeEntity savedEntity = episodeRepository.save(newEpisodeEntity);
             return savedEntity;
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
@@ -93,7 +95,6 @@ public class EpisodeService {
                 episodeRepository.save(episodeEntity);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new BadRequestException("Episode id " + episodeId + "add to server cloudinary fail");
         }
     }
@@ -130,6 +131,7 @@ public class EpisodeService {
         EpisodeEntity updateEpisodeEntity = episodeEntityOptional.get();
         updateEpisodeEntity.setTitle(episodeDTO.getTitle());
         updateEpisodeEntity.setPremiumRequired(episodeDTO.getPremiumRequired());
+        updateEpisodeEntity.setNumEpisodes(episodeDTO.getNumEpisodes());
         try {
                 episodeRepository.save(updateEpisodeEntity);
             //        Update source file

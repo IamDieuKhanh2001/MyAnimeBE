@@ -1,7 +1,11 @@
 package com.hcmute.myanime.controller;
 
+import com.hcmute.myanime.config.EmailTemplate;
 import com.hcmute.myanime.model.CategoryEntity;
+import com.hcmute.myanime.model.UsersEntity;
 import com.hcmute.myanime.repository.CategoryRepository;
+import com.hcmute.myanime.service.EmailSenderService;
+import com.hcmute.myanime.service.UserService;
 import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
@@ -17,101 +21,30 @@ import java.util.Map;
 @RestController
 public class testController {
 
-    public class RankClass {
-        private int reaction;
-        private int memory;
-        private int verbal;
-        private int visual;
-        private String description;
-        private String rank;
-
-        public int getReaction() {
-            return reaction;
-        }
-
-        public void setReaction(int reaction) {
-            this.reaction = reaction;
-        }
-
-        public int getMemory() {
-            return memory;
-        }
-
-        public void setMemory(int memory) {
-            this.memory = memory;
-        }
-
-        public int getVerbal() {
-            return verbal;
-        }
-
-        public void setVerbal(int verbal) {
-            this.verbal = verbal;
-        }
-
-        public int getVisual() {
-            return visual;
-        }
-
-        public void setVisual(int visual) {
-            this.visual = visual;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getRank() {
-            return rank;
-        }
-
-        public void setRank(String rank) {
-            this.rank = rank;
-        }
-
-        public RankClass(int reaction, int memory, int verbal, int visual, String description, String rank) {
-            this.reaction = reaction;
-            this.memory = memory;
-            this.verbal = verbal;
-            this.visual = visual;
-            this.description = description;
-            this.rank = rank;
-        }
-    }
-
     @Autowired
-    private CategoryRepository categoryRepository;
-
-    @GetMapping("/test/procedure/categories")
-    public ResponseEntity<?> cateFindAllTest() {
-        List<CategoryEntity> allByStoredProcedures = categoryRepository.findAllByStoredProcedures();
-        return ResponseEntity.ok(allByStoredProcedures);
-    }
-
-    @GetMapping("/test/procedure/categories/{id}")
-    public ResponseEntity<?> cateFindAllTest(@PathVariable int id) {
-        CategoryEntity byIdByStoredProcedures = categoryRepository.findByIdByStoredProcedures(id);
-        System.out.println(byIdByStoredProcedures.getName());
-        System.out.println(byIdByStoredProcedures.getMovieEntityCollection().size());
-        return ResponseEntity.ok(byIdByStoredProcedures);
-    }
+    private EmailSenderService emailSenderService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/test/demo")
     public ResponseEntity<?> demo() {
-         RankClass rankClass = new RankClass(
-                 10,
-                 10,
-                 10,
-                 10,
-                 "Điểm quá thấp so với 1% người tham gia test",
-                 "Bad"
-         );
-
-        return ResponseEntity.ok(rankClass);
+        try {
+            emailSenderService.sendAsHTML(
+                    "quachdieukhanh@gmail.com",
+                    "[My anime E-Bill] Thanks for your subscribe " + "quachkhanh2",
+                    EmailTemplate.TemplateProductInvoice(
+                            "PAYID-MN47GSQ02C85057CM515013L",
+                            "Order Premium Package: 1 month premium",
+                            "$2",
+                            "1",
+                            "PayPal",
+                            "quachkhanh2"
+                    )
+            );
+            return ResponseEntity.ok("Send");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Could not send");
+        }
     }
 
     //CMND ID:

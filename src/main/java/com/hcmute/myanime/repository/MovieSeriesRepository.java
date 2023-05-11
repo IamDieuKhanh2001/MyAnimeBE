@@ -25,4 +25,6 @@ public interface MovieSeriesRepository extends JpaRepository<MovieSeriesEntity, 
     List<MovieSeriesEntity> findAllByStoredProcedures(int currentPage, int productLimit);
     @Query(value = "{call hcmutemyanime.movieSeriesByCategoryIdPageable(:categoryId, :currentPage, :productLimit)}", nativeQuery = true)
     List<MovieSeriesEntity> findByCategoryIdByStoredProcedures(int categoryId,int currentPage, int productLimit);
+    @Query(value = "{call hcmutemyanime.usp_InsertOrUpdateMovieSeries(:id, :name, :description, :dateAired, :totalEpisode, :movieId, :image)}", nativeQuery = true)
+    MovieSeriesEntity InsertOrUpdateMovieSeriesByStoredProcedures(int id, String name, String description, Timestamp dateAired, int totalEpisode, int movieId, String image);
 }

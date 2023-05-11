@@ -82,7 +82,12 @@ public class MovieService {
         );
         try
         {
-            MovieEntity movieEntityCurrent = movieRepository.save(movieEntity);
+//            MovieEntity movieEntityCurrent = movieRepository.save(movieEntity); //jpa
+            MovieEntity movieEntityCurrent = movieRepository.usp_InsertOrUpdateMovie(
+                0,
+                    movieEntity.getStudioName(),
+                    movieEntity.getTitle()
+            ); //stored procedure
             return movieEntityCurrent;
         }
         catch (Exception ex)
@@ -117,7 +122,12 @@ public class MovieService {
         movieEntity.setTitle(movieDTO.getTitle());
         movieEntity.setStudioName(movieDTO.getStudioName());
         try {
-            MovieEntity saveMovieEntity = movieRepository.save(movieEntity);
+//            MovieEntity saveMovieEntity = movieRepository.save(movieEntity); //jpa
+            MovieEntity saveMovieEntity = movieRepository.usp_InsertOrUpdateMovie(
+                    movieEntity.getId(),
+                    movieEntity.getStudioName(),
+                    movieEntity.getTitle()
+            ); //stored procedure
             return saveMovieEntity;
         } catch (Exception ex) {
             throw new BadRequestException("Can not update movie");
