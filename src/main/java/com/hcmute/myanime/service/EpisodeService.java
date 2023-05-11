@@ -131,6 +131,7 @@ public class EpisodeService {
         EpisodeEntity updateEpisodeEntity = episodeEntityOptional.get();
         updateEpisodeEntity.setTitle(episodeDTO.getTitle());
         updateEpisodeEntity.setPremiumRequired(episodeDTO.getPremiumRequired());
+        updateEpisodeEntity.setNumEpisodes(episodeDTO.getNumEpisodes());
         try {
                 episodeRepository.save(updateEpisodeEntity);
             //        Update source file
