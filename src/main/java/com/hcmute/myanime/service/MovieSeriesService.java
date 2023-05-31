@@ -72,16 +72,16 @@ public class MovieSeriesService {
         movieSeriesEntity.setMovieByMovieId(movieEntity);
         try
         {
-//            MovieSeriesEntity savedEntity = movieSeriesRepository.save(movieSeriesEntity); //jpa
-            MovieSeriesEntity savedEntity = movieSeriesRepository.InsertOrUpdateMovieSeriesByStoredProcedures(
-                    0, //id = 0 will auto inscrease in db
-                    movieSeriesEntity.getName(),
-                    movieSeriesEntity.getDescription(),
-                    movieSeriesEntity.getDateAired(),
-                    movieSeriesEntity.getTotalEpisode(),
-                    movieSeriesEntity.getMovieByMovieId().getId(),
-                    movieSeriesEntity.getImage()
-            ); // stored procedure
+            MovieSeriesEntity savedEntity = movieSeriesRepository.save(movieSeriesEntity); //jpa
+//            MovieSeriesEntity savedEntity = movieSeriesRepository.InsertOrUpdateMovieSeriesByStoredProcedures(
+//                    0, //id = 0 will auto inscrease in db
+//                    movieSeriesEntity.getName(),
+//                    movieSeriesEntity.getDescription(),
+//                    movieSeriesEntity.getDateAired(),
+//                    movieSeriesEntity.getTotalEpisode(),
+//                    movieSeriesEntity.getMovieByMovieId().getId(),
+//                    movieSeriesEntity.getImage()
+//            ); // stored procedure
             String urlSource = uploadSourceFileToCloudinary(sourceFile, savedEntity.getId());
             if(!urlSource.equals("-1")) {
                 savedEntity.setImage(urlSource);

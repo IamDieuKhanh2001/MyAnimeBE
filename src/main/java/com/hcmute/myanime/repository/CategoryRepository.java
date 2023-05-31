@@ -18,11 +18,8 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Intege
             "movie.categoryEntityCollection categoryMovie where categoryMovie.id = :categoryId")
     Long countSeriesByCategoryId(@Param("categoryId") int categoryId);
     //View
-    @Query(value = "select * from hcmutemyanime.ListCategoryView", nativeQuery = true)
+    @Query(value = "select * from hcmutemyanime.listcategoryview", nativeQuery = true)
     List<CategoryEntity> findAllByView();
     //Call by stored procedures
-    @Query(value = "{call hcmutemyanime.findAll_categories}", nativeQuery = true)
-    List<CategoryEntity> findAllByStoredProcedures();
-    @Query(value = "{call hcmutemyanime.findById_categories(:id)}", nativeQuery = true)
-    CategoryEntity findByIdByStoredProcedures(int id);
+
 }

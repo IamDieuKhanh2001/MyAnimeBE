@@ -10,6 +10,6 @@ public interface GiftcodeRepository extends JpaRepository<GiftCodeEntity, Intege
     List<GiftCodeEntity> findByRedemptionCode(String redemptionCode);
 
     //Call View
-    @Query(value = "select * from hcmutemyanime.GiftcodeView", nativeQuery = true)
+    @Query(value = "select * from hcmutemyanime.giftcodeview", nativeQuery = true)
     List<GiftCodeEntity> findAllByView();
 }

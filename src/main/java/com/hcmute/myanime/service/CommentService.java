@@ -71,13 +71,13 @@ public class CommentService {
         commentEntity.setCreateAt(createAt);
         commentEntity.setUsersByUserId(userLoggedIn.get());
         try {
-//            return commentsRepository.save(commentEntity); //jpa
-            return commentsRepository.insertOrUpdateComment(
-                    0,
-                    commentEntity.getContent(),
-                    commentEntity.getEpisodeByEpisodeId().getId(),
-                    commentEntity.getUsersByUserId().getId()
-            ); //Using stored procedure
+            return commentsRepository.save(commentEntity); //jpa
+//            return commentsRepository.insertOrUpdateComment(
+//                    0,
+//                    commentEntity.getContent(),
+//                    commentEntity.getEpisodeByEpisodeId().getId(),
+//                    commentEntity.getUsersByUserId().getId()
+//            ); //Using stored procedure
         } catch (Exception ex) {
             throw new BadRequestException("Can not save comment for user: " + usernameLoggedIn);
         }

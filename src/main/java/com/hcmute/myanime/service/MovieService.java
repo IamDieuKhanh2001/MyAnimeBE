@@ -82,12 +82,12 @@ public class MovieService {
         );
         try
         {
-//            MovieEntity movieEntityCurrent = movieRepository.save(movieEntity); //jpa
-            MovieEntity movieEntityCurrent = movieRepository.usp_InsertOrUpdateMovie(
-                0,
-                    movieEntity.getStudioName(),
-                    movieEntity.getTitle()
-            ); //stored procedure
+            MovieEntity movieEntityCurrent = movieRepository.save(movieEntity); //jpa
+//            MovieEntity movieEntityCurrent = movieRepository.usp_InsertOrUpdateMovie(
+//                0,
+//                    movieEntity.getStudioName(),
+//                    movieEntity.getTitle()
+//            ); //stored procedure
             return movieEntityCurrent;
         }
         catch (Exception ex)
